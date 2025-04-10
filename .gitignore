@@ -1,0 +1,44 @@
+# Ignorar la carpeta del entorno virtual
+/PlanGo-env
+
+# Ignorar archivos compilados de Python
+*.pyc
+
+# Node.js y Frontend dentro de la carpeta PlanGo_frontend
+PlanGo_frontend/node_modules/
+PlanGo_frontend/npm-debug.log
+PlanGo_frontend/yarn-error.log
+
+# Archivos generados por compiladores y herramientas en frontend
+PlanGo_frontend/dist/
+PlanGo_frontend/tmp/
+PlanGo_frontend/out-tsc/
+PlanGo_frontend/bazel-out/
+
+# Cachés y archivos de herramientas de frontend
+PlanGo_frontend/.angular/cache
+PlanGo_frontend/.sass-cache/
+PlanGo_frontend/connect.lock
+PlanGo_frontend/coverage/
+PlanGo_frontend/libpeerconnection.log
+PlanGo_frontend/testem.log
+PlanGo_frontend/typings/
+
+# Archivos de configuración y temporales de IDE
+PlanGo_frontend/.idea/
+PlanGo_frontend/.project
+PlanGo_frontend/.classpath
+PlanGo_frontend/*.launch
+PlanGo_frontend.settings/
+PlanGo_frontend/.sublime-workspace
+
+# Visual Studio Code
+PlanGo_frontend/.vscode/*
+PlanGo_frontend!.vscode/settings.json
+PlanGo_frontend!.vscode/tasks.json
+PlanGo_frontend!.vscode/launch.json
+PlanGo_frontend!.vscode/extensions.json
+
+# Archivos del sistema operativo
+PlanGo_frontend/.DS_Store
+PlanGo_frontend.Thumbs.db
