@@ -1,0 +1,16 @@
+<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow-md">
+    <h2 class="text-2xl font-bold mb-4 text-center">Sign Up</h2>
+    <form (ngSubmit)="register()">
+      <div class="mb-4">
+        <label>Email</label>
+        <input class="w-full border p-2 rounded" type="email" [(ngModel)]="email" name="email" required>
+      </div>
+      <div class="mb-4">
+        <label>Password</label>
+        <input class="w-full border p-2 rounded" type="password" [(ngModel)]="password" name="password" required>
+      </div>
+      <button class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded w-full">Register</button>
+      <p *ngIf="errorMessage" class="text-red-500 text-sm mt-2 text-center">{{ errorMessage }}</p>
+    </form>
+  </div>
+  
