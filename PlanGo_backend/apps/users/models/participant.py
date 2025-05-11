@@ -1,5 +1,5 @@
 from django.db import models
-from .destination import Destination
+from ...itineraries.models.destination import Destination
 from apps.users.models.user import User
 
 class Participant(models.Model):
