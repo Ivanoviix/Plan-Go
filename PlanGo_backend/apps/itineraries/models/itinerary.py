@@ -3,8 +3,8 @@ from apps.users.models.user import User
 
 class Itinerary(models.Model):
     itinerary_id = models.AutoField(primary_key=True)
+    itinerary_name = models.CharField(max_length=255)
     creator_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='itineraries')
-    creator_first_name = models.CharField(max_length=255)
     creation_date = models.DateField()
     start_date = models.DateField()
     end_date = models.DateField()
@@ -14,4 +14,4 @@ class Itinerary(models.Model):
         verbose_name_plural = 'Itinerary'
     
     def __str__(self):
-        return f"Itinerary #{self.id} by {self.creator_first_name}"
+        return f"Itinerary #{self.itinerary_id} by {self.creator_user}"
