@@ -1,4 +1,4 @@
-<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow-md">
+<!-- <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow-md">
     <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
     <form (ngSubmit)="login()">
       <div class="mb-4">
@@ -20,4 +20,56 @@
   
     <p *ngIf="errorMessage" class="text-red-500 text-sm mt-4 text-center">{{ errorMessage }}</p>
   </div>
-  
+   -->
+<div class="flex flex-row h-dvh">
+  <section class="bg-red-200 w-[50%] h-full flex items-center justify-center">
+    <div class="flex flex-col items-center justify-center">
+      <picture class="w-[300px] h-[200px]">
+        <source srcset="https://picsum.photos/300/200" media="(min-width: 1024px)" class="rounded">
+        <source srcset="https://picsum.photos/300/200" media="(min-width: 768px)" class="rounded">
+        <source srcset="https://picsum.photos/300/200" media="(max-width: 767px)" class="rounded">
+        <img src="https://picsum.photos/300/200" alt="Sample Image" class="rounded">
+      </picture>
+      <p class="my-6">Tu puerta al mundo. Planifica, descubre y vive tu próximo destino.</p>
+      <form class="w-full" (ngSubmit)="login()">
+          <div class=" mb-4">
+        <label>Email</label>
+        <input class="w-full border p-2 rounded" type="email" [(ngModel)]="email" name="email" required>
+    </div>
+    <div class="mb-4">
+      <label>Password</label>
+      <input class="w-full border p-2 rounded" type="password" [(ngModel)]="password" name="password" required>
+    </div>
+    <div class="mb-4 flex items-center justify-end">
+      <label for="rememberMe" class="mr-3">Recordar usuario</label>
+      <input type="checkbox" id="rememberMe" class="mr-2">
+    </div>
+    <div class="separator flex items-center my-4">
+      <hr class="flex-grow border-black">
+      <span class="mx-6 text-black">o</span>
+      <hr class="flex-grow border-black">
+    </div>
+    <div class="login-buttons flex items-center justify-center">
+      <button class=" login-google w-20 h-12 border border-black rounded-full flex items-center justify-center m-4"
+        (click)="loginWithGoogle()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" class="w-6 h-6">
+          <path fill="#000000"
+            d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+        </svg>
+      </button>
+      <button class=" login-microsoft w-20 h-12 border border-black rounded-full flex items-center justify-center m-4">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-6 h-6">
+          <path fill="#000000"
+            d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z" />
+        </svg>
+      </button>
+    </div>
+    <button class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded w-full">Login</button>
+    </form>
+</div>
+</section>
+
+<section id="background" class="bg-red-500 w-[50%] h-full">
+
+</section>
+</div>

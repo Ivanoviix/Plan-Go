@@ -27,12 +27,14 @@ export class LoginComponent {
   }
 
   async loginWithGoogle() {
+    console.log('loginWithGoogle clicked');
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(this.auth, provider);
       this.router.navigate(['/']);
     } catch (error: any) {
       this.errorMessage = error.message;
+      console.error(error);
     }
   }
 }
