@@ -5,6 +5,9 @@
 *.pyc
 .env
 
+# Archivos del proyecto PlanGo_backend
+PlanGo_backend/config/firebase-credentials.json
+
 # Node.js y Frontend dentro de la carpeta PlanGo_frontend
 PlanGo_frontend/node_modules/
 PlanGo_frontend/npm-debug.log
