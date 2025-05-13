@@ -1,34 +1,105 @@
-from django.shortcuts import render
 from django.http import JsonResponse
-from core.auth.firebase_authentication import firebase_login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views import View
 from apps.users.models.user import User
+import json
+from firebase_admin import auth
+from config.firebase_config import *
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
-# Create your views here.
-# El endpoint user_profile está diseñado para 
-# devolver los datos del usuario autenticado que realiza la solicitud. 
-@firebase_login_required
-def user_profile(request):
-    user = request.user
-    return JsonResponse({
-        'id': user.id,
-        'email': user.email,
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-        'user_image': user.user_image,
-        'countries_visited': user.countries_visited,
-    })
+@method_decorator(csrf_exempt, name='dispatch')
+class RegisterView(View):
+    def post(self, request):
+        try:
+            # Obtén el token del encabezado Authorization
+            auth_header = request.headers.get('Authorization')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return JsonResponse({'error': 'Token no proporcionado'}, status=401)
 
-def get_user_by_id(request, user_id):
-    try:
-        user = User.objects.get(id=user_id)
-        return JsonResponse({
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'user_image': user.user_image,
-            'countries_visited': user.countries_visited,
-        })
-    except User.DoesNotExist:
-        return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
+            token = auth_header.split(' ')[1]
+
+            # Verifica el token de Firebase
+            try:
+                decoded_token = auth.verify_id_token(token)
+                uid = decoded_token['uid']
+                print("Token válido. UID:", uid)
+            except Exception as e:
+                return JsonResponse({'error': 'Token inválido o expirado'}, status=401)
+
+            # Procesa los datos del cuerpo de la solicitud
+            data = json.loads(request.body)
+            email = data.get('email')
+            first_name = data.get('first_name')
+            last_name = data.get('last_name')
+
+            # Obtén la foto de perfil del usuario desde Firebase
+            firebase_user = auth.get_user(uid)
+            profile_image = firebase_user.photo_url
+
+            # Crea un nuevo usuario en la base de datos de Django
+            user, created = User.objects.get_or_create(
+                email=email,
+                defaults={
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'firebase_uid': uid,
+                    'user_image': profile_image,
+                }
+            )
+
+            if not created:
+                return JsonResponse({'error': 'El usuario ya existe'}, status=400)
+
+            return JsonResponse({'message': 'Usuario registrado exitosamente'}, status=201)
+        except Exception as e:
+            print("Error en el backend:", str(e))
+            return JsonResponse({'error': str(e)}, status=400)
+        
+@method_decorator(csrf_exempt, name='dispatch')
+class LoginWithGoogleView(View):
+    def post(self, request):
+        try:
+            # Obtén el token del encabezado Authorization
+            auth_header = request.headers.get('Authorization')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return JsonResponse({'error': 'Token no proporcionado'}, status=401)
+
+            token = auth_header.split(' ')[1]
+
+            # Verifica el token de Firebase
+            try:
+                decoded_token = auth.verify_id_token(token)
+                uid = decoded_token['uid']
+                print("Token válido. UID:", uid)
+            except Exception as e:
+                return JsonResponse({'error': 'Token inválido o expirado'}, status=401)
+
+            # Procesa los datos enviados desde el frontend
+            data = json.loads(request.body)
+            email = data.get('email')
+            first_name = data.get('first_name')
+            last_name = data.get('last_name')
+            profile_image = data.get('profile_image')
+
+            # Busca o crea el usuario en la base de datos de Django
+            user, created = User.objects.get_or_create(
+                email=email,
+                defaults={
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'firebase_uid': uid,
+                    'user_image': profile_image,
+                }
+            )
+
+            if created:
+                print("Usuario creado en Django:", user.email)
+            else:
+                print("Usuario ya existente en Django:", user.email)
+
+            return JsonResponse({'message': 'Usuario autenticado exitosamente'}, status=200)
+        except Exception as e:
+            print("Error en el backend:", str(e))
+            return JsonResponse({'error': str(e)}, status=400)

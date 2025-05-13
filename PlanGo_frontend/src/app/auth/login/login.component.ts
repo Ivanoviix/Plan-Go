@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   standalone: true,
   selector: 'app-login',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
@@ -15,26 +17,58 @@ export class LoginComponent {
   password = '';
   errorMessage = '';
 
-  constructor(private auth: Auth, private router: Router) {}
+  constructor(private auth: Auth, private router: Router, private http: HttpClient) {}
 
   async login() {
+    if (!this.email || !this.email.includes('@')) {
+      this.errorMessage = 'Por favor, introduce un correo electrónico válido.';
+      return;
+    }
+  
     try {
       await signInWithEmailAndPassword(this.auth, this.email, this.password);
       this.router.navigate(['/']);
     } catch (error: any) {
+      console.error('Error al iniciar sesión:', error);
       this.errorMessage = error.message;
     }
   }
 
   async loginWithGoogle() {
-    console.log('loginWithGoogle clicked');
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(this.auth, provider);
-      this.router.navigate(['/']);
+      const result = await signInWithPopup(this.auth, provider);
+      const firebaseUser = result.user;
+      const idToken = await firebaseUser.getIdToken(); // Obtén el token de Firebase
+  
+      const payload = {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        first_name: firebaseUser.displayName?.split(' ')[0] || '',
+        last_name: firebaseUser.displayName?.split(' ')[1] || '',
+        profile_image: firebaseUser.photoURL || '',
+      };
+  
+      console.log('Payload enviado al backend:', payload);
+  
+      // Envía los datos al backend
+      this.http.post('http://localhost:8000/users/login-with-google/', payload, {
+        headers: {
+          Authorization: `Bearer ${idToken}` // Incluye el token en el encabezado
+        }
+      }).subscribe({
+        next: (rs) => {
+          console.log('Usuario autenticado en Django:', rs);
+          this.router.navigate(['/']); // Redirige al usuario a la página principal
+        },
+        error: (err) => {
+          console.error('Error al autenticar usuario en Django:', err);
+          this.errorMessage = 'Error al autenticar usuario. Inténtalo de nuevo.';
+        },
+      });
     } catch (error: any) {
+      console.error('Error al iniciar sesión con Google:', error);
       this.errorMessage = error.message;
-      console.error(error);
     }
   }
 
