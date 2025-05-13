@@ -32,12 +32,12 @@
       </picture>
       <h1 class="my-6 text-l font-bold text-center">Tu puerta al mundo. Planifica, descubre y vive tu próximo destino.</h1>
       <form class="w-full" (ngSubmit)="login()">
-        <div class=" mb-4">
+        <div class=" mb-4 h-24">
           <label class="">Email</label>
           <input class="mt-2 w-full h-12 border p-2 rounded-full" type="email" [(ngModel)]="email" name="email" required>
           <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
         </div>
-        <div class="mb-4">
+        <div class="mb-4 h-24">
           <label class="my-2">Contraseña</label>
           <input class="mt-2 w-full h-12 border p-2 rounded-full" type="password" [(ngModel)]="password" name="password" required>
           <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
