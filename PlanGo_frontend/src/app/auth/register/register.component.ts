@@ -20,9 +20,13 @@ export class RegisterComponent {
   async register() {
     try {
       await createUserWithEmailAndPassword(this.auth, this.email, this.password);
-      this.router.navigate(['/']);
+      this.router.navigate(['/register']);
     } catch (error: any) {
       this.errorMessage = error.message;
     }
+  }
+
+  navigateToLogin() {
+    this.router.navigate(['/login']);
   }
 }
