@@ -9,3 +9,7 @@ class AccommodationImage(models.Model):
     class Meta:
         verbose_name = 'Accommodation Image'
         verbose_name_plural = 'Accommodation Image'
+        
+        
+    def __int__(self):
+        return self.accommodation

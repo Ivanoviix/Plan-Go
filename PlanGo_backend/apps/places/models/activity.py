@@ -74,8 +74,8 @@ class Activity(models.Model):
         ('sculpture', 'Sculpture'),
     ]
     activity_type = models.CharField(max_length=50, choices=ACTIVITY_TYPES)
-    latitude = models.DecimalField(max_digits=10, decimal_places=8)
-    longitude = models.DecimalField(max_digits=10, decimal_places=8)
+    latitude = models.DecimalField(max_digits=30, decimal_places=20)
+    longitude = models.DecimalField(max_digits=30, decimal_places=20)
 
     class Meta:
         verbose_name = 'Activity'
