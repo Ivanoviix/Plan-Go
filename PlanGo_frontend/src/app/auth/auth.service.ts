@@ -23,7 +23,7 @@ export class AuthService {
           Authorization: `Bearer ${idToken}`
         }
       }).subscribe(
-        (res) => console.log('Perfil obtenido:', res),
+        (rs) => console.log('Perfil obtenido:', rs),
         (err) => console.error('Error al obtener perfil:', err)
       );
     } catch (error) {

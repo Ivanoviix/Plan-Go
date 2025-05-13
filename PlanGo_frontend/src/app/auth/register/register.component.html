@@ -1,16 +1,64 @@
-<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow-md">
-    <h2 class="text-2xl font-bold mb-4 text-center">Sign Up</h2>
-    <form (ngSubmit)="register()">
-      <div class="mb-4">
-        <label>Email</label>
-        <input class="w-full border p-2 rounded" type="email" [(ngModel)]="email" name="email" required>
-      </div>
-      <div class="mb-4">
-        <label>Password</label>
-        <input class="w-full border p-2 rounded" type="password" [(ngModel)]="password" name="password" required>
-      </div>
-      <button class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded w-full">Register</button>
-      <p *ngIf="errorMessage" class="text-red-500 text-sm mt-2 text-center">{{ errorMessage }}</p>
-    </form>
-  </div>
-  
+<!-- <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow-md">
+  <h2 class="text-2xl font-bold mb-4 text-center">Sign Up</h2>
+  <form (ngSubmit)="register()">
+    <div class="mb-4">
+      <label>Email</label>
+      <input class="w-full border p-2 rounded" type="email" [(ngModel)]="email" name="email" required>
+    </div>
+    <div class="mb-4">
+      <label>Password</label>
+      <input class="w-full border p-2 rounded" type="password" [(ngModel)]="password" name="password" required>
+    </div>
+    <button class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded w-full">Register</button>
+    <p *ngIf="errorMessage" class="text-red-500 text-sm mt-2 text-center">{{ errorMessage }}</p>
+  </form>
+</div> -->
+<div class="flex flex-row h-lvh">
+  <section id="background" class="bg-gray-200 w-[50%] h-full">
+
+  </section>
+  <section class="bg-white w-[50%] h-full flex items-center justify-center">
+    <div class="flex flex-col items-center justify-center w-full px-32">
+      <picture class="w-[300px] h-[150px]">
+        <source srcset="https://picsum.photos/300/150" media="(min-width: 1024px)" class="rounded">
+        <source srcset="https://picsum.photos/300/150" media="(min-width: 768px)" class="rounded">
+        <source srcset="https://picsum.photos/300/150" media="(max-width: 767px)" class="rounded">
+        <img src="https://picsum.photos/300/200" alt="Sample Image" class="rounded">
+      </picture>
+      <h1 class="my-6 text-l font-bold text-center">Tu puerta al mundo. Planifica, descubre y vive tu próximo destino.</h1>
+      <form class="w-full" (ngSubmit)="register()">
+        <div class=" mb-4 h-24">
+          <label class="">Email</label>
+          <input class="mt-2 w-full h-12 border p-2 rounded-full" type="email" [(ngModel)]="email" name="email" required>
+          <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+        </div>
+        <div class="flex flex-row">
+          <div class="mb-4 mr-2 w-[50%] h-24">
+            <label class="my-2">Nombre</label>
+            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="password" [(ngModel)]="password" name="password" required>
+            <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+          </div>
+          <div class="mb-4 ml-2 w-[50%] h-24">
+            <label class="my-2">Apellido</label>
+            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="password" [(ngModel)]="password" name="password" required>
+            <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+          </div>
+        </div>
+        <div class="flex flex-row">
+          <div class="mb-4 mr-2 w-[50%] h-24">
+            <label class="my-2">Contraseña</label>
+            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="password" [(ngModel)]="password" name="password" required>
+            <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+          </div>
+          <div class="mb-4 ml-2 w-[50%] h-24">
+            <label class="my-2">Repetir contraseña</label>
+            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="password" [(ngModel)]="password" name="password" required>
+            <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+          </div>
+        </div>
+        <button class="border border-black py-2 px-4 rounded-full w-full">Registrarse</button>
+      </form>
+      <p class="my-2">Ya tienes cuenta? <strong><button (click)="navigateToLogin()">Inicia sesión</button></strong></p>
+    </div>
+  </section>
+</div>
