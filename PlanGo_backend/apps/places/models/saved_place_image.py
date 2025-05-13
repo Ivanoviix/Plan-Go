@@ -9,3 +9,6 @@ class SavedPlaceImage(models.Model):
     class Meta:
         verbose_name = 'Saved Place Image'
         verbose_name_plural = 'Saved Place Image'
+        
+    def __int__(self):
+        return self.saved_place

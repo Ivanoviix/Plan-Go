@@ -9,3 +9,7 @@ class ActivityImage(models.Model):
     class Meta:
         verbose_name = 'Activity Image'
         verbose_name_plural = 'Activity Image'
+        
+        
+    def __int__(self):
+        return self.activity

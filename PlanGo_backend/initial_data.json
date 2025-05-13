@@ -1,0 +1,1647 @@
+[
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2025-05-12T18:46:29.140Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "2",
+    "object_repr": "Helentoxic",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2025-05-12T18:46:48.969Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "3",
+    "object_repr": "Ivanovix",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2025-05-13T18:06:52.667Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "1",
+    "object_repr": "Itinerary #1 by Helentoxic",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2025-05-13T18:07:48.552Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "1",
+    "object_repr": "Amsterdam, Holanda",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2025-05-13T18:08:43.477Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "2",
+    "object_repr": "Berlín, Alemania",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2025-05-13T18:20:44.312Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "ChIJkVCbC1SSlxIRR8HZISyPnGU",
+    "object_repr": "Palacio Avenida Palma",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2025-05-13T18:40:04.633Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "AccommodationImage object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2025-05-13T18:41:00.577Z",
+    "user": 1,
+    "content_type": 16,
+    "object_id": "ChIJqafoD1SSlxIRICizVrt8rZQ",
+    "object_repr": "Amics del Ferrocarril illes Balears",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2025-05-13T18:41:38.050Z",
+    "user": 1,
+    "content_type": 17,
+    "object_id": "1",
+    "object_repr": "ActivityImage object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2025-05-13T18:42:56.047Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "ChIJYa3ykviSlxIRmSdPs4lzgWs",
+    "object_repr": "Bierkönig",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2025-05-13T18:43:12.537Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "RestaurantImage object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2025-05-13T18:46:20.538Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "1",
+    "object_repr": "Mega-Park",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2025-05-13T18:47:05.409Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "1",
+    "object_repr": "SavedPlaceImage object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2025-05-13T18:48:52.236Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "2",
+    "object_repr": "Regina Selfcheck-in Smart Rooms",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2025-05-13T18:49:17.559Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "2",
+    "object_repr": "SavedPlaceImage object (2)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2025-05-13T18:54:25.432Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "3",
+    "object_repr": "Tour Mallorca - Vall Sóller Services S L",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2025-05-13T18:54:41.597Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "3",
+    "object_repr": "SavedPlaceImage object (3)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2025-05-13T18:57:11.339Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "ChIJB0PAtiSTlxIRJymvYXPVKv8",
+    "object_repr": "ROC Hotels",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2025-05-13T18:57:29.249Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "2",
+    "object_repr": "AccommodationImage object (2)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2025-05-13T18:58:51.969Z",
+    "user": 1,
+    "content_type": 16,
+    "object_id": "ChIJpflxoFaSlxIRTW9HTELbRic",
+    "object_repr": "Train Sóller Station (Palma de Mallorca)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2025-05-13T18:59:02.350Z",
+    "user": 1,
+    "content_type": 17,
+    "object_id": "2",
+    "object_repr": "ActivityImage object (2)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2025-05-13T19:01:59.891Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "ChIJUZQRnF2WlxIRc8SqfSwrVE4",
+    "object_repr": "Balneari 6",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2025-05-13T19:02:14.402Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "2",
+    "object_repr": "RestaurantImage object (2)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2025-05-13T19:03:52.207Z",
+    "user": 1,
+    "content_type": 20,
+    "object_id": "1",
+    "object_repr": "Tomeu",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2025-05-13T19:06:20.717Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "1",
+    "object_repr": "Este gasto es de prueba",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 26,
+  "fields": {
+    "action_time": "2025-05-13T19:12:10.164Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "UserExpense object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 27,
+  "fields": {
+    "action_time": "2025-05-13T19:12:20.508Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "UserExpense object (2)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 28,
+  "fields": {
+    "action_time": "2025-05-13T19:12:46.055Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "UserExpense object (3)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 29,
+  "fields": {
+    "action_time": "2025-05-13T19:13:19.504Z",
+    "user": 1,
+    "content_type": 20,
+    "object_id": "2",
+    "object_repr": "Ivan",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 30,
+  "fields": {
+    "action_time": "2025-05-13T19:13:41.940Z",
+    "user": 1,
+    "content_type": 20,
+    "object_id": "3",
+    "object_repr": "Ivanovix",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 1,
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": 1,
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 2,
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": 1,
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 3,
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": 1,
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 4,
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": 1,
+    "codename": "view_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 5,
+  "fields": {
+    "name": "Can add permission",
+    "content_type": 2,
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 6,
+  "fields": {
+    "name": "Can change permission",
+    "content_type": 2,
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 7,
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": 2,
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 8,
+  "fields": {
+    "name": "Can view permission",
+    "content_type": 2,
+    "codename": "view_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 9,
+  "fields": {
+    "name": "Can add group",
+    "content_type": 3,
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 10,
+  "fields": {
+    "name": "Can change group",
+    "content_type": 3,
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 11,
+  "fields": {
+    "name": "Can delete group",
+    "content_type": 3,
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 12,
+  "fields": {
+    "name": "Can view group",
+    "content_type": 3,
+    "codename": "view_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 13,
+  "fields": {
+    "name": "Can add content type",
+    "content_type": 4,
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 14,
+  "fields": {
+    "name": "Can change content type",
+    "content_type": 4,
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 15,
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": 4,
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 16,
+  "fields": {
+    "name": "Can view content type",
+    "content_type": 4,
+    "codename": "view_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 17,
+  "fields": {
+    "name": "Can add session",
+    "content_type": 5,
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 18,
+  "fields": {
+    "name": "Can change session",
+    "content_type": 5,
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 19,
+  "fields": {
+    "name": "Can delete session",
+    "content_type": 5,
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 20,
+  "fields": {
+    "name": "Can view session",
+    "content_type": 5,
+    "codename": "view_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 21,
+  "fields": {
+    "name": "Can add user",
+    "content_type": 6,
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 22,
+  "fields": {
+    "name": "Can change user",
+    "content_type": 6,
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 23,
+  "fields": {
+    "name": "Can delete user",
+    "content_type": 6,
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 24,
+  "fields": {
+    "name": "Can view user",
+    "content_type": 6,
+    "codename": "view_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 25,
+  "fields": {
+    "name": "Can add expense",
+    "content_type": 7,
+    "codename": "add_expense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 26,
+  "fields": {
+    "name": "Can change expense",
+    "content_type": 7,
+    "codename": "change_expense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 27,
+  "fields": {
+    "name": "Can delete expense",
+    "content_type": 7,
+    "codename": "delete_expense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 28,
+  "fields": {
+    "name": "Can view expense",
+    "content_type": 7,
+    "codename": "view_expense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 29,
+  "fields": {
+    "name": "Can add user expense",
+    "content_type": 8,
+    "codename": "add_userexpense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 30,
+  "fields": {
+    "name": "Can change user expense",
+    "content_type": 8,
+    "codename": "change_userexpense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 31,
+  "fields": {
+    "name": "Can delete user expense",
+    "content_type": 8,
+    "codename": "delete_userexpense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 32,
+  "fields": {
+    "name": "Can view user expense",
+    "content_type": 8,
+    "codename": "view_userexpense"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 33,
+  "fields": {
+    "name": "Can add destination",
+    "content_type": 9,
+    "codename": "add_destination"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 34,
+  "fields": {
+    "name": "Can change destination",
+    "content_type": 9,
+    "codename": "change_destination"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 35,
+  "fields": {
+    "name": "Can delete destination",
+    "content_type": 9,
+    "codename": "delete_destination"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 36,
+  "fields": {
+    "name": "Can view destination",
+    "content_type": 9,
+    "codename": "view_destination"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 37,
+  "fields": {
+    "name": "Can add itinerary",
+    "content_type": 10,
+    "codename": "add_itinerary"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 38,
+  "fields": {
+    "name": "Can change itinerary",
+    "content_type": 10,
+    "codename": "change_itinerary"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 39,
+  "fields": {
+    "name": "Can delete itinerary",
+    "content_type": 10,
+    "codename": "delete_itinerary"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 40,
+  "fields": {
+    "name": "Can view itinerary",
+    "content_type": 10,
+    "codename": "view_itinerary"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 41,
+  "fields": {
+    "name": "Can add participant",
+    "content_type": 11,
+    "codename": "add_participant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 42,
+  "fields": {
+    "name": "Can change participant",
+    "content_type": 11,
+    "codename": "change_participant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 43,
+  "fields": {
+    "name": "Can delete participant",
+    "content_type": 11,
+    "codename": "delete_participant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 44,
+  "fields": {
+    "name": "Can view participant",
+    "content_type": 11,
+    "codename": "view_participant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 45,
+  "fields": {
+    "name": "Can add saved place",
+    "content_type": 12,
+    "codename": "add_savedplace"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 46,
+  "fields": {
+    "name": "Can change saved place",
+    "content_type": 12,
+    "codename": "change_savedplace"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 47,
+  "fields": {
+    "name": "Can delete saved place",
+    "content_type": 12,
+    "codename": "delete_savedplace"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 48,
+  "fields": {
+    "name": "Can view saved place",
+    "content_type": 12,
+    "codename": "view_savedplace"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 49,
+  "fields": {
+    "name": "Can add saved place image",
+    "content_type": 13,
+    "codename": "add_savedplaceimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 50,
+  "fields": {
+    "name": "Can change saved place image",
+    "content_type": 13,
+    "codename": "change_savedplaceimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 51,
+  "fields": {
+    "name": "Can delete saved place image",
+    "content_type": 13,
+    "codename": "delete_savedplaceimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 52,
+  "fields": {
+    "name": "Can view saved place image",
+    "content_type": 13,
+    "codename": "view_savedplaceimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 53,
+  "fields": {
+    "name": "Can add accommodation",
+    "content_type": 14,
+    "codename": "add_accommodation"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 54,
+  "fields": {
+    "name": "Can change accommodation",
+    "content_type": 14,
+    "codename": "change_accommodation"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 55,
+  "fields": {
+    "name": "Can delete accommodation",
+    "content_type": 14,
+    "codename": "delete_accommodation"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 56,
+  "fields": {
+    "name": "Can view accommodation",
+    "content_type": 14,
+    "codename": "view_accommodation"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 57,
+  "fields": {
+    "name": "Can add accommodation image",
+    "content_type": 15,
+    "codename": "add_accommodationimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 58,
+  "fields": {
+    "name": "Can change accommodation image",
+    "content_type": 15,
+    "codename": "change_accommodationimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 59,
+  "fields": {
+    "name": "Can delete accommodation image",
+    "content_type": 15,
+    "codename": "delete_accommodationimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 60,
+  "fields": {
+    "name": "Can view accommodation image",
+    "content_type": 15,
+    "codename": "view_accommodationimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 61,
+  "fields": {
+    "name": "Can add activity",
+    "content_type": 16,
+    "codename": "add_activity"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 62,
+  "fields": {
+    "name": "Can change activity",
+    "content_type": 16,
+    "codename": "change_activity"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 63,
+  "fields": {
+    "name": "Can delete activity",
+    "content_type": 16,
+    "codename": "delete_activity"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 64,
+  "fields": {
+    "name": "Can view activity",
+    "content_type": 16,
+    "codename": "view_activity"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 65,
+  "fields": {
+    "name": "Can add activity image",
+    "content_type": 17,
+    "codename": "add_activityimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 66,
+  "fields": {
+    "name": "Can change activity image",
+    "content_type": 17,
+    "codename": "change_activityimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 67,
+  "fields": {
+    "name": "Can delete activity image",
+    "content_type": 17,
+    "codename": "delete_activityimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 68,
+  "fields": {
+    "name": "Can view activity image",
+    "content_type": 17,
+    "codename": "view_activityimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 69,
+  "fields": {
+    "name": "Can add restaurant",
+    "content_type": 18,
+    "codename": "add_restaurant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 70,
+  "fields": {
+    "name": "Can change restaurant",
+    "content_type": 18,
+    "codename": "change_restaurant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 71,
+  "fields": {
+    "name": "Can delete restaurant",
+    "content_type": 18,
+    "codename": "delete_restaurant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 72,
+  "fields": {
+    "name": "Can view restaurant",
+    "content_type": 18,
+    "codename": "view_restaurant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 73,
+  "fields": {
+    "name": "Can add restaurant image",
+    "content_type": 19,
+    "codename": "add_restaurantimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 74,
+  "fields": {
+    "name": "Can change restaurant image",
+    "content_type": 19,
+    "codename": "change_restaurantimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 75,
+  "fields": {
+    "name": "Can delete restaurant image",
+    "content_type": 19,
+    "codename": "delete_restaurantimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 76,
+  "fields": {
+    "name": "Can view restaurant image",
+    "content_type": 19,
+    "codename": "view_restaurantimage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 77,
+  "fields": {
+    "name": "Can add Participant",
+    "content_type": 20,
+    "codename": "add_participant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 78,
+  "fields": {
+    "name": "Can change Participant",
+    "content_type": 20,
+    "codename": "change_participant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 79,
+  "fields": {
+    "name": "Can delete Participant",
+    "content_type": 20,
+    "codename": "delete_participant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 80,
+  "fields": {
+    "name": "Can view Participant",
+    "content_type": 20,
+    "codename": "view_participant"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 1,
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 2,
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 3,
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 4,
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 5,
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 6,
+  "fields": {
+    "app_label": "users",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 7,
+  "fields": {
+    "app_label": "expenses",
+    "model": "expense"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 8,
+  "fields": {
+    "app_label": "expenses",
+    "model": "userexpense"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 9,
+  "fields": {
+    "app_label": "itineraries",
+    "model": "destination"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 10,
+  "fields": {
+    "app_label": "itineraries",
+    "model": "itinerary"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 11,
+  "fields": {
+    "app_label": "itineraries",
+    "model": "participant"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 12,
+  "fields": {
+    "app_label": "places",
+    "model": "savedplace"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 13,
+  "fields": {
+    "app_label": "places",
+    "model": "savedplaceimage"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 14,
+  "fields": {
+    "app_label": "places",
+    "model": "accommodation"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 15,
+  "fields": {
+    "app_label": "places",
+    "model": "accommodationimage"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 16,
+  "fields": {
+    "app_label": "places",
+    "model": "activity"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 17,
+  "fields": {
+    "app_label": "places",
+    "model": "activityimage"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 18,
+  "fields": {
+    "app_label": "places",
+    "model": "restaurant"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 19,
+  "fields": {
+    "app_label": "places",
+    "model": "restaurantimage"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 20,
+  "fields": {
+    "app_label": "users",
+    "model": "participant"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "4z0dydg7wt379u3ib1eb6lzs7wvjon82",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAURP-FtSG8Hy7d9xvIhQtSNZCUdmX8d9ukC13OnDPzJgG2tYZt5CXMSK6Ek8tvFyE9czsAPqDdO029rcsc6aHQkw46dcyv2-n-HVQYdV8zJbxHKYWXwLXXxmmlMEWWZLQi7sEljbp4dIkbBQUMiMyFilbawgz5fAG2lzcU:1uD8KZ:mGkw8eUZeqp2La256p8Hkth3sTAznCFdK5EwznyUjpM",
+    "expire_date": "2025-05-22T20:58:59.824Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "af5s3z8g4tzbwp4bxf42uv97njrvjzuz",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAURP-FtSG8Hy7d9xvIhQtSNZCUdmX8d9ukC13OnDPzJgG2tYZt5CXMSK6Ek8tvFyE9czsAPqDdO029rcsc6aHQkw46dcyv2-n-HVQYdV8zJbxHKYWXwLXXxmmlMEWWZLQi7sEljbp4dIkbBQUMiMyFilbawgz5fAG2lzcU:1uEY9d:oWWNbfQ1QFWBAelPTKZcKa11INMCOcZwhguAFHHalFo",
+    "expire_date": "2025-05-26T18:45:33.070Z"
+  }
+},
+{
+  "model": "users.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$Aa6jAbpgnABLxT8nPURGJq$4LNSCSkRJ+4qJNeToT/o7Tr6I5QA3gwlhfQYVm11JYY=",
+    "last_login": "2025-05-12T18:45:33.059Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "helentoxiccherry666@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-05-08T20:58:14.750Z",
+    "firebase_uid": null,
+    "user_image": null,
+    "countries_visited": 0,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 2,
+  "fields": {
+    "password": "prueba",
+    "last_login": "2025-05-12T18:46:11Z",
+    "is_superuser": false,
+    "username": "Helentoxic",
+    "first_name": "helen",
+    "last_name": "toxic",
+    "email": "helentoxic@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-05-12T18:45:43Z",
+    "firebase_uid": null,
+    "user_image": "",
+    "countries_visited": 0,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 3,
+  "fields": {
+    "password": "prueba",
+    "last_login": "2025-05-12T18:46:33Z",
+    "is_superuser": false,
+    "username": "Ivanovix",
+    "first_name": "Ivan",
+    "last_name": "martin",
+    "email": "ivan@hotmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-05-12T18:46:29Z",
+    "firebase_uid": null,
+    "user_image": "",
+    "countries_visited": 0,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.participant",
+  "pk": 1,
+  "fields": {
+    "destination": 1,
+    "user": null,
+    "participant_name": "Tomeu"
+  }
+},
+{
+  "model": "users.participant",
+  "pk": 2,
+  "fields": {
+    "destination": 2,
+    "user": null,
+    "participant_name": "Ivan"
+  }
+},
+{
+  "model": "users.participant",
+  "pk": 3,
+  "fields": {
+    "destination": 1,
+    "user": 3,
+    "participant_name": "Ivanovix"
+  }
+},
+{
+  "model": "expenses.expense",
+  "pk": 1,
+  "fields": {
+    "description": "Este gasto es de prueba",
+    "total_amount": "100.00",
+    "date": "2025-05-14",
+    "paid_by_user": null,
+    "paid_by_name": "Tomeu"
+  }
+},
+{
+  "model": "expenses.userexpense",
+  "pk": 1,
+  "fields": {
+    "expense": 1,
+    "user": null,
+    "user_name": "Tomeu",
+    "amount_paid": "100.00",
+    "expected_share": "25.00"
+  }
+},
+{
+  "model": "expenses.userexpense",
+  "pk": 2,
+  "fields": {
+    "expense": 1,
+    "user": 2,
+    "user_name": null,
+    "amount_paid": "0.00",
+    "expected_share": "50.00"
+  }
+},
+{
+  "model": "expenses.userexpense",
+  "pk": 3,
+  "fields": {
+    "expense": 1,
+    "user": null,
+    "user_name": "Ivan",
+    "amount_paid": "0.00",
+    "expected_share": "25.00"
+  }
+},
+{
+  "model": "itineraries.itinerary",
+  "pk": 1,
+  "fields": {
+    "itinerary_name": "Tu mama",
+    "creator_user": 2,
+    "creation_date": "2025-05-13",
+    "start_date": "2025-05-14",
+    "end_date": "2025-05-17"
+  }
+},
+{
+  "model": "itineraries.destination",
+  "pk": 1,
+  "fields": {
+    "itinerary": 1,
+    "country": "Holanda",
+    "city_name": "Amsterdam",
+    "start_date": "2025-05-14",
+    "end_date": "2025-05-15"
+  }
+},
+{
+  "model": "itineraries.destination",
+  "pk": 2,
+  "fields": {
+    "itinerary": 1,
+    "country": "Alemania",
+    "city_name": "Berlín",
+    "start_date": "2025-05-16",
+    "end_date": "2025-05-17"
+  }
+},
+{
+  "model": "places.accommodation",
+  "pk": "ChIJB0PAtiSTlxIRJymvYXPVKv8",
+  "fields": {
+    "destination": 2,
+    "name": "ROC Hotels",
+    "rating": "3.3",
+    "address": "Carrer d'Enric Alzamora, 6, 8º, Distrito Centro, 07002 Palma, Illes Balears, Spain",
+    "accomodation_type": "resort_hotel",
+    "latitude": "39.57408010000000000000",
+    "longitude": "2.65523110000000000000"
+  }
+},
+{
+  "model": "places.accommodation",
+  "pk": "ChIJkVCbC1SSlxIRR8HZISyPnGU",
+  "fields": {
+    "destination": 1,
+    "name": "Palacio Avenida Palma",
+    "rating": "3.8",
+    "address": "C/ del Marquès de la Fontsanta, 2, Llevant, 07005 Palma, Illes Balears, Spain",
+    "accomodation_type": "hotel",
+    "latitude": "39.57553630000000000000",
+    "longitude": "2.65486670000000000000"
+  }
+},
+{
+  "model": "places.accommodationimage",
+  "pk": 1,
+  "fields": {
+    "accommodation": "ChIJkVCbC1SSlxIRR8HZISyPnGU",
+    "uri": "places/ChIJkVCbC1SSlxIRR8HZISyPnGU/photos/AXQCQNQRUQPzTprje4rEM2nUtceXsnZ1aaRTzl9mqoZeH097oX4MqOaM8lIuYf7r2zrbjk8Ul76K0KZDit708p09A2FhaLUL45H0nEAYRzgEDrn4LZFj3E-V4hcHgGAADO2gDvJAJMc_zek53NCwmsTzZk5R6CKtIh-xYR_mSvTLqVHr47U8Qquutu3E0vFp_wS6NPbMxdWJPUScPZ1BofYoZomLbtXFRtk0oHNEL3szJBCdwnk2XVJuMFHQcXFy6BPoZe_AWg--Id1gGOtE5T2gFdYUKCNH-HHpL_7ugEfTG8CBP3rh7OunGJd_i2qPtC_kk6S_7HubDH7_qZxDy6xiEE7rEMDp_Ovj16_XOcqYKv8B5Z8Sj1uq_UgbSh2NdV20c4qGJ_FSfnHVAAZAhwuFiMjXVcA__vYBScrhCPP0W7X_5My7"
+  }
+},
+{
+  "model": "places.accommodationimage",
+  "pk": 2,
+  "fields": {
+    "accommodation": "ChIJB0PAtiSTlxIRJymvYXPVKv8",
+    "uri": "places/ChIJB0PAtiSTlxIRJymvYXPVKv8/photos/AXQCQNQOgYmUKUDLFF0dGS8PISWgXg0LCRWYdvA1Kunzj7MIe5jEwN8x1nOC-1UQ_xbf9S8prWmrWBSr0oKjN_FxBQ0ZAinp_vEdoQC9al9aL4p2xw13JCvrGkPcr40q9nYJJINkVcpYTWLLQjiDsLtRqnhGo0WNDSUoHVa3Oz2oa4tuWX0kWvD9Ci8RxEb26Sc558yzp4UL24C5wEY0pjSlVVn2Dbdg9QTk1Unutae_NVcPTN-VDwoO052_rwlztGGlpFwPVBPI9ZYr0mwmbh4BR1GVA0Cw-94hf8usBUEU01Q"
+  }
+},
+{
+  "model": "places.activity",
+  "pk": "ChIJpflxoFaSlxIRTW9HTELbRic",
+  "fields": {
+    "destination": 2,
+    "name": "Train Sóller Station (Palma de Mallorca)",
+    "rating": "4.4",
+    "address": "Carrer d'Eusebi Estada, 1, Nord, 07004 Palma, Illes Balears, Spain",
+    "activity_type": "tourist_attraction",
+    "latitude": "39.57667740000000000000",
+    "longitude": "2.65384860000000000000"
+  }
+},
+{
+  "model": "places.activity",
+  "pk": "ChIJqafoD1SSlxIRICizVrt8rZQ",
+  "fields": {
+    "destination": 1,
+    "name": "Amics del Ferrocarril illes Balears",
+    "rating": "5.0",
+    "address": "Pl. d'Espanya, 6, Nord, 07002 Palma, Illes Balears, Spain",
+    "activity_type": "museum",
+    "latitude": "39.57619470000000000000",
+    "longitude": "2.65423490000000000000"
+  }
+},
+{
+  "model": "places.activityimage",
+  "pk": 1,
+  "fields": {
+    "activity": "ChIJqafoD1SSlxIRICizVrt8rZQ",
+    "uri": "places/ChIJqafoD1SSlxIRICizVrt8rZQ/photos/AXQCQNQkfCawEXEU_LKefb60MUT_UUiNY8Y3hLKjYoeUj065u2xfJ-0GsvoJcjrf003a_fpxDstor8s1SAuHPMgzsGhvQ-JoUNcg7yZrT8t61xIAB9Rd1cICl10747GXGXZkfFbHB33UrJtOAiuKEGDRyrNTDJKRqwS1gD4ltPSjjE-xo0Y5qxQ_0IzIYPg7jX3PYTr68Lp_QTQZebusZ2yszGvvqTVaG27QNP9PfiimljJxig-h_GbVp-w-KRRZN3ytyKJw8ny0kgJvCyB3sgZfjqBOt69Kd25VB8q-uSJnvQU4LQ"
+  }
+},
+{
+  "model": "places.activityimage",
+  "pk": 2,
+  "fields": {
+    "activity": "ChIJpflxoFaSlxIRTW9HTELbRic",
+    "uri": "places/ChIJpflxoFaSlxIRTW9HTELbRic/photos/AXQCQNTuXHYzyIU9wePOFJmIAzlEwJX7YDmoZE4Aq1qCuxS6-z37yiqGnfcZinf-lAOG87Txpbi9BgPg1vsBZWTkA70FnuVasSsr6ber5RaOXpbXpHbdyA8gGWY8nZwngfQFlSavOOgn2A3njfhk9xxYS3he2PoNjvIc_0yX81qdr1a0uvSt6PYJTwyVb4CRqDWBOuAb3o5vTT9YpAGegTs71r6kRFowioSO3EC3EQxhiwYXtokn8vJUzgPzsHVq1KcX1YIJPkqwiaiRAiro93TLghYDZXZUAJbrFqUsmdcuB7kB2_YFv5QAYHtgiJgPm7kJtn0eeSGFZoF4pz-a1uuCXVrzYjP22nSJpoAFyq9IIFWb4gHZQnFRJ98GVm4PF7G4-50_KEj___NWKJ-cu1BU21FYfM9hvhddZBHmWPDlUIcoFgmH"
+  }
+},
+{
+  "model": "places.restaurant",
+  "pk": "ChIJUZQRnF2WlxIRc8SqfSwrVE4",
+  "fields": {
+    "destination": 2,
+    "name": "Balneari 6",
+    "rating": "4.1",
+    "address": "Avinguda de l'Olivera, s/n, 07181, Illes Balears, Spain",
+    "restaurant_type": "bar",
+    "latitude": "39.51565500000000000000",
+    "longitude": "2.74518350000000000000"
+  }
+},
+{
+  "model": "places.restaurant",
+  "pk": "ChIJYa3ykviSlxIRmSdPs4lzgWs",
+  "fields": {
+    "destination": 1,
+    "name": "Bierkönig",
+    "rating": "4.1",
+    "address": "Carrer del Pare Bartomeu Salvà, 6, Platja de Palma, 07600 El Arenal, Illes Balears, Spain",
+    "restaurant_type": "bar",
+    "latitude": "39.51699770000000000000",
+    "longitude": "2.74657430000000000000"
+  }
+},
+{
+  "model": "places.restaurantimage",
+  "pk": 1,
+  "fields": {
+    "restaurant": "ChIJYa3ykviSlxIRmSdPs4lzgWs",
+    "uri": "places/ChIJYa3ykviSlxIRmSdPs4lzgWs/photos/AXQCQNTw4h1dBCuxhkGBNkzczRH93H7ETlbyY_Q_r8-HSrKl1My0wkF5REpa2sxdZXqNt6MGS9ptm_q3IrIEyd0MuNoYuOesPT180Yl3AqFiahZB53qADDroQ2BV8YeqAUU5vAPurYPs4SM4lvtfNIbv0DiX0jv7rm-jyL7QyM4QHExYzd5TNdeimR8nNm6-ijTXMiVxORsWZlDbIcRyChtS7BxitEcqcAT52eyXm8S55s8i-eys01JRw0h23KxUk-6gmL5lJy6DlW7T3S_ClRAMs6xEvEsZHG1u9-MSZDBVRkRidA"
+  }
+},
+{
+  "model": "places.restaurantimage",
+  "pk": 2,
+  "fields": {
+    "restaurant": "ChIJUZQRnF2WlxIRc8SqfSwrVE4",
+    "uri": "places/ChIJUZQRnF2WlxIRc8SqfSwrVE4/photos/AXQCQNS2a7WXNUMEj3rxcWx7F6jUR65VtJmMsF0vswxHP2C7a3-xZcyC1E0ipLAPsXCZfted5uPCA8-dv32K9BPX1y7CXUu-UUQJ89Bx68aNdWZDLAgHwvZHl9xnrr1n5XIgHGhXXtww4HX82WnVvbjr3w2rB-8DAsDEE8DIRtMCSLQpu9A7WmzldY3tC0YhEMvxwHbAk76pETWOccJ-9YhgNY-z_-7Nx_cvx-ptey8r5J7DJkVT16PR45q3LORlpkiqbAOuctCMa3rWzfXUF-2XvLBWi878vA4cPf-Z2LsvNzufOi3F3J0KdKp6zh_Z6wE0_k68MFpz5m5mrF6NFmQvF-7P1EF5JOlBRMQ__fjj8f8n8V7Xrw6mvJY4AcWSat0D7I9pJlryEAdFGLNpkqlCjl1c7B23gUdimVos8Clr7rexqw"
+  }
+},
+{
+  "model": "places.savedplace",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "place_id": "ChIJVQkgLF2WlxIRRgiFBQPr6jM",
+    "name": "Mega-Park",
+    "rating": "3.8",
+    "address": "Carretera de l'Arenal, 52, Platja de Palma, 07600 Palma, Illes Balears, Spain",
+    "place_type": "bar",
+    "latitude": "39.51369540000000000000",
+    "longitude": "2.74711870000000000000"
+  }
+},
+{
+  "model": "places.savedplace",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "place_id": "ChIJ61ny61aSlxIRffyg2VqCf9U",
+    "name": "Regina Selfcheck-in Smart Rooms",
+    "rating": "4.0",
+    "address": "Carrer de Sant Miquel, 77, Centre, 07002 Palma, Illes Balears, Spain",
+    "place_type": "hotel",
+    "latitude": "39.57673370000000000000",
+    "longitude": "2.65218590000000000000"
+  }
+},
+{
+  "model": "places.savedplace",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "place_id": "ChIJAcGLTFSSlxIRccrzuKKq2Ac",
+    "name": "Tour Mallorca - Vall Sóller Services S L",
+    "rating": "4.2",
+    "address": "Carrer d'Eusebi Estada, 1, Nord, 07004 Palma, Illes Balears, Spain",
+    "place_type": "tourist_attraction",
+    "latitude": "39.57667740000000000000",
+    "longitude": "2.65384860000000000000"
+  }
+},
+{
+  "model": "places.savedplaceimage",
+  "pk": 1,
+  "fields": {
+    "saved_place": 1,
+    "uri": "places/ChIJVQkgLF2WlxIRRgiFBQPr6jM/photos/AXQCQNT5b30h37WjsRmiH9MT9iHmswCxYvZlxjn0iZ148-INvlHX2g0Qd-xaeJIjSjiMpt1lVKUhTTApT0YzaF7GoAH5iqiY9RSLjxgoqHM66a948SncVO6FlFftkD0LoUa-94_Nl3WJmgiWsVASzSvI1UXkt_ipmRJHOk5g1hvYkx5BV-tV7iQckwTau04ekBIvBabRhdn4FxFJ4HJFjEGO0eku0DZJvt0Ptpl4fY-l-58uJ-yuzH3qTtnsKTDg2Gm-O4gKN0TieKnWsjRYhuE4hGu9t8zQohgIahDMnR7s0xSyEoMejOCg9ndMJWzBuyFkjiw7OMjEhUL_QA7uBt14A1RbdXRW1TAzJVBUFF04UWpRr9frY-8fS0TsrGaGyabT6gSOcwatpF2rZmHI2yNCkIWNa0ZpsrrUbV9pOVhJZtc_uFM"
+  }
+},
+{
+  "model": "places.savedplaceimage",
+  "pk": 2,
+  "fields": {
+    "saved_place": 2,
+    "uri": "places/ChIJ61ny61aSlxIRffyg2VqCf9U/photos/AXQCQNQ4BnEjtwahXx8jrfV8JcfAqjP9VtIgoWOYkUmCA1dYftwj92H2gkjNiAL8EAL3grjM_BIIQhST4y2J1AP1LqaHOcA1CGePS_kc_5f11XHJzP12jXq5nf11NejETFPL9ElSO9VzR9aRbFbtu_Suej6qY_ticfuL33-LabYgatjz2YBJZlQNRgjmTDwmSAVQQdX6VAZEYGZFVPB39tH3U3mgBlsSTc23Br_yZJ2F4DmMOiDfi1B4oz8WJ7zy_fxnqr1yhm5CFLTb7hHtd0vOxr_ckd7NHGXwmpLnR-23zofnZA"
+  }
+},
+{
+  "model": "places.savedplaceimage",
+  "pk": 3,
+  "fields": {
+    "saved_place": 3,
+    "uri": "places/ChIJAcGLTFSSlxIRccrzuKKq2Ac/photos/AXQCQNSsci2ORVZ5AE00J9bwmrw7_rR11smS43GA9fX6cWqW065VyIqstd1Gp4dbyC3KOpZVP4JoGHc6ipYMyzcP5iyiKueB7pbOeVcAxwcIDtJvPEBn-db8QvB-6wmIHjjMQ5C1eIZvF-LN4fZORCK7T1Idri4Dngn-qAF3itvpnTXr731ZJFvB2Fvv9TCBm9xyW2eun41exGvYBTWktwPxboBeRx9-CcfI4KxOlX8dhEJ4FTiBQAT0gxroCLvbTV9nAqGwugDIy_ndysi_aLR2R9uWy2tF2X-1HMlRAxrPJRaNzuY2mGie5SSzI4m3aY00y1OipLD4a7c5UMZseCBjdP-kiOm3oclD8WN-XP_5ZIEOEbpg3ZRkTLN8VRK2t8W6R2QJkInteY7uB8FgObdsziCFhF3Oo-Nq10c5IC7eJD3N7VJx"
+  }
+}
+]

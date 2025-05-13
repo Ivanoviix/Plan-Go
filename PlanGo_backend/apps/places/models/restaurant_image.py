@@ -9,3 +9,6 @@ class RestaurantImage(models.Model):
     class Meta:
         verbose_name = 'Restaurant Image'
         verbose_name_plural = 'Restaurant Image'
+        
+    def __int__(self):
+        return self.restaurant
