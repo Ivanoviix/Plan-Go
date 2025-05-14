@@ -20,10 +20,11 @@ export class LoginComponent {
   constructor(private auth: Auth, private router: Router, private http: HttpClient) {}
 
   async login() {
-    if (!this.email || !this.email.includes('@')) {
+    //meter en una función y ejecutarlo cuando dejas de hacer focus en el input
+    /* if (!this.email || !this.email.includes('@')) {
       this.errorMessage = 'Por favor, introduce un correo electrónico válido.';
       return;
-    }
+    } */
   
     try {
       await signInWithEmailAndPassword(this.auth, this.email, this.password);
@@ -39,7 +40,7 @@ export class LoginComponent {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(this.auth, provider);
       const firebaseUser = result.user;
-      const idToken = await firebaseUser.getIdToken(); // Obtén el token de Firebase
+      const idToken = await firebaseUser.getIdToken(); 
   
       const payload = {
         uid: firebaseUser.uid,
@@ -48,18 +49,16 @@ export class LoginComponent {
         last_name: firebaseUser.displayName?.split(' ')[1] || '',
         profile_image: firebaseUser.photoURL || '',
       };
-  
-      console.log('Payload enviado al backend:', payload);
-  
+    
       // Envía los datos al backend
       this.http.post('http://localhost:8000/users/login-with-google/', payload, {
         headers: {
-          Authorization: `Bearer ${idToken}` // Incluye el token en el encabezado
+          Authorization: `Bearer ${idToken}`
         }
       }).subscribe({
         next: (rs) => {
           console.log('Usuario autenticado en Django:', rs);
-          this.router.navigate(['/']); // Redirige al usuario a la página principal
+          this.router.navigate(['/']); 
         },
         error: (err) => {
           console.error('Error al autenticar usuario en Django:', err);
