@@ -5,6 +5,7 @@ from apps.itineraries.models.destination import Destination
 
 class Expense(models.Model):
     expense_id = models.AutoField(primary_key=True)
+    destination = models.ForeignKey(Destination, on_delete=models.CASCADE, related_name='expenses', null=True, blank=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField(blank=True, null=True)
@@ -16,4 +17,4 @@ class Expense(models.Model):
         verbose_name_plural = 'Expense'
         
     def __str__(self):
-        return self.description 
+        return self.description or f"Expense {self.expense_id}"
