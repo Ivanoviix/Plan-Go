@@ -36,7 +36,7 @@ export class RegisterComponent {
   
       this.http.post('http://localhost:8000/users/register/', payload, {
         headers: {
-          Authorization: `Bearer ${idToken}` // Incluye el token en el encabezado
+          Authorization: `Bearer ${idToken}`
         }
       }).subscribe({
         next: (rs) => {

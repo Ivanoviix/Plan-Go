@@ -13,7 +13,6 @@ from django.core.exceptions import ValidationError
 class RegisterView(View):
     def post(self, request):
         try:
-            # Obtén el token del encabezado Authorization
             auth_header = request.headers.get('Authorization')
             if not auth_header or not auth_header.startswith('Bearer '):
                 return JsonResponse({'error': 'Token no proporcionado'}, status=401)
@@ -33,11 +32,9 @@ class RegisterView(View):
             email = data.get('email')
             first_name = data.get('first_name')
             last_name = data.get('last_name')
-
-            # Obtén la foto de perfil del usuario desde Firebase
             firebase_user = auth.get_user(uid)
             profile_image = firebase_user.photo_url
-
+            
             # Crea un nuevo usuario en la base de datos de Django
             user, created = User.objects.get_or_create(
                 email=email,
@@ -45,7 +42,7 @@ class RegisterView(View):
                     'first_name': first_name,
                     'last_name': last_name,
                     'firebase_uid': uid,
-                    'user_image': profile_image,
+                    'user_image': profile_image
                 }
             )
 
@@ -83,6 +80,13 @@ class LoginWithGoogleView(View):
             last_name = data.get('last_name')
             profile_image = data.get('profile_image')
 
+            # Si faltan nombre o apellidos, extraerlos desde Firebase
+            firebase_user = auth.get_user(uid)
+            full_name = firebase_user.display_name or ""
+            profile_image = profile_image or firebase_user.photo_url
+            first_name, last_name = split_full_name(full_name)
+            username = f"{first_name[0]}{last_name.split(" ")[0]}".lower()
+
             # Busca o crea el usuario en la base de datos de Django
             user, created = User.objects.get_or_create(
                 email=email,
@@ -91,6 +95,7 @@ class LoginWithGoogleView(View):
                     'last_name': last_name,
                     'firebase_uid': uid,
                     'user_image': profile_image,
+                    'username': username
                 }
             )
 
@@ -103,3 +108,23 @@ class LoginWithGoogleView(View):
         except Exception as e:
             print("Error en el backend:", str(e))
             return JsonResponse({'error': str(e)}, status=400)
+        
+def split_full_name(full_name):
+    name_parts = full_name.strip().split()
+    match len(name_parts):
+        case 4:  # Dos nombres y dos apellidos
+            first_name = name_parts[1] 
+            last_name = " ".join(name_parts[2:])
+            
+        case 3:  # Un nombre y dos apellidos
+            first_name = name_parts[0]  
+            last_name = " ".join(name_parts[1:]) 
+            
+        case 2:  # Un nombre y un apellido
+            first_name = name_parts[0] 
+            last_name = name_parts[1]
+            
+        case _:  # Caso por defecto (1 palabra o vacío)
+            first_name = name_parts[0] if name_parts else ''
+            last_name = ''
+    return first_name, last_name
