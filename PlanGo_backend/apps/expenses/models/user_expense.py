@@ -13,3 +13,8 @@ class UserExpense(models.Model):
     class Meta:
         verbose_name = 'UserExpense'
         verbose_name_plural = 'UserExpense'
+        
+        
+    def __str__(self):
+        return self.expense.description
+    
