@@ -79,6 +79,11 @@ class LoginWithGoogleView(View):
             first_name = data.get('first_name')
             last_name = data.get('last_name')
             profile_image = data.get('profile_image')
+            
+            email = decoded_token.get('email')
+            
+            if not email:
+                return JsonResponse({'error': 'No se pudo obtener el email del token de Google'}, status=400)
 
             # Si faltan nombre o apellidos, extraerlos desde Firebase
             firebase_user = auth.get_user(uid)

@@ -1,4 +1,4 @@
-from django.utils.deprecation import MiddlewareMixin
+""" from django.utils.deprecation import MiddlewareMixin
 from config.firebase_config import auth
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
@@ -41,4 +41,4 @@ class FirebaseAuthenticationMiddleware(MiddlewareMixin):
             request.user = user
 
         except Exception as e:
-            return JsonResponse({'error': 'Token inválido o expirado', 'detail': str(e)}, status=401)
+            return JsonResponse({'error': 'Token inválido o expirado', 'detail': str(e)}, status=401) """
