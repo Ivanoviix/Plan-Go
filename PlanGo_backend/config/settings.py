@@ -57,12 +57,27 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.firebase_authentication.FirebaseAuthenticationMiddleware',
 ]
 
 MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200'
+]
+
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',  
+    'x-requested-with',
+]
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'DELETE',
+    'OPTIONS',  
 ]
 
 ROOT_URLCONF = 'config.urls'

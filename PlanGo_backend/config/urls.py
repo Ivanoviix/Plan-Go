@@ -22,5 +22,4 @@ urlpatterns = [
     path('users/', include('apps.users.urls')),
     path('itineraries/', include('apps.itineraries.urls')),
     path('expenses/', include('apps.expenses.urls')),
-
 ]

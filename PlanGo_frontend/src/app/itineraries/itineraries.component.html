@@ -1,0 +1,20 @@
+<div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="!errorMessage && itineraries.length > 0">
+    <h2>Lista de Itinerarios</h2>
+    <ul>
+      <li *ngFor="let itinerary of itineraries">
+        <h3>{{ itinerary.itinerary_name }}</h3>
+        <p>Creado por: {{ itinerary.creator_user }}</p>
+        <p>Fecha de creación: {{ itinerary.creation_date }}</p>
+        <p>Inicio: {{ itinerary.start_date }}</p>
+        <p>Fin: {{ itinerary.end_date }}</p>
+      </li>
+    </ul>
+  </div>
+  
+  <div *ngIf="!errorMessage && itineraries.length === 0">
+    <p>No hay itinerarios disponibles.</p>
+  </div>
