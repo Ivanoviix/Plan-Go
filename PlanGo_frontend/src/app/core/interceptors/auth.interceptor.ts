@@ -5,14 +5,11 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
-  const router = inject(Router); // Inyecta el Router para redirigir al usuario
+  const router = inject(Router) as Router;
 
   return next(req).pipe(
     catchError((error) => {
-      if (error.status === 401) {
-        // Redirige al usuario a la página de inicio de sesión
-        router.navigate(['/login']);
-      }
+      if (error.status === 401) router.navigate(['/login']);
       return throwError(() => error);
     })
   );
