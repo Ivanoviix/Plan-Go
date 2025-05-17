@@ -83,6 +83,7 @@ class LoginWithGoogleView(View):
             first_name, last_name = split_full_name(full_name)
             username = f"{first_name[0]}{last_name.split(" ")[0]}".lower()
             email = decoded_token['email']
+            print("HOLAAA", email)
             # Busca o crea el usuario en la base de datos de Django
             user, created = User.objects.get_or_create(
                 email=email,
