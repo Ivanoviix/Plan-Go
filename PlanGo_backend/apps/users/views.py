@@ -81,6 +81,7 @@ class LoginWithGoogleView(View):
             first_name, last_name = split_full_name(full_name)
             username = f"{first_name[0]}{last_name.split(" ")[0]}".lower()
             email = decoded_token['email']
+            print("HOLAAA", email)
             # Busca o crea el usuario en la base de datos de Django
             user, created = User.objects.get_or_create(
                 email=email,
@@ -103,3 +104,9 @@ class LoginWithGoogleView(View):
             print("Error en el backend:", str(e))
             return JsonResponse({'error': str(e)}, status=400)
         
+def get_userId_by_userUid(uid):
+    try:
+        user = User.objects.get(firebase_uid=uid)
+        return JsonResponse({'id': user.id})
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'Usuario no encontrado'}, status=404)

@@ -17,19 +17,25 @@ export class ItinerariesComponent implements OnInit {
   constructor(private itinerariesService: ItinerariesService) {}
 
   ngOnInit(): void {
-    this.fetchItineraries();
+    this.getItineraries();
   }
 
-  fetchItineraries(): void {
-    this.itinerariesService.getItineraries().subscribe({
-      next: (data: { itineraries: Itinerary[] }) => {
-        console.log('Datos recibidos:', data);
-        this.itineraries = data.itineraries;
-      },
-      error: (err: any) => {
-        console.error('Error al obtener itinerarios:', err);
-        this.errorMessage = 'No se pudieron cargar los itinerarios.';
-      },
-    });
+  async getItineraries(): Promise<void> {
+    try {
+      const observable = await this.itinerariesService.getItineraries();
+      observable.subscribe({
+        next: (data: { itineraries: Itinerary[] }) => {
+          console.log('Datos recibidos:', data);
+          this.itineraries = data.itineraries;
+        },
+        error: (err: any) => {
+          console.error('Error al obtener itinerarios:', err);
+          this.errorMessage = 'No se pudieron cargar los itinerarios.';
+        },
+      });
+    } catch (error) {
+      console.error('Error al obtener itinerarios:', error);
+      this.errorMessage = 'No se pudieron cargar los itinerarios.';
+    }
   }
 }
