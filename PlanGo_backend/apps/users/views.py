@@ -57,7 +57,7 @@ class RegisterView(View):
         
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginWithGoogleView(View):
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         try:
             # Obtén el token del encabezado Authorization
             auth_header = request.headers.get('Authorization')

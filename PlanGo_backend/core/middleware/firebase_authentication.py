@@ -7,6 +7,10 @@ User = get_user_model()
 
 class FirebaseAuthenticationMiddleware(MiddlewareMixin):
     def process_request(self, request):
+        # Permitir solicitudes OPTIONS
+        if request.method == 'OPTIONS':
+            return None
+
         # Excluir rutas públicas
         public_paths = ['/users/login-with-google/', '/users/register/']
         if request.path in public_paths:
