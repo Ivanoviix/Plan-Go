@@ -31,7 +31,7 @@ export class ItinerariesService extends BaseHttpService {
     const uid = decodedPayload?.user_id;
     if (!uid) throw new Error('UID not found in token');
   
-    const response: any = await this.httpClient.post(`${globals.apiBaseUrl}/users/get-id/`, { uid }).toPromise();
+    const response: any = await this.httpClient.post(`${globals.apiBaseUrl}/users/user/get_id`, { uid }).toPromise();
     return response.id;
   }
 

@@ -107,12 +107,17 @@ class LoginWithGoogleView(View):
             return JsonResponse({'error': str(e)}, status=400)
        
 
-def get_userId_by_userUid(request, uid):
-    try:
-        user = User.objects.get(firebase_uid=uid)
-        return JsonResponse({'id': user.id})
-    except User.DoesNotExist:
-        return JsonResponse({'error': 'Usuario no encontrado'}, status=404)    
+@csrf_exempt
+def get_userId_by_userUid(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        uid = data.get('uid')
+        try:
+            user = User.objects.get(firebase_uid=uid)
+            return JsonResponse({'id': user.id})
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 
 # PARTICIPANTS
