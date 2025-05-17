@@ -390,6 +390,578 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 31,
+  "fields": {
+    "action_time": "2025-05-14T19:21:01.021Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "1",
+    "object_repr": "gasto de prueba",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Destination\", \"<class 'apps.itineraries.models.destination.Destination'>\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 32,
+  "fields": {
+    "action_time": "2025-05-14T19:21:42.809Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "UserExpense object (3)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\", \"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 33,
+  "fields": {
+    "action_time": "2025-05-14T19:21:45.596Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "UserExpense object (3)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 34,
+  "fields": {
+    "action_time": "2025-05-14T19:22:04.131Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "UserExpense object (2)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\", \"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 35,
+  "fields": {
+    "action_time": "2025-05-14T19:22:07.164Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "UserExpense object (1)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 36,
+  "fields": {
+    "action_time": "2025-05-14T19:22:12.980Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "UserExpense object (1)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 37,
+  "fields": {
+    "action_time": "2025-05-14T19:22:24.330Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "UserExpense object (3)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\", \"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 38,
+  "fields": {
+    "action_time": "2025-05-14T19:22:28.597Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "UserExpense object (2)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 39,
+  "fields": {
+    "action_time": "2025-05-14T19:22:33.891Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "UserExpense object (1)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 40,
+  "fields": {
+    "action_time": "2025-05-14T19:22:41.196Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "UserExpense object (2)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 41,
+  "fields": {
+    "action_time": "2025-05-14T19:22:45.078Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "UserExpense object (1)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 42,
+  "fields": {
+    "action_time": "2025-05-14T19:22:47.189Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "UserExpense object (2)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 43,
+  "fields": {
+    "action_time": "2025-05-14T19:22:53.464Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "UserExpense object (2)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 44,
+  "fields": {
+    "action_time": "2025-05-14T19:40:23.394Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 45,
+  "fields": {
+    "action_time": "2025-05-14T19:40:52.583Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 46,
+  "fields": {
+    "action_time": "2025-05-14T19:41:32.301Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "UserExpense object (4)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 47,
+  "fields": {
+    "action_time": "2025-05-14T19:41:47.972Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "5",
+    "object_repr": "UserExpense object (5)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 48,
+  "fields": {
+    "action_time": "2025-05-14T19:54:09.328Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "1",
+    "object_repr": "CoffeShop",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Description\", \"Paid by user\", \"Paid by name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 49,
+  "fields": {
+    "action_time": "2025-05-14T19:54:25.536Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "1",
+    "object_repr": "CoffeShop",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Total amount\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 50,
+  "fields": {
+    "action_time": "2025-05-14T19:54:53.314Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "CoffeShop",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"User\", \"User name\", \"Amount paid\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 51,
+  "fields": {
+    "action_time": "2025-05-14T19:55:12.089Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"User\", \"User name\", \"Amount paid\", \"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 52,
+  "fields": {
+    "action_time": "2025-05-14T19:55:23.350Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "CoffeShop",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\", \"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 53,
+  "fields": {
+    "action_time": "2025-05-14T19:55:41.955Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "CoffeShop",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\", \"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 54,
+  "fields": {
+    "action_time": "2025-05-14T19:55:53.159Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "1",
+    "object_repr": "CoffeShop",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Paid by user\", \"Paid by name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 55,
+  "fields": {
+    "action_time": "2025-05-14T19:56:03.803Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "CoffeShop",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"User\", \"User name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 56,
+  "fields": {
+    "action_time": "2025-05-14T19:56:07.287Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "CoffeShop",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 57,
+  "fields": {
+    "action_time": "2025-05-15T21:04:39.077Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "2",
+    "object_repr": "Itinerary #2 by admin",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 58,
+  "fields": {
+    "action_time": "2025-05-15T21:16:49.455Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "3",
+    "object_repr": "Zúrich, Suiza",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Country\", \"City name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 59,
+  "fields": {
+    "action_time": "2025-05-16T20:08:45.073Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "1",
+    "object_repr": "CoffeShop",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Type expense\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 60,
+  "fields": {
+    "action_time": "2025-05-16T20:08:53.546Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "1",
+    "object_repr": "CoffeShop",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Type expense\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 61,
+  "fields": {
+    "action_time": "2025-05-16T20:08:59.239Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Type expense\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 62,
+  "fields": {
+    "action_time": "2025-05-16T20:10:14.402Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\", \"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 63,
+  "fields": {
+    "action_time": "2025-05-16T20:10:28.336Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 64,
+  "fields": {
+    "action_time": "2025-05-16T20:10:40.219Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 65,
+  "fields": {
+    "action_time": "2025-05-16T20:11:17.030Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Total amount\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 66,
+  "fields": {
+    "action_time": "2025-05-16T20:12:16.676Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 67,
+  "fields": {
+    "action_time": "2025-05-16T20:12:57.283Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "5",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 68,
+  "fields": {
+    "action_time": "2025-05-16T20:13:00.945Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Expected share\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 69,
+  "fields": {
+    "action_time": "2025-05-16T20:20:11.745Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Total amount\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 70,
+  "fields": {
+    "action_time": "2025-05-16T20:20:20.702Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 71,
+  "fields": {
+    "action_time": "2025-05-16T20:20:44.580Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Total amount\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 72,
+  "fields": {
+    "action_time": "2025-05-16T20:20:52.915Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 73,
+  "fields": {
+    "action_time": "2025-05-16T20:21:21.478Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 74,
+  "fields": {
+    "action_time": "2025-05-16T20:22:56.375Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "Billares y cervezas ROCKZ",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Amount paid\"]}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -1279,6 +1851,14 @@
 },
 {
   "model": "sessions.session",
+  "pk": "5l6zphhi18htyzs1sqnch0jbmx8o2889",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAURP-FtSG8Hy7d9xvIhQtSNZCUdmX8d9ukC13OnDPzJgG2tYZt5CXMSK6Ek8tvFyE9czsAPqDdO029rcsc6aHQkw46dcyv2-n-HVQYdV8zJbxHKYWXwLXXxmmlMEWWZLQi7sEljbp4dIkbBQUMiMyFilbawgz5fAG2lzcU:1uFfgU:NQS9TzJwvGhbRjDCLxpfQ_iJbaupgQFb0CzwAiwW1qo",
+    "expire_date": "2025-05-29T21:00:06.296Z"
+  }
+},
+{
+  "model": "sessions.session",
   "pk": "af5s3z8g4tzbwp4bxf42uv97njrvjzuz",
   "fields": {
     "session_data": ".eJxVjMsOwiAURP-FtSG8Hy7d9xvIhQtSNZCUdmX8d9ukC13OnDPzJgG2tYZt5CXMSK6Ek8tvFyE9czsAPqDdO029rcsc6aHQkw46dcyv2-n-HVQYdV8zJbxHKYWXwLXXxmmlMEWWZLQi7sEljbp4dIkbBQUMiMyFilbawgz5fAG2lzcU:1uEY9d:oWWNbfQ1QFWBAelPTKZcKa11INMCOcZwhguAFHHalFo",
@@ -1290,7 +1870,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$1000000$Aa6jAbpgnABLxT8nPURGJq$4LNSCSkRJ+4qJNeToT/o7Tr6I5QA3gwlhfQYVm11JYY=",
-    "last_login": "2025-05-12T18:45:33.059Z",
+    "last_login": "2025-05-15T21:00:06.284Z",
     "is_superuser": true,
     "username": "admin",
     "first_name": "",
@@ -1379,11 +1959,26 @@
   "model": "expenses.expense",
   "pk": 1,
   "fields": {
-    "description": "Este gasto es de prueba",
-    "total_amount": "100.00",
+    "destination": 1,
+    "description": "CoffeShop",
+    "total_amount": "60.00",
     "date": "2025-05-14",
     "paid_by_user": null,
-    "paid_by_name": "Tomeu"
+    "paid_by_name": "Ivan",
+    "type_expense": "Personalized"
+  }
+},
+{
+  "model": "expenses.expense",
+  "pk": 2,
+  "fields": {
+    "destination": 2,
+    "description": "Billares y cervezas ROCKZ",
+    "total_amount": "31.31",
+    "date": "2025-05-16",
+    "paid_by_user": 2,
+    "paid_by_name": null,
+    "type_expense": "Equalitarian"
   }
 },
 {
@@ -1393,8 +1988,9 @@
     "expense": 1,
     "user": null,
     "user_name": "Tomeu",
-    "amount_paid": "100.00",
-    "expected_share": "25.00"
+    "amount_paid": "0.00",
+    "expected_share": "0.00",
+    "debt": "0.00"
   }
 },
 {
@@ -1405,7 +2001,8 @@
     "user": 2,
     "user_name": null,
     "amount_paid": "0.00",
-    "expected_share": "50.00"
+    "expected_share": "30.00",
+    "debt": "0.00"
   }
 },
 {
@@ -1415,8 +2012,33 @@
     "expense": 1,
     "user": null,
     "user_name": "Ivan",
+    "amount_paid": "60.00",
+    "expected_share": "30.00",
+    "debt": "0.00"
+  }
+},
+{
+  "model": "expenses.userexpense",
+  "pk": 4,
+  "fields": {
+    "expense": 2,
+    "user": null,
+    "user_name": "Helentoxic",
     "amount_paid": "0.00",
-    "expected_share": "25.00"
+    "expected_share": "0.00",
+    "debt": "0.00"
+  }
+},
+{
+  "model": "expenses.userexpense",
+  "pk": 5,
+  "fields": {
+    "expense": 2,
+    "user": null,
+    "user_name": "Ivan",
+    "amount_paid": "0.00",
+    "expected_share": "0.00",
+    "debt": "0.00"
   }
 },
 {
@@ -1431,14 +2053,36 @@
   }
 },
 {
+  "model": "itineraries.itinerary",
+  "pk": 3,
+  "fields": {
+    "itinerary_name": "Viaje a Berlín",
+    "creator_user": 1,
+    "creation_date": "2025-05-20",
+    "start_date": "2025-05-21",
+    "end_date": "2025-05-25"
+  }
+},
+{
+  "model": "itineraries.itinerary",
+  "pk": 4,
+  "fields": {
+    "itinerary_name": "Viaje a Berlín",
+    "creator_user": 3,
+    "creation_date": "2025-05-20",
+    "start_date": "2025-05-21",
+    "end_date": "2025-05-25"
+  }
+},
+{
   "model": "itineraries.destination",
   "pk": 1,
   "fields": {
     "itinerary": 1,
     "country": "Holanda",
-    "city_name": "Amsterdam",
+    "city_name": "Potsdam",
     "start_date": "2025-05-14",
-    "end_date": "2025-05-15"
+    "end_date": "2025-05-24"
   }
 },
 {
@@ -1449,7 +2093,18 @@
     "country": "Alemania",
     "city_name": "Berlín",
     "start_date": "2025-05-16",
-    "end_date": "2025-05-17"
+    "end_date": "2025-05-24"
+  }
+},
+{
+  "model": "itineraries.destination",
+  "pk": 3,
+  "fields": {
+    "itinerary": 3,
+    "country": "Suiza",
+    "city_name": "Zúrich",
+    "start_date": "2025-05-21",
+    "end_date": "2025-05-23"
   }
 },
 {

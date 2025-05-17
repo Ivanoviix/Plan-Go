@@ -1,8 +1,17 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from .serializer import ItinerarySerializer, DestinationSerializer
 from apps.itineraries.models.itinerary import Itinerary
 from apps.itineraries.models.destination import Destination
-
+from apps.users.models.user import User
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods, require_POST
+from django.utils import timezone
+import json
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 # Create your views here.
 
 # ITINERARIOS
@@ -42,6 +51,43 @@ def get_itineraries_by_user(request, user_id):
     return JsonResponse({'itineraries': data})
 
 
+# Un decorador que indica que una vista no requiere validación CSRF (Cross-Site Request Forgery).
+@csrf_exempt
+@require_POST
+def create_itinerary2(request):
+    data = json.loads(request.body)
+    itinerary_name = data.get('itinerary_name')
+    creator_user_id = data.get('creator_user_id')
+    creation_date = data.get('creation_date')
+    start_date = data.get('start_date')
+    end_date = data.get('end_date')
+    
+    try:
+        creator_user = User.objects.get(id=creator_user_id)
+        itinerary = Itinerary.objects.create(
+            itinerary_name=itinerary_name,
+            creator_user=creator_user,
+            creation_date=creation_date,
+            start_date=start_date,
+            end_date=end_date
+        )
+        return JsonResponse({'success': True, 'itinerary_id': itinerary.itinerary_id})
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+        
+# OTRA OPCIÓN (MAS SEGURA CON SERIALIZER)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_itinerary(request):
+    serializer = ItinerarySerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 # DESTINOS
 def get_destinations(request):
@@ -66,7 +112,7 @@ def get_destinations_by_itinerary(request, itinerary_id):
         return JsonResponse({'error': 'No hay destinos creados con este usuario.'}, status=404)
     data = [
         {
-'itinerary_id': i.itinerary.itinerary_id if hasattr(i.itinerary, 'itinerary_id') else i.itinerary,            'country': i.country,
+            'itinerary_id': i.itinerary.itinerary_id if hasattr(i.itinerary, 'itinerary_id') else i.itinerary,            'country': i.country,
             'city_name': i.city_name,
             'start_date': i.start_date,
             'end_date': i.end_date,
@@ -74,3 +120,28 @@ def get_destinations_by_itinerary(request, itinerary_id):
         for i in destination
     ]
     return JsonResponse({'User destinations': data})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_destination(request):
+    serializer = DestinationSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_destination(request, destination_id):
+    try:
+        destination = Destination.objects.get(pk=destination_id)
+    except Destination.DoesNotExist:
+        return Response({'error': 'Destino no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+                                                                    # Actualizar un dato parcialmente (fechas del destino)
+    serializer = DestinationSerializer(destination, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

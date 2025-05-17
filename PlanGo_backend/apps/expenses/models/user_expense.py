@@ -1,5 +1,5 @@
 from django.db import models
-from .expense import Expense
+from apps.expenses.models.expense import Expense
 from apps.users.models.user import User
 
 class UserExpense(models.Model):
@@ -9,6 +9,7 @@ class UserExpense(models.Model):
     user_name = models.CharField(max_length=100, blank=True, null=True)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
     expected_share = models.DecimalField(max_digits=10, decimal_places=2)
+    debt = models.DecimalField(max_digits=10, decimal_places=2)
     
     class Meta:
         verbose_name = 'UserExpense'
