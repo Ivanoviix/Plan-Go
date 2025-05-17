@@ -20,7 +20,7 @@ export class ItinerariesService extends BaseHttpService {
 
   getItineraries(): Observable<any> {
     const headers = this.createHeaders();
-    return this.httpClient.get(`${globals.apiBaseUrl}/itinerary/`, { headers });
+    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/`, { headers });
   }
 
   private createHeaders(): HttpHeaders {
