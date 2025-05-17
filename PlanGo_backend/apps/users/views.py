@@ -10,6 +10,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from apps.users.service import split_full_name
 
+# USERS
 @method_decorator(csrf_exempt, name='dispatch')
 class RegisterView(View):
     def post(self, request):
@@ -54,6 +55,7 @@ class RegisterView(View):
         except Exception as e:
             print("Error en el backend:", str(e))
             return JsonResponse({'error': str(e)}, status=400)
+       
         
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginWithGoogleView(View):
@@ -103,10 +105,14 @@ class LoginWithGoogleView(View):
         except Exception as e:
             print("Error en el backend:", str(e))
             return JsonResponse({'error': str(e)}, status=400)
-        
-def get_userId_by_userUid(uid):
+       
+
+def get_userId_by_userUid(request, uid):
     try:
         user = User.objects.get(firebase_uid=uid)
         return JsonResponse({'id': user.id})
     except User.DoesNotExist:
-        return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
+        return JsonResponse({'error': 'Usuario no encontrado'}, status=404)    
+
+
+# PARTICIPANTS
