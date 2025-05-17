@@ -73,25 +73,13 @@ class LoginWithGoogleView(View):
             except Exception as e:
                 return JsonResponse({'error': 'Token inválido o expirado'}, status=401)
 
-            # Procesa los datos enviados desde el frontend
-            data = json.loads(request.body)
-            email = data.get('email')
-            first_name = data.get('first_name')
-            last_name = data.get('last_name')
-            profile_image = data.get('profile_image')
-            
-            email = decoded_token.get('email')
-            
-            if not email:
-                return JsonResponse({'error': 'No se pudo obtener el email del token de Google'}, status=400)
-
             # Si faltan nombre o apellidos, extraerlos desde Firebase
             firebase_user = auth.get_user(uid)
             full_name = firebase_user.display_name or ""
-            profile_image = profile_image or firebase_user.photo_url
+            profile_image = firebase_user.photo_url
             first_name, last_name = split_full_name(full_name)
             username = f"{first_name[0]}{last_name.split(" ")[0]}".lower()
-
+            email = decoded_token['email']
             # Busca o crea el usuario en la base de datos de Django
             user, created = User.objects.get_or_create(
                 email=email,
