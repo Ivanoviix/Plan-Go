@@ -1,0 +1,11 @@
+
+
+<div *ngIf="destinations.length > 0">
+  <h2>Destinos del itinerario</h2>
+  <ul>
+    <li *ngFor="let destination of destinations">
+      {{ destination.city_name }}, {{ destination.country }} {{ destination.start_date}} {{ destination.end_date}}
+    </li>
+  </ul>
+</div>
+<div *ngIf="errorMessage">{{ errorMessage }}</div>
