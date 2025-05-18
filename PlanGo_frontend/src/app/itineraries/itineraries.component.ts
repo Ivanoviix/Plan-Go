@@ -29,8 +29,8 @@ export class ItinerariesComponent implements OnInit {
           this.itineraries = data.itineraries;
         },
         error: (err: any) => {
-          console.error('Error al obtener itinerarios:', err);
           this.errorMessage = 'No se pudieron cargar los itinerarios.';
+          console.error('Error al obtener itinerarios:', err);
         },
       });
     } catch (error) {

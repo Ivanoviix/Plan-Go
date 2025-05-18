@@ -19,9 +19,12 @@ export class DestinationsComponent implements OnInit {
 
   constructor(private destinationService: DestinationService) {}
 
-ngOnInit(): void {
-  this.fetchDestinationsByItinerary(1); // PRUEBA CON itinerary_id 1
-}
+  ngOnInit(): void { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
+  if (this.selectedItineraryId !== null) {
+      this.fetchDestinationsByItinerary(this.selectedItineraryId);
+    }
+  }
+  
   fetchDestinationsByItinerary(itineraryId: number): void {
     this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
       next: (data: any) => {

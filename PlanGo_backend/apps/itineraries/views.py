@@ -99,7 +99,8 @@ def get_destinations(request):
         return JsonResponse({'error': 'No hay destinos creados'}, status=404)
     data = [
         {
-            'itinerary_id': i.itinerary.itinerary_id if hasattr(i.itinerary, 'itinerary_id') else i.itinerary,            'country': i.country,
+            'itinerary_id': i.itinerary.itinerary_id if hasattr(i.itinerary, 'itinerary_id') else i.itinerary,            
+            'country': i.country,
             'city_name': i.city_name,
             'start_date': i.start_date,
             'end_date': i.end_date,
@@ -115,7 +116,8 @@ def get_destinations_by_itinerary(request, itinerary_id):
         return JsonResponse({'error': 'No hay destinos creados con este usuario.'}, status=404)
     data = [
         {
-            'itinerary_id': i.itinerary.itinerary_id if hasattr(i.itinerary, 'itinerary_id') else i.itinerary,            'country': i.country,
+            'itinerary_id': i.itinerary.itinerary_id if hasattr(i.itinerary, 'itinerary_id') else i.itinerary,            
+            'country': i.country,
             'city_name': i.city_name,
             'start_date': i.start_date,
             'end_date': i.end_date,
