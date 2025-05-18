@@ -31,7 +31,7 @@
           <h1 class="text-4xl font-bold text-gray-800">Itinerarios</h1>
             <hr class="flex-grow border-black border-2 mt-4">
         </div>
-        <button class="add-itinerary h-12 bg-[#4c43ce] text-white px-4 py-2 rounded-full hover:bg-[#6c61ff] transition duration-300">
+        <button class="add-itinerary h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300">
           Añadir itinerario
         </button>
       </div>
@@ -41,7 +41,7 @@
       <div *ngIf="itineraries.length > 0" class=" mt-6">
         <ul>
           <li *ngFor="let itinerary of itineraries" class="my-3">
-            <div class="flex flex-row items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[#4c43ce] hover:bg-[#6c61ff] transition duration-300" (click)="goToDestinations(itinerary.itinerary_id)" style="cursor:pointer;">
+            <div class="flex flex-row items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300" (click)="goToDestinations(itinerary.itinerary_id)" style="cursor:pointer;">
                 <h3 class="text-lg text text-white w-[30%]">{{ itinerary.itinerary_name }}</h3>
                 <time class="text-lg text-white w-[40%] text-center" [attr.datetime]="itinerary.start_date">
                 {{ itinerary.start_date | date:'dd-MMMM-yyyy' }} - {{ itinerary.end_date | date:'dd-MMMM-yyyy' }}
