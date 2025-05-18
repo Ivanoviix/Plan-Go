@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from apps.expenses.models.expense import Expense
 from apps.expenses.models.user_expense import UserExpense
-from .serializer import ExpenseSerializer, UserExpenseSerializer
+from .serializer import ExpenseSerializer, UserExpenseSerializer, ExpenseWithNamesSerializer
 from apps.expenses.service import calculate_expected_share
 
 
@@ -172,3 +172,17 @@ def create_expense_with_users(request):
 #   ]
 # }
 
+
+def get_expenses_with_names(request):
+    expenses = Expense.objects.all()
+    serializer = ExpenseWithNamesSerializer(expenses, many=True)
+    return JsonResponse({'expenses': serializer.data})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_expenses_with_names_by_user(request):
+    user = request.user
+    expenses = Expense.objects.filter(paid_by_user=user)
+    serializer = ExpenseWithNamesSerializer(expenses, many=True)
+    return JsonResponse({'expenses': serializer.data})
