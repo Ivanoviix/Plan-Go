@@ -22,10 +22,10 @@ export class ItinerariesService extends BaseHttpService {
   async getIdUser(): Promise<number> {
   
     if (!isPlatformBrowser(this.platformId)) throw new Error('localStorage no está disponible en este entorno');
-    const token = localStorage.getItem(globals.keys.accessToken) || '';
+    let token = localStorage.getItem(globals.keys.accessToken) || '';
     if (!token) throw new Error('No token found in localStorage');
   
-    const payloadBase64 = token.split('.')[1];
+    let payloadBase64 = token.split('.')[1];
     if (!payloadBase64) throw new Error('Invalid token format');
   
     const decodedPayload = JSON.parse(atob(payloadBase64));
@@ -40,16 +40,14 @@ export class ItinerariesService extends BaseHttpService {
   }
 
   async getItineraries(): Promise<Observable<any>> {
-    const userId = await this.getIdUser();
-    const headers = this.createHeaders();
+    let userId = await this.getIdUser();
+    let headers = this.createHeaders();
     return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/${userId}`, { headers });
   }
 
   private createHeaders(): HttpHeaders {
     let token = '';
-    if (isPlatformBrowser(this.platformId)) {
-      token = localStorage.getItem(globals.keys.accessToken) || '';
-    }
+    if (isPlatformBrowser(this.platformId)) token = localStorage.getItem(globals.keys.accessToken) || '';
 
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,

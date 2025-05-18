@@ -1,22 +1,71 @@
-<div *ngIf="errorMessage" class="error">
-    {{ errorMessage }}
-  </div>
-  
-  <div *ngIf="!errorMessage && itineraries.length > 0">
-    <h2>Lista de Itinerarios</h2>
-    <ul>
-      <li *ngFor="let itinerary of itineraries">
-        <div (click)="goToDestinations(itinerary.itinerary_id)" style="cursor:pointer;">
+<!-- <div class="flex flex-row">
+  <app-header></app-header>
+  <div *ngIf="errorMessage" class="error">
+      {{ errorMessage }}
+    </div>
+    
+    <div *ngIf="!errorMessage && itineraries.length > 0">
+      <h2>Lista de Itinerarios</h2>
+      <ul>
+        <li *ngFor="let itinerary of itineraries">
           <h3>{{ itinerary.itinerary_name }}</h3>
           <p>Creado por: {{ itinerary.creator_user }}</p>
+          <p>Fecha de creación: {{ itinerary.creation_date }}</p>
           <p>Inicio: {{ itinerary.start_date }}</p>
           <p>Fin: {{ itinerary.end_date }}</p>
-          <p>{{ itinerary.destinations_count || 0 }}<strong>Destinos</strong></p>
+        </li>
+      </ul>
+    </div>
+    
+    <div *ngIf="!errorMessage && itineraries.length === 0">
+      <p>No hay itinerarios disponibles.</p>
+    </div>
+</div>
+ -->
+<div class="flex h-lvh">
+  <app-header class="w-16"></app-header>
+  <div class="flex flex-grow">
+    <section class="container w-[65%] p-8 pt-5">
+      <div class="itineraries-header w-auto h-20 flex flex-row justify-between items-center">
+        <div class="w-[30%]">
+          <h1 class="text-4xl font-bold text-gray-800">Itinerarios</h1>
+            <hr class="flex-grow border-black border-2 mt-4">
         </div>
-      </li>
-    </ul>
+        <button class="add-itinerary h-12 bg-[#4c43ce] text-white px-4 py-2 rounded-full hover:bg-[#9993f1] transition duration-300">
+          Añadir itinerario
+        </button>
+      </div>
+      <div *ngIf="itineraries.length == 0">
+        <p class="text-xl pl-3 my-4">No hay itinerarios creados. ¡Añade el primero!</p>
+      </div>
+      <div *ngIf="itineraries.length > 0" class=" mt-6">
+        <ul>
+          <li *ngFor="let itinerary of itineraries" class="my-3">
+            <div class="flex flex-row items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[#4c43ce] hover:bg-[#9993f1] transition duration-300" (click)="goToDestinations(itinerary.itinerary_id)" style="cursor:pointer;">
+                <h3 class="text-xl text-white w-[30%]">{{ itinerary.itinerary_name }}</h3>
+                <time class="text-xl text-white w-[40%] text-center" [attr.datetime]="itinerary.start_date">
+                {{ itinerary.start_date | date:'dd-MMMM-yyyy' }} - {{ itinerary.end_date | date:'dd-MMMM-yyyy' }}
+                </time>
+              <div class="flex flex-row items-center w-[30%] justify-end">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="size-8 mr-3">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                </svg>
+                <p class="text-xl text-white">{{ itinerary.destinations_count || 0 }} destinos</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="map w-[35%]">
+      <gmp-map 
+      [center]="center" 
+      [zoom]="zoom" 
+      [options]="mapOptions" 
+      style="height: 100%; width: 100%;">
+      </gmp-map>
+    </section>
   </div>
-  
-  <div *ngIf="!errorMessage && itineraries.length === 0">
-    <p>No hay itinerarios disponibles.</p>
-  </div>
+</div>
