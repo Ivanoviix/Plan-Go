@@ -1,5 +1,5 @@
 <div class="flex flex-row h-lvh">
-  <section id="background" class="bg-gray-200 w-[50%] h-full">
+  <section id="background" class="bg-[#4c43ce] w-[50%] h-full">
 
   </section>
   <section class="bg-white w-[50%] h-full flex items-center justify-center">
@@ -41,9 +41,9 @@
             <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
           </div>
         </div>
-        <button class="border border-black py-2 px-4 rounded-full w-full">Registrarse</button>
+        <button class="border bg-[#4c43ce] hover:bg-[#6c61ff] text-white py-2 px-4 rounded-full w-full">Registrarse</button>
       </form>
-      <p class="my-2">Ya tienes cuenta? <strong><button (click)="navigateToLogin()">Inicia sesión</button></strong></p>
+      <p class="my-2">Ya tienes cuenta? <strong><button class="text-[#4c43ce] hover:text-[#6c61ff]" (click)="navigateToLogin()">Inicia sesión</button></strong></p>
     </div>
   </section>
 </div>
