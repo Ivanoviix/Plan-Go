@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { RegisterService } from '../../core/services/register.service';
 
 @Component({
   standalone: true,
   selector: 'app-register',
   imports: [CommonModule, FormsModule, HttpClientModule],
-  templateUrl: './register.component.html'
+  templateUrl: './register.component.html',
 })
 export class RegisterComponent {
   email = '';
@@ -20,25 +20,23 @@ export class RegisterComponent {
   repeatPassword = '';
   errorMessage = '';
 
-  constructor(private auth: Auth, private http: HttpClient, private router: Router) {}
+  constructor(private auth: Auth, private router: Router, private registerService: RegisterService) {}
 
   async register() {
     try {
       const userCredential = await createUserWithEmailAndPassword(this.auth, this.email, this.password);
       const firebaseUser = userCredential.user;
       const idToken = await firebaseUser.getIdToken(); // Obtén el token de Firebase
-  
+
       const payload = {
         email: this.email,
         first_name: this.firstName,
         last_name: this.lastName,
+        username: `${this.firstName[0].toLowerCase()}${this.lastName.split(' ')[0].toLowerCase()}`, // Generar username
+        firebase_uid: firebaseUser.uid
       };
-  
-      this.http.post('http://localhost:8000/users/register/', payload, {
-        headers: {
-          Authorization: `Bearer ${idToken}`
-        }
-      }).subscribe({
+
+      this.registerService.registerUser(idToken, payload).subscribe({
         next: (rs) => {
           console.log('Usuario registrado en Django:', rs);
           this.router.navigate(['/login']);
