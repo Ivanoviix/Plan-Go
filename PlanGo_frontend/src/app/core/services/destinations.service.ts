@@ -28,6 +28,13 @@ export class DestinationService extends BaseHttpService {
     const headers = this.createHeaders();
     return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/destination/${itineraryId}/`, { headers });
   }
+
+  getDestinationSummary(destinationId: number): Observable<any> {
+    const headers = this.createHeaders(); // Si necesitas autenticación
+    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/destination/${destinationId}/summary/`, { headers });
+  }
+
+
   private createHeaders(): HttpHeaders {
     let token = '';
     if (isPlatformBrowser(this.platformId)) {

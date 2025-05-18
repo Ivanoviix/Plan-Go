@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import get_itineraries, get_itineraries_by_user, get_destinations, get_destinations_by_itinerary, create_destination, update_destination, create_itinerary
+from .views import get_itineraries, get_itineraries_by_user, get_destinations, get_destinations_by_itinerary, create_destination, update_destination, create_itinerary, destination_summary
 
 urlpatterns = [
     # ITINERARIES
@@ -12,5 +12,6 @@ urlpatterns = [
     path('destination/<int:itinerary_id>/', get_destinations_by_itinerary, name='get_destinations_by_itinerary'),
     path('destination/create/', create_destination, name='create_destination'),
     path('destination/update/<int:destination_id>/', update_destination, name='update_destination'),
+    path('destination/<int:destination_id>/summary/', destination_summary, name='destination_summary'),
 
 ]

@@ -3,18 +3,24 @@ from django.http import JsonResponse
 from .serializer import ItinerarySerializer, DestinationSerializer
 from apps.itineraries.models.itinerary import Itinerary
 from apps.itineraries.models.destination import Destination
+from apps.places.models.accommodation import Accommodation
+from apps.places.models.activity import Activity
+from apps.places.models.restaurant import Restaurant
+from apps.expenses.models.expense import Expense
 from apps.users.models.user import User
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods, require_POST
 from django.utils import timezone
-import json
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils.decorators import method_decorator
 from django.views import View
-
+from django.http import JsonResponse
+from django.db.models import Sum
+from django.db import models
+import json
 # Create your views here.
         
 # ITINERARIOS
@@ -99,6 +105,7 @@ def get_destinations(request):
         return JsonResponse({'error': 'No hay destinos creados'}, status=404)
     data = [
         {
+            'destination_id': i.id,
             'itinerary_id': i.itinerary.itinerary_id if hasattr(i.itinerary, 'itinerary_id') else i.itinerary,            
             'country': i.country,
             'city_name': i.city_name,
@@ -116,6 +123,7 @@ def get_destinations_by_itinerary(request, itinerary_id):
         return JsonResponse({'error': 'No hay destinos creados con este usuario.'}, status=404)
     data = [
         {
+            'destination_id': i.id,
             'itinerary_id': i.itinerary.itinerary_id if hasattr(i.itinerary, 'itinerary_id') else i.itinerary,            
             'country': i.country,
             'city_name': i.city_name,
@@ -123,6 +131,7 @@ def get_destinations_by_itinerary(request, itinerary_id):
             'end_date': i.end_date,
         }
         for i in destination
+
     ]
     return JsonResponse({'User destinations': data})
 
@@ -150,3 +159,18 @@ def update_destination(request, destination_id):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def destination_summary(request, destination_id):
+    accommodations_count = Accommodation.objects.filter(destination_id=destination_id).count()
+    activities_count = Activity.objects.filter(destination_id=destination_id).count()
+    restaurants_count = Restaurant.objects.filter(destination_id=destination_id).count()
+    expenses = Expense.objects.filter(destination_id=destination_id)
+    total_expenses = expenses.aggregate(total=models.Sum('total_amount'))['total'] or 0
+
+    return JsonResponse({
+        'accommodations_count': accommodations_count,
+        'activities_count': activities_count,
+        'restaurants_count': restaurants_count,
+        'total_expenses': float(total_expenses),
+    })
