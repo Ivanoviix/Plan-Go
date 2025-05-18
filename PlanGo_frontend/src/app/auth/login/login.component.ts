@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms'; // Importa FormsModule
+import { LoginService } from '../../core/services/login.service'; // Importa el servicio
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { globals } from '../../core/globals';
 
 @Component({
   standalone: true,
   selector: 'app-login',
-  imports: [FormsModule, CommonModule], // Agrega FormsModule aquí
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
@@ -17,26 +17,21 @@ export class LoginComponent {
   email = '';
   password = '';
 
-  constructor(private auth: Auth, private router: Router, private http: HttpClient) {}
+  constructor(private auth: Auth, private router: Router, private loginService: LoginService) {}
 
   async loginWithGoogle() {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(this.auth, provider);
       const firebaseUser = result.user;
-      const idToken = await firebaseUser.getIdToken(); // Obtén el token de Firebase
-  
-      localStorage.setItem('authToken', idToken); // Guarda el token en localStorage
-  
-      // Envía el token al backend para autenticar al usuario
-      this.http.post(`${globals.apiBaseUrl}/users/login-with-google/`, {}, {
-        headers: {
-          Authorization: `Bearer ${idToken}`,
-        },
-      }).subscribe({
+      const idToken = await firebaseUser.getIdToken();
+
+      localStorage.setItem('authToken', idToken);
+
+      this.loginService.loginWithGoogle(idToken).subscribe({
         next: () => {
           console.log('Usuario autenticado en el backend');
-          this.router.navigate(['/itineraries']); // Redirige a itinerarios
+          this.router.navigate(['/itineraries']);
         },
         error: (err) => {
           console.error('Error al autenticar usuario en el backend:', err);
@@ -51,8 +46,24 @@ export class LoginComponent {
 
   async login() {
     try {
-      await signInWithEmailAndPassword(this.auth, this.email, this.password);
-      this.router.navigate(['/register']);
+      const result = await signInWithEmailAndPassword(this.auth, this.email, this.password);
+      const firebaseUser = result.user;
+      const idToken = await firebaseUser.getIdToken();
+  
+      // Guarda el token en localStorage
+      localStorage.setItem(globals.keys.accessToken, idToken);
+  
+      // Llama al servicio para autenticar con el backend
+      this.loginService.loginWithEmail(idToken).subscribe({
+        next: () => {
+          console.log('Usuario autenticado en el backend');
+          this.router.navigate(['/itineraries']);
+        },
+        error: (err) => {
+          console.error('Error al autenticar usuario en el backend:', err);
+          this.errorMessage = 'Error al autenticar usuario. Inténtalo de nuevo.';
+        },
+      });
     } catch (error: any) {
       console.error('Error al iniciar sesión:', error);
       this.errorMessage = error.message;
@@ -62,5 +73,4 @@ export class LoginComponent {
   navigateToRegister() {
     this.router.navigate(['/register']);
   }
-
 }
