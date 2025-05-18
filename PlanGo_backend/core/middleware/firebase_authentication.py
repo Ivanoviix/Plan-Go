@@ -1,4 +1,4 @@
-""" from django.utils.deprecation import MiddlewareMixin
+from django.utils.deprecation import MiddlewareMixin
 from config.firebase_config import auth
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
@@ -13,6 +13,8 @@ class FirebaseAuthenticationMiddleware(MiddlewareMixin):
 
         # Excluir rutas públicas
         public_paths = ['/users/login-with-google/', '/users/register/']
+        if request.path.startswith('/admin/'):
+            return None
         if request.path in public_paths:
             return None
 
@@ -41,4 +43,4 @@ class FirebaseAuthenticationMiddleware(MiddlewareMixin):
             request.user = user
 
         except Exception as e:
-            return JsonResponse({'error': 'Token inválido o expirado', 'detail': str(e)}, status=401) """
+            return JsonResponse({'error': 'Token inválido o expirado', 'detail': str(e)}, status=401)

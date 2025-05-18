@@ -49,9 +49,6 @@ def get_expenses_by_destination(request, destination_id):
         }
         for i in destexpenses
     ]
-    print(destexpenses.exists())
-    print(destexpenses)
-    print(data)
     return JsonResponse({'destination expenses': data})
         
     
@@ -179,10 +176,12 @@ def get_expenses_with_names(request):
     return JsonResponse({'expenses': serializer.data})
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
 def get_expenses_with_names_by_user(request):
     user = request.user
+    if not user or not user.is_authenticated:
+        return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
     expenses = Expense.objects.filter(paid_by_user=user)
     serializer = ExpenseWithNamesSerializer(expenses, many=True)
     return JsonResponse({'expenses': serializer.data})

@@ -6,7 +6,7 @@ urlpatterns = [
     path('expenses/', get_expenses, name='get_expenses'),
     path('expense/destination/<int:destination_id>/', get_expenses_by_destination, name='get_expenses_by_destination'),
     path('expenses/expense/', get_expenses_with_names, name='get_expenses_with_names'),
-    path('expenses/expense/user/', get_expenses_with_names_by_user, name='get_expenses_with_names_by_user'),
+    path('expense/user/', get_expenses_with_names_by_user, name='get_expenses_with_names_by_user'),
 
     # USER EXPENSES
     path('user-expenses/', get_user_expenses, name='get_user_expenses'),
