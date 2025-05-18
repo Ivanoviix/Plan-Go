@@ -4,10 +4,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.shortcuts import render
 from django.http import JsonResponse
-from apps.expenses.models.expense import Expense
-from apps.expenses.models.user_expense import UserExpense
 from .serializer import ExpenseSerializer, UserExpenseSerializer, ExpenseWithNamesSerializer
 from apps.expenses.service import calculate_expected_share
+from apps.expenses.models.expense import Expense
+from apps.expenses.models.user_expense import UserExpense
+
+
 
 
 # Create your views here.
@@ -185,3 +187,5 @@ def get_expenses_with_names_by_user(request):
     expenses = Expense.objects.filter(paid_by_user=user)
     serializer = ExpenseWithNamesSerializer(expenses, many=True)
     return JsonResponse({'expenses': serializer.data})
+
+

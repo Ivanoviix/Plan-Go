@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ItinerariesService } from '../core/services/itineraries.service'; // Ruta corregida
 import { Itinerary } from './interfaces/itinerary.interface'; 
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
 
 @Component({
   standalone: true,
@@ -14,7 +16,7 @@ export class ItinerariesComponent implements OnInit {
   itineraries: Itinerary[] = [];
   errorMessage: string = '';
 
-  constructor(private itinerariesService: ItinerariesService) {}
+constructor(private itinerariesService: ItinerariesService, private router: Router) {}
 
   ngOnInit(): void {
     this.getItineraries();
@@ -37,5 +39,9 @@ export class ItinerariesComponent implements OnInit {
       console.error('Error al obtener itinerarios:', error);
       this.errorMessage = 'No se pudieron cargar los itinerarios.';
     }
+  }
+
+  goToDestinations(itineraryId: number): void {
+    this.router.navigate(['/destinations', itineraryId]);
   }
 }
