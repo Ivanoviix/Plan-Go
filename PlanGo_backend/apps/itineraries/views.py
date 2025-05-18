@@ -36,9 +36,11 @@ def get_itineraries(request):
             'creation_date': i.creation_date,
             'start_date': i.start_date,
             'end_date': i.end_date,
+            'destinations_count': i.destinations.count(),
         }
         for i in itineraries
     ]
+    print("PEPITO", data)
     return JsonResponse({'itineraries': data})
     
     
@@ -54,9 +56,11 @@ def get_itineraries_by_user(request, user_id):
             'creation_date': i.creation_date,
             'start_date': i.start_date,
             'end_date': i.end_date,
+            'destinations_count': i.destinations.count(),
         }
         for i in itineraries
     ]
+    print("PEPITA", data)
     return JsonResponse({'itineraries': data})
 
 
