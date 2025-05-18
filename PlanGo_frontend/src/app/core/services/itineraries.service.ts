@@ -21,33 +21,29 @@ export class ItinerariesService extends BaseHttpService {
 
   async getIdUser(): Promise<number> {
     if (!isPlatformBrowser(this.platformId)) throw new Error('localStorage no está disponible en este entorno');
-    const token = localStorage.getItem(globals.keys.accessToken) || '';
+    let token = localStorage.getItem(globals.keys.accessToken) || '';
     if (!token) throw new Error('No token found in localStorage');
   
-    const payloadBase64 = token.split('.')[1];
+    let payloadBase64 = token.split('.')[1];
     if (!payloadBase64) throw new Error('Invalid token format');
   
-    const decodedPayload = JSON.parse(atob(payloadBase64));
-    const uid = decodedPayload?.user_id;
+    let decodedPayload = JSON.parse(atob(payloadBase64));
+    let uid = decodedPayload?.user_id;
     if (!uid) throw new Error('UID not found in token');
   
-    const response: any = await this.httpClient.post(`${globals.apiBaseUrl}/users/user/get_id`, { uid }).toPromise();
+    let response: any = await this.httpClient.post(`${globals.apiBaseUrl}/users/user/get_id`, { uid }).toPromise();
     return response.id;
   }
 
   async getItineraries(): Promise<Observable<any>> {
-    debugger
-    const userId = await this.getIdUser();
-    console.log("aaaaaa", userId);
-    const headers = this.createHeaders();
+    let userId = await this.getIdUser();
+    let headers = this.createHeaders();
     return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/${userId}`, { headers });
   }
 
   private createHeaders(): HttpHeaders {
     let token = '';
-    if (isPlatformBrowser(this.platformId)) {
-      token = localStorage.getItem(globals.keys.accessToken) || '';
-    }
+    if (isPlatformBrowser(this.platformId)) token = localStorage.getItem(globals.keys.accessToken) || '';
 
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
