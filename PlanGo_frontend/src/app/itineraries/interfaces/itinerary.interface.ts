@@ -5,4 +5,5 @@ export interface Itinerary {
     creation_date: string;
     start_date: Date;
     end_date: Date;
-  }
+    destinations_count?: number;
+}

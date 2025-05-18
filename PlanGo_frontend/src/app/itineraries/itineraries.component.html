@@ -11,6 +11,7 @@
           <p>Creado por: {{ itinerary.creator_user }}</p>
           <p>Inicio: {{ itinerary.start_date }}</p>
           <p>Fin: {{ itinerary.end_date }}</p>
+          <p>{{ itinerary.destinations_count || 0 }}<strong>Destinos</strong></p>
         </div>
       </li>
     </ul>
