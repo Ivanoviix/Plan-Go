@@ -1,13 +1,16 @@
-<div *ngIf="expenses.length > 0">
-  <h2>Mis gastos</h2>
-  <ul>
-    <li *ngFor="let expense of expenses">
-      Itinerario: {{ expense.itinerary_name }}<br>
-      Destino: {{ expense.destination_name }}<br>
-      Descripción: {{ expense.description }}<br>
-      Total: {{ expense.total_amount }}<br>
-      Fecha: {{ expense.date }}
-    </li>
-  </ul>
+<div class="flex flex-row">
+  <app-header class="w-16"></app-header>
+  <div *ngIf="expenses.length > 0">
+    <h2>Mis gastos</h2>
+    <ul>
+      <li *ngFor="let expense of expenses">
+        Itinerario: {{ expense.itinerary_name }}<br>
+        Destino: {{ expense.destination_name }}<br>
+        Descripción: {{ expense.description }}<br>
+        Total: {{ expense.total_amount }}<br>
+        Fecha: {{ expense.date }}
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="errorMessage">{{ errorMessage }}</div>
 </div>
-<div *ngIf="errorMessage">{{ errorMessage }}</div>
