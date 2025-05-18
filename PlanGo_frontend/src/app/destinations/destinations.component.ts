@@ -4,13 +4,14 @@ import { Destination } from './interfaces/destinations.interface';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   standalone: true,
   selector: 'app-destinations',
   templateUrl: './destinations.component.html',
   styleUrl: './destinations.component.css',
-  imports: [CommonModule, FormsModule], 
+  imports: [CommonModule, FormsModule, HeaderComponent], 
 
 })
 export class DestinationsComponent implements OnInit {

@@ -1,22 +1,25 @@
-<div *ngIf="destinations.length > 0">
-  <h2>Destinos del itinerario</h2>
-  <ul>
-    <div *ngIf="destinations.length > 0" style="background:#e3e3e3;padding:1em;margin-bottom:1em;border-radius:8px;">
-      <strong>Gasto total de todos los destinos:</strong>
-        {{ getTotalExpenses() | currency:'EUR' }}
-    </div>
-
-    <li *ngFor="let destination of destinations">
-      <span>{{ destination.city_name }}, {{ destination.country }}</span>
-      <span> | {{ destination.start_date }} - {{ destination.end_date }}</span>
-      <ng-container *ngIf="summary && summary[destination.destination_id]">
-        <span> | Alojamientos: {{ summary[destination.destination_id].accommodations_count }}</span>
-        <span> | Restaurantes: {{ summary[destination.destination_id].restaurants_count }}</span>
-        <span> | Actividades: {{ summary[destination.destination_id].activities_count }}</span>
-        <span> | Total gastos: {{ summary[destination.destination_id].total_expenses | currency:'EUR' }}</span>
-      </ng-container>
-      <button (click)="fetchDestinationSummary(destination.destination_id)">Ver resumen</button>
-    </li>
-  </ul>
+<div class="flex flex-row">
+  <app-header></app-header>
+  <div *ngIf="destinations.length > 0">
+    <h2>Destinos del itinerario</h2>
+    <ul>
+      <div *ngIf="destinations.length > 0" style="background:#e3e3e3;padding:1em;margin-bottom:1em;border-radius:8px;">
+        <strong>Gasto total de todos los destinos:</strong>
+          {{ getTotalExpenses() | currency:'EUR' }}
+      </div>
+  
+      <li *ngFor="let destination of destinations">
+        <span>{{ destination.city_name }}, {{ destination.country }}</span>
+        <span> | {{ destination.start_date }} - {{ destination.end_date }}</span>
+        <ng-container *ngIf="summary && summary[destination.destination_id]">
+          <span> | Alojamientos: {{ summary[destination.destination_id].accommodations_count }}</span>
+          <span> | Restaurantes: {{ summary[destination.destination_id].restaurants_count }}</span>
+          <span> | Actividades: {{ summary[destination.destination_id].activities_count }}</span>
+          <span> | Total gastos: {{ summary[destination.destination_id].total_expenses | currency:'EUR' }}</span>
+        </ng-container>
+        <button (click)="fetchDestinationSummary(destination.destination_id)">Ver resumen</button>
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="errorMessage">{{ errorMessage }}</div>
 </div>
-<div *ngIf="errorMessage">{{ errorMessage }}</div>
