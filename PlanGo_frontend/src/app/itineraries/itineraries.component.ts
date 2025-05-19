@@ -6,7 +6,6 @@ import { HeaderComponent } from '../header/header.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { Router } from '@angular/router';
 
-
 @Component({
   standalone: true,
   selector: 'app-itineraries',
@@ -24,7 +23,7 @@ export class ItinerariesComponent implements OnInit {
     mapId: 'DEMO_MAP_ID',
     disableDefaultUI: true,
   };
-  map!: google.maps.Map;
+  
 
 constructor(private itinerariesService: ItinerariesService, private router: Router) {}
 
