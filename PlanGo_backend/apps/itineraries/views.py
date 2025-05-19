@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .serializer import ItinerarySerializer, DestinationSerializer
+from .serializer import ItinerarySerializer, DestinationSerializer, FormItinerarySerializer
 from apps.itineraries.models.itinerary import Itinerary
 from apps.itineraries.models.destination import Destination
 from apps.places.models.accommodation import Accommodation
@@ -40,7 +40,6 @@ def get_itineraries(request):
         }
         for i in itineraries
     ]
-    print("PEPITO", data)
     return JsonResponse({'itineraries': data})
     
     
@@ -60,7 +59,6 @@ def get_itineraries_by_user(request, user_id):
         }
         for i in itineraries
     ]
-    print("PEPITA", data)
     return JsonResponse({'itineraries': data})
 
 
@@ -94,7 +92,7 @@ def create_itinerary2(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_itinerary(request):
-    serializer = ItinerarySerializer(data=request.data)
+    serializer = FormItinerarySerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -48,11 +48,12 @@ constructor(private destinationService: DestinationService, private route: Activ
   });
 }
   getTotalExpenses(): number {
-      return this.destinations.reduce((sum, dest) => {
-        const resumen = this.summary[dest.destination_id];
-        return sum + (resumen ? resumen.total_expenses || 0 : 0);
-      }, 0);
-    }
+    return this.destinations.reduce((sum, dest) => {
+      const resumen = this.summary[dest.destination_id];
+      return sum + (resumen ? resumen.total_expenses || 0 : 0);
+    }, 0);
+  }
+
   fetchDestinationSummary(destinationId: number): void {
     this.destinationService.getDestinationSummary(destinationId).subscribe({
       next: (data: any) => {

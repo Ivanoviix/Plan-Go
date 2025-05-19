@@ -8,11 +8,10 @@ import {globals} from '../globals';
 export class ExpensesService {
   private apiUrl = `${globals.apiBaseUrl}/expenses/expense/user/`;
 
-  constructor(
-    
-    private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  constructor( 
+    private http: HttpClient, 
+    @Inject(PLATFORM_ID) private platformId: Object) {}
+
   private createHeaders(): HttpHeaders {
     
     let token = '';
