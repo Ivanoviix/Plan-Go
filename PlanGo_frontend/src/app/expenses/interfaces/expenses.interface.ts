@@ -1,5 +1,6 @@
-export interface Itinerary {
+export interface Expenses {
     expense_id: number;
+    itinerary_id: number;
     destination: string;
     description: string;
     total_amount: number;
@@ -7,4 +8,5 @@ export interface Itinerary {
     paid_by_user: number;
     paid_by_name: string;
     type_expense: string;
+    itinerary_name: string;
   }
