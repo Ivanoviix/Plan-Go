@@ -5,26 +5,19 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { Router } from '@angular/router';
-
+import { MapComponent } from '../map/map.component';
 
 @Component({
   standalone: true,
   selector: 'app-itineraries',
   templateUrl: './itineraries.component.html',
   styleUrls: ['./itineraries.component.css'],
-  imports: [CommonModule, HeaderComponent, GoogleMapsModule], 
+  imports: [CommonModule, HeaderComponent, GoogleMapsModule, MapComponent], 
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ItinerariesComponent implements OnInit {
   itineraries: Itinerary[] = [];
-  errorMessage: string = '';
-  center = { lat: 39.720007, lng: 2.910419 };
-  zoom = 13;
-  mapOptions: google.maps.MapOptions = {
-    mapId: 'DEMO_MAP_ID',
-    disableDefaultUI: true,
-  };
-  map!: google.maps.Map;
+  errorMessage: string = '';  
 
 constructor(private itinerariesService: ItinerariesService, private router: Router) {}
 
