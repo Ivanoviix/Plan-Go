@@ -35,6 +35,10 @@ export class ExpensesComponent implements OnInit {
     });
   }
 
+  getTotalExpenses(): number {
+    return this.expenses.reduce((sum, expense) => sum + parseFloat(expense.total_amount as any || '0'), 0)
+  }
+
   goToDestinations(itineraryId: number): void {
     this.router.navigate(['/destinations', itineraryId]);
   }

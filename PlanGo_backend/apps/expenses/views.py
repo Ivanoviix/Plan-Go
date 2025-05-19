@@ -7,7 +7,10 @@ from django.http import JsonResponse
 from .serializer import ExpenseSerializer, UserExpenseSerializer, ExpenseWithNamesSerializer
 from apps.expenses.service import calculate_expected_share
 from apps.expenses.models.expense import Expense
+from apps.itineraries.models.itinerary import Itinerary
 from apps.expenses.models.user_expense import UserExpense
+from django.db.models import Q
+
 
 
 
@@ -70,7 +73,7 @@ def get_user_expenses(request):
             'debt': i.debt,
         }
         for i in user_expenses
-    ]
+    ]   
     return JsonResponse({'user expenses': data})
     
 
@@ -90,7 +93,7 @@ def get_user_expenses_by_expense_id(request, expense_id):
 
         }
         for i in user_expenses
-    ]
+    ]    
     return JsonResponse({'user expenses': data})
 
 
@@ -182,9 +185,13 @@ def get_expenses_with_names(request):
 # @permission_classes([IsAuthenticated])
 def get_expenses_with_names_by_user(request):
     user = request.user
+    print(request.user)
     if not user or not user.is_authenticated:
         return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
-    expenses = Expense.objects.filter(paid_by_user=user)
+    
+    itineraries = Itinerary.objects.filter(creator_user=user)
+    expenses = Expense.objects.filter(destination__itinerary__in=itineraries).distinct()
+    print("HOlaaaa", expenses)
     serializer = ExpenseWithNamesSerializer(expenses, many=True)
     return JsonResponse({'expenses': serializer.data})
 
