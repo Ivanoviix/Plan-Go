@@ -1,25 +1,41 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ExpensesService } from '../core/services/expenses.service';
+import { Expenses } from './interfaces/expenses.interface';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-expenses',
   standalone: true,
+  selector: 'app-expenses',
   templateUrl: './expenses.component.html',
   styleUrl: './expenses.component.css',
-  imports: [CommonModule, HeaderComponent], 
+  imports: [CommonModule, HeaderComponent, GoogleMapsModule], 
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], 
 })
-export class ExpensesComponent implements OnInit {
-  expenses: any[] = [];
-  errorMessage = '';
 
-  constructor(private expensesService: ExpensesService) {}
+export class ExpensesComponent implements OnInit {
+  expenses: Expenses[] = [];
+  errorMessage: string = '';
+  center = { lat: 39.720007, lng: 2.910419 };
+  zoom = 13;
+  mapOptions: google.maps.MapOptions = {
+    mapId: 'DEMO_MAP_ID',
+    disableDefaultUI: true,
+  };
+  map!: google.maps.Map;
+
+  constructor(private expensesService: ExpensesService, private router: Router) {}
 
   ngOnInit(): void {
     this.expensesService.getExpensesByLoggedUser().subscribe({
       next: (data) => this.expenses = data.expenses,
       error: (err) => this.errorMessage = 'No se pudieron cargar los gastos.'
     });
+  }
+
+  goToDestinations(itineraryId: number): void {
+    this.router.navigate(['/destinations', itineraryId]);
   }
 }
