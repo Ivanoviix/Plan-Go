@@ -3,12 +3,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views import View
 from apps.users.models.user import User
+from .serializer import ParticipantSerializer
 import json
 from firebase_admin import auth
 from config.firebase_config import *
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from apps.users.service import split_full_name
+from rest_framework.response import Response
 
 # USERS
 @method_decorator(csrf_exempt, name='dispatch')
@@ -144,6 +146,7 @@ class LoginWithEmailView(View):
 def get_userId_by_userUid(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        print(data)
         uid = data.get('uid')
         try:
             user = User.objects.get(firebase_uid=uid)
@@ -154,3 +157,16 @@ def get_userId_by_userUid(request):
 
 
 # PARTICIPANTS
+@csrf_exempt
+def create_participant(request):
+    if request.method == 'POST':
+            try:
+                data = json.loads(request.body)
+                serializer = ParticipantSerializer(data=data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return JsonResponse(serializer.data, status=201)
+                return JsonResponse({'error': serializer.errors}, status=400)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=400)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)

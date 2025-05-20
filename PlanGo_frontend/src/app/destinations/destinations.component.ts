@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DestinationService } from '../core/services/destinations.service';
+import { ParticipantsComponent } from '../participants/participants.component';
 import { Destination } from './interfaces/destinations.interface'; 
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -11,7 +12,7 @@ import { HeaderComponent } from '../header/header.component';
   selector: 'app-destinations',
   templateUrl: './destinations.component.html',
   styleUrl: './destinations.component.css',
-  imports: [CommonModule, FormsModule, HeaderComponent], 
+  imports: [CommonModule, FormsModule, HeaderComponent, ParticipantsComponent], 
 
 })
 export class DestinationsComponent implements OnInit {
