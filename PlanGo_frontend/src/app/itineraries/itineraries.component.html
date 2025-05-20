@@ -1,27 +1,3 @@
-<!-- <div class="flex flex-row">
-  <app-header></app-header>
-  <div *ngIf="errorMessage" class="error">
-      {{ errorMessage }}
-    </div>
-    
-    <div *ngIf="!errorMessage && itineraries.length > 0">
-      <h2>Lista de Itinerarios</h2>
-      <ul>
-        <li *ngFor="let itinerary of itineraries">
-          <h3>{{ itinerary.itinerary_name }}</h3>
-          <p>Creado por: {{ itinerary.creator_user }}</p>
-          <p>Fecha de creación: {{ itinerary.creation_date }}</p>
-          <p>Inicio: {{ itinerary.start_date }}</p>
-          <p>Fin: {{ itinerary.end_date }}</p>
-        </li>
-      </ul>
-    </div>
-    
-    <div *ngIf="!errorMessage && itineraries.length === 0">
-      <p>No hay itinerarios disponibles.</p>
-    </div>
-</div>
- -->
 <div class="flex h-lvh">
   <app-header class="w-16"></app-header>
   <div class="flex flex-grow">
@@ -29,23 +5,26 @@
       <div class="itineraries-header w-auto h-20 flex flex-row justify-between items-center">
         <div class="w-[30%]">
           <h1 class="text-4xl font-bold text-gray-800">Itinerarios</h1>
-            <hr class="flex-grow border-black border-2 mt-4">
+          <hr class="flex-grow border-black border-2 mt-4">
         </div>
-        <button class="add-itinerary h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300">
+        <button 
+          (click)="toggleForm()"
+          class="add-itinerary h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300">
           Añadir itinerario
         </button>
       </div>
+
       <div *ngIf="itineraries.length == 0">
         <p class="text-xl pl-3 my-4">No hay itinerarios creados. ¡Añade el primero!</p>
       </div>
-      <div *ngIf="itineraries.length > 0" class=" mt-6">
+      <div *ngIf="itineraries.length > 0" class="mt-6">
         <ul>
           <li *ngFor="let itinerary of itineraries" class="my-3">
             <div class="flex flex-row items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300" (click)="goToDestinations(itinerary.itinerary_id)" style="cursor:pointer;">
-                <h3 class="text-lg text text-white w-[30%]">{{ itinerary.itinerary_name }}</h3>
-                <time class="text-lg text-white w-[40%] text-center" [attr.datetime]="itinerary.start_date">
+              <h3 class="text-lg text text-white w-[30%]">{{ itinerary.itinerary_name }}</h3>
+              <time class="text-lg text-white w-[40%] text-center" [attr.datetime]="itinerary.start_date">
                 {{ itinerary.start_date | date:'dd-MMMM-yyyy' }} - {{ itinerary.end_date | date:'dd-MMMM-yyyy' }}
-                </time>
+              </time>
               <div class="flex flex-row items-center w-[30%] justify-end">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="size-8 mr-3">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -64,3 +43,77 @@
     </section>
   </div>
 </div>
+
+<!-- Modal -->
+<div *ngIf="showForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white p-8 rounded-2xl shadow-lg w-[50%] max-w-[600px] h-auto relative">
+    <button (click)="toggleForm()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <div class="w-full">
+      <h1 class="text-3xl font-bold text-gray-800">New itinerary</h1>
+      <hr class="w-[60%] border-black border-2 mt-4">
+    </div>
+    <form [formGroup]="itineraryForm" (ngSubmit)="onSubmit()" class="mt-6">
+      <div class="mb-4 h-20">
+        <label for="itineraryName" class="block text-gray-700">Itinerary name</label>
+        <input id="itineraryName" formControlName="itineraryName" type="text" class="w-full h-12 border p-2 rounded-full" placeholder="Enter itinerary name" required>
+        <p *ngIf="itineraryForm.get('itineraryName')?.invalid && itineraryForm.get('itineraryName')?.touched" class="text-red-500 text-sm">
+          Es obligatorio el nombre del itinerario.
+        </p>
+      </div>
+
+      <div class="mb-4 h-20">
+        <label for="countries" class="block text-gray-700">Countries to visit</label>
+        <div class="relative">
+          <select id="countries" (change)="onCountriesChange()" formControlName="countries" class="w-full h-12 border p-2 rounded-full relative z-10">
+            <option *ngFor="let country of countries" [value]="country.code">
+              {{ country.name }}
+            </option>
+          </select>
+        </div>
+        <p *ngIf="itineraryForm.get('countries')?.invalid && itineraryForm.get('countries')?.touched" class="text-red-500 text-sm">
+          Please select at least one country.
+        </p>
+      </div>
+
+      <div class="flex justify-between items-center mb-4 h-20">
+        <div class="w-[45%]">
+          <input id="startDate" formControlName="startDate" type="date" class="w-full h-12 border p-2 rounded-full">
+        </div>
+        <div class="w-[10%] text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mx-auto">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+          </svg>
+        </div>
+        <div class="w-[45%]">
+          <input id="endDate" formControlName="endDate" type="date" class="w-full h-12 border p-2 rounded-full">
+        </div>
+      </div>
+
+      <div class="flex justify-center mt-6">
+        <button type="submit" class="bg-[--primary-color] text-white w-[60%] h-14 px-4 py-2 rounded-full hover:bg-[--secondary-color]">
+          Create itinerary
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  fetch('https://restcountries.com/v3.1/all')
+    .then(response => response.json())
+    .then(data => {
+      const select = document.getElementById('itineraryNameDropdown');
+      data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+      data.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country.cca2;
+        option.text = country.name.common;
+        select.appendChild(option);
+      });
+    });
+</script>

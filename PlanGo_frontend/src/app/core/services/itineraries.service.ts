@@ -45,6 +45,12 @@ export class ItinerariesService extends BaseHttpService {
     return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/${userId}`, { headers });
   }
 
+  public createItinerary(itinerary: any): Observable<any> {
+    return this.httpClient.post(`${globals.apiBaseUrl}/itineraries/itinerary/create/`, itinerary, {
+      headers: this.createHeaders(),
+    });
+  }
+
   private createHeaders(): HttpHeaders {
     let token = '';
     if (isPlatformBrowser(this.platformId)) token = localStorage.getItem(globals.keys.accessToken) || '';
