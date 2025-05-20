@@ -59,7 +59,7 @@
     </div>
     <form [formGroup]="itineraryForm" (ngSubmit)="onSubmit()" class="mt-6">
       <div class="mb-4 h-20">
-        <label for="itineraryName" class="block text-gray-700">Itinerary name</label>
+        <label for="itineraryName" class="block text-gray-700">Nombre del itinerario</label>
         <input id="itineraryName" formControlName="itineraryName" type="text" class="w-full h-12 border p-2 rounded-full" placeholder="Enter itinerary name" required>
         <p *ngIf="itineraryForm.get('itineraryName')?.invalid && itineraryForm.get('itineraryName')?.touched" class="text-red-500 text-sm">
           Es obligatorio el nombre del itinerario.
@@ -67,16 +67,19 @@
       </div>
 
       <div class="mb-4 h-20">
-        <label for="countries" class="block text-gray-700">Countries to visit</label>
+        <label for="countries" class="block text-gray-700">Países a visitar</label>
         <div class="relative">
-          <select id="countries" (change)="onCountriesChange()" formControlName="countries" class="w-full h-12 border p-2 rounded-full relative z-10">
-            <option *ngFor="let country of countries" [value]="country.code">
-              {{ country.name }}
-            </option>
-          </select>
+          <ng-select 
+            [items]="countries" 
+            bindLabel="name" 
+            bindValue="code" 
+            formControlName="countries" 
+            [multiple]="true" 
+            class="w-full h-12 border rounded-full bg-white text-black border-gray-800">
+          </ng-select>
         </div>
         <p *ngIf="itineraryForm.get('countries')?.invalid && itineraryForm.get('countries')?.touched" class="text-red-500 text-sm">
-          Please select at least one country.
+          Por favor, selecciona al menos un país..
         </p>
       </div>
 
@@ -102,18 +105,3 @@
     </form>
   </div>
 </div>
-
-<script>
-  fetch('https://restcountries.com/v3.1/all')
-    .then(response => response.json())
-    .then(data => {
-      const select = document.getElementById('itineraryNameDropdown');
-      data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-      data.forEach(country => {
-        const option = document.createElement('option');
-        option.value = country.cca2;
-        option.text = country.name.common;
-        select.appendChild(option);
-      });
-    });
-</script>
