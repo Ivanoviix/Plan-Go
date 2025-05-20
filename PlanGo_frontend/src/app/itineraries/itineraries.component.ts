@@ -7,13 +7,14 @@ import { HeaderComponent } from '../header/header.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { Router } from '@angular/router';
 import { MapComponent } from '../map/map.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   standalone: true,
   selector: 'app-itineraries',
   templateUrl: './itineraries.component.html',
   styleUrls: ['./itineraries.component.css'],
-  imports: [CommonModule, HeaderComponent, GoogleMapsModule, MapComponent, ReactiveFormsModule], 
+  imports: [CommonModule, HeaderComponent, GoogleMapsModule, MapComponent, ReactiveFormsModule, NgSelectModule], 
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ItinerariesComponent implements OnInit {
