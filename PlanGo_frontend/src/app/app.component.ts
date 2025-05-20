@@ -54,6 +54,9 @@ import { trigger, transition, style, animate, group, query } from '@angular/anim
   ]
 })
 export class AppComponent {
+  title(title: any) {
+    throw new Error('Method not implemented.');
+  }
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }

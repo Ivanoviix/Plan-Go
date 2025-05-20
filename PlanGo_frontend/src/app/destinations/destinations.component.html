@@ -7,8 +7,8 @@
         <strong>Gasto total de todos los destinos:</strong>
           {{ getTotalExpenses() | currency:'EUR' }}
       </div>
-  
       <li *ngFor="let destination of destinations">
+        <app-participants-form [destination]="destination.destination_id"></app-participants-form>
         <span>{{ destination.city_name }}, {{ destination.country }}</span>
         <span> | {{ destination.start_date }} - {{ destination.end_date }}</span>
         <ng-container *ngIf="summary && summary[destination.destination_id]">
