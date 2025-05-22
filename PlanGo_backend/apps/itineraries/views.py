@@ -9,6 +9,7 @@ from apps.places.models.restaurant import Restaurant
 from apps.expenses.models.expense import Expense
 from apps.users.models.user import User
 from django.views.decorators.csrf import csrf_exempt
+from django.middleware.csrf import get_token
 from django.views.decorators.http import require_http_methods, require_POST
 from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
@@ -41,24 +42,29 @@ def get_itineraries(request):
         for i in itineraries
     ]
     return JsonResponse({'itineraries': data})
-    
+
+def get_csrf_token(request):
+    token = get_token(request)
+    return JsonResponse({'csrftoken': token})   
     
 def get_itineraries_by_user(request, user_id):
     itineraries = Itinerary.objects.filter(creator_user=user_id)
     if not itineraries.exists():
         return JsonResponse({'error': 'No hay itinerarios creados con este usuario.'}, status=404)
-    data = [
-        {
+    data = []
+    for i in itineraries:
+        destinations = i.destinations.split(',') if i.destinations else []
+        destinations_count = len(destinations)
+
+        data.append({
             'itinerary_id': i.itinerary_id,
-            'itinerary_name': i.itinerary_name, # creator_user: Usará 'id' si es una instancia del modelo User, si no usará el string o el valor directo.
+            'itinerary_name': i.itinerary_name,
             'creator_user': i.creator_user.id if hasattr(i.creator_user, 'id') else i.creator_user,
             'creation_date': i.creation_date,
             'start_date': i.start_date,
             'end_date': i.end_date,
-            'destinations_count': i.destinations.count(),
-        }
-        for i in itineraries
-    ]
+            'destinations_count': destinations_count,
+        })
     return JsonResponse({'itineraries': data})
 
 
@@ -90,7 +96,7 @@ def create_itinerary2(request):
         
 # OTRA OPCIÓN (MAS SEGURA CON SERIALIZER)
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated]) 
 def create_itinerary(request):
     serializer = FormItinerarySerializer(data=request.data, context={'request': request})
     if serializer.is_valid():

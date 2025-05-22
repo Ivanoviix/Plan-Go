@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { trigger, transition, style, animate, group, query } from '@angular/animations';
+import { ItinerariesService } from './core/services/itineraries.service';
 
 @Component({
   standalone: true,
@@ -53,7 +54,22 @@ import { trigger, transition, style, animate, group, query } from '@angular/anim
     ])
   ]
 })
-export class AppComponent {
+
+export class AppComponent implements OnInit {
+  constructor(private itinerariesService: ItinerariesService) {}
+
+  ngOnInit(): void {
+    this.itinerariesService.getCsrfTokenFromServer().subscribe({
+      next: (csrfToken) => {
+        console.log('CSRF Token obtenido:', csrfToken);
+        this.itinerariesService.setCsrfToken(csrfToken);
+      },
+      error: (err) => {
+        console.error('Error al obtener el token CSRF:', err);
+      },
+    });
+  }
+
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }

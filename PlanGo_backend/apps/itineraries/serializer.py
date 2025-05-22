@@ -1,3 +1,4 @@
+import json
 from rest_framework import serializers
 from .models.itinerary import Itinerary
 from .models.destination import Destination
@@ -16,23 +17,14 @@ class DestinationSerializer(serializers.ModelSerializer):
       
 
 class FormItinerarySerializer(serializers.ModelSerializer):
-    destinations = DestinationSerializer(many=True)
-    
+    destinations = serializers.ListField(child=serializers.CharField(), write_only=True)
+
     class Meta:
         model = Itinerary
-        fields = ['itinerary_name', 'creator_user', 'create_date', 'start_date', 'end_date', 'destinations']
-        ready_field = ['creator_user', 'create_date']
-        
-    def create(self, data):
-        destination_data = data.pop('destinations')
-        itinerary = Itinerary.objects.create(data)
-        self_data = self.context.get('request')
-        user = self_data.user if self_data else None
-        
-        itinerary = Itinerary.objects.create(
-            creator_user=user,
-            create_date=timezone.now()
-            **data
-        )
-        for destinations in destination_data:     # Desempaqueta un diccionario y así recibir claves y valores.
-            Destination.objects.create(itinerary=itinerary, **destinations)
+        fields = ['itinerary_name', 'creator_user', 'creation_date', 'start_date', 'end_date', 'destinations']
+
+    def create(self, validated_data):
+        destinations = validated_data.pop('destinations', [])
+        validated_data['destinations'] = ','.join(destinations)  # Convertir a string separado por comas
+        itinerary = Itinerary.objects.create(**validated_data)
+        return itinerary
