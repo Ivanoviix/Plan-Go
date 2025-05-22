@@ -1,16 +1,19 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable, switchMap, throwError } from 'rxjs';
 import { globals } from '../globals';
 import { BaseHttpService } from './base-http.service';
 import { MessageService } from '../messageService';
 import { user } from '@angular/fire/auth';
+import { Itinerary } from '../../itineraries/interfaces/itinerary.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ItinerariesService extends BaseHttpService {
+  private csrfToken: string = '';
+
   constructor(
     public override httpClient: HttpClient, 
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -19,44 +22,85 @@ export class ItinerariesService extends BaseHttpService {
     super(httpClient, toast); 
   }
 
-  async getIdUser(): Promise<number> {
+  getItineraries(): Observable<any> {
+    return this.getIdUser().pipe(
+      switchMap((userId) => {
+        const headers = this.createHeaders();
+        return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/${userId}`, { headers });
+      })
+    );
+  }
   
-    if (!isPlatformBrowser(this.platformId)) throw new Error('localStorage no está disponible en este entorno');
-    let token = localStorage.getItem(globals.keys.accessToken) || '';
-    if (!token) throw new Error('No token found in localStorage');
+  createItinerary(itinerary: Itinerary): Observable<any> {
+    const headers = this.createHeaders();
+    return this.httpClient.post(`${globals.apiBaseUrl}/itineraries/itinerary/create/`, itinerary, {
+      headers,
+      withCredentials: true, 
+    });
+  }
   
-    let payloadBase64 = token.split('.')[1];
-    if (!payloadBase64) throw new Error('Invalid token format');
+  getIdUser(): Observable<number> {
+    if (!isPlatformBrowser(this.platformId)) return throwError(() => new Error('localStorage no está disponible en este entorno'));
+  
+    const token = localStorage.getItem(globals.keys.accessToken) || '';
+    if (!token)  throwError(() => new Error('No token found in localStorage'));
+  
+    const payloadBase64 = token.split('.')[1];
+    if (!payloadBase64) return throwError(() => new Error('Invalid token format'));
   
     const decodedPayload = JSON.parse(atob(payloadBase64));
     const uid = decodedPayload?.uid || decodedPayload?.sub;
-    if (!uid) throw new Error('UID not found in token');
-    
+    if (!uid) return throwError(() => new Error('UID not found in token'));
+  
     const headers = this.createHeaders();
-    const response: any = await this.httpClient
-      .post(`${globals.apiBaseUrl}/users/user/get_id/`, { uid }, { headers })
-      .toPromise();   
-      return response.id;
-  }
-
-  async getItineraries(): Promise<Observable<any>> {
-    let userId = await this.getIdUser();
-    let headers = this.createHeaders();
-    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/${userId}`, { headers });
-  }
-
-  public createItinerary(itinerary: any): Observable<any> {
-    return this.httpClient.post(`${globals.apiBaseUrl}/itineraries/itinerary/create/`, itinerary, {
-      headers: this.createHeaders(),
-    });
+    return this.httpClient.post<{ id: number }>(`${globals.apiBaseUrl}/users/user/get_id/`, { uid }, { headers }).pipe(
+      map((response) => response.id)
+    );
   }
 
   private createHeaders(): HttpHeaders {
     let token = '';
-    if (isPlatformBrowser(this.platformId)) token = localStorage.getItem(globals.keys.accessToken) || '';
-
+    if (isPlatformBrowser(this.platformId)) {
+      token = localStorage.getItem(globals.keys.accessToken) || '';
+    }
+  
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
+      'X-CSRFToken': this.csrfToken,
+      'Content-Type': 'application/json',
     });
+  }
+  
+  getCsrfTokenFromServer(): Observable<string> {
+    const token = localStorage.getItem(globals.keys.accessToken) || '';
+    if (!token) {
+      return throwError(() => new Error('Token de usuario no disponible'));
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.httpClient.get<{ csrftoken: string }>(`${globals.apiBaseUrl}/itineraries/csrf-token/`, {
+      headers,
+      withCredentials: true,
+    }).pipe(
+      map((response) => response.csrftoken)
+    );
+  }
+
+  /* private getCsrfTokenFromCookies(): string | null {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+      const [key, value] = cookie.trim().split('=');
+      if (key === 'csrftoken') {
+        return value;
+      }
+    }
+    return null;
+  } */
+
+  setCsrfToken(token: string): void {
+    this.csrfToken = token;
   }
 }
