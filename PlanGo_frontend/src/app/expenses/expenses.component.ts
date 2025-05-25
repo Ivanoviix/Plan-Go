@@ -65,9 +65,9 @@ export class ExpensesComponent implements OnInit {
     })
 
     this.itinerariesService.getItineraries().subscribe({
-      next: (data: any) => this.itineraries = data.itineraries,
-      error: (err: any) => this.itineraries = []
-    });
+        next: (data: any) => this.itineraries = data.itineraries,
+        error: (err: any) => this.itineraries = []
+      });
   }
 
   toggleForm(): void {
@@ -80,7 +80,6 @@ export class ExpensesComponent implements OnInit {
       const payerId = Number(formValue.payer);
       const payer = this.participants.find(p => p.participant_id === payerId);
 
-      
       // Pagador: si es -1 es el usuario, si no es participante invitado
       const paid_by_user = payer?.participant_id === -1 ? payer.user : null;
       const paid_by_name = payer?.participant_id === -1 ? null : payer.participant_name;
@@ -152,7 +151,6 @@ export class ExpensesComponent implements OnInit {
     if (itineraryId) {
       this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
         next: (data: any) => {
-          // Asegúrate de que destinations es un array
           this.destinations = Array.isArray(data) ? data : data['User destinations'] || [];
         },
         error: (err: any) => this.destinations = []
