@@ -8,13 +8,15 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { Router } from '@angular/router';
 import { MapComponent } from '../map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { switchMap } from 'rxjs';
+import { globals } from '../core/globals';
 
 @Component({
   standalone: true,
   selector: 'app-itineraries',
   templateUrl: './itineraries.component.html',
   styleUrls: ['./itineraries.component.css'],
-  imports: [CommonModule, HeaderComponent, GoogleMapsModule, MapComponent, ReactiveFormsModule, NgSelectModule], 
+  imports: [CommonModule, HeaderComponent, GoogleMapsModule, MapComponent, ReactiveFormsModule, NgSelectModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ItinerariesComponent implements OnInit {
@@ -49,11 +51,30 @@ export class ItinerariesComponent implements OnInit {
 
   onSubmit(): void {
     if (this.itineraryForm.valid) {
-      const newItinerary = this.itineraryForm.value;
-      console.log('Nuevo itinerario:', newItinerary);
+      this.itinerariesService.getCsrfTokenFromServer().pipe(
+        switchMap((csrfToken) => {
+          this.itinerariesService.setCsrfToken(csrfToken);
   
-      this.itinerariesService.createItinerary(newItinerary).subscribe({
-        next: () => {
+          return this.itinerariesService.getIdUser().pipe(
+            switchMap((userId) => {
+              const destinations = this.itineraryForm.get('countries')?.value.map((country: string) => country);
+  
+              const newItinerary: Itinerary = {
+                itinerary_name: this.itineraryForm.get('itineraryName')?.value,
+                creator_user: userId,
+                creation_date: new Date().toISOString().split('T')[0],
+                start_date: this.itineraryForm.get('startDate')?.value,
+                end_date: this.itineraryForm.get('endDate')?.value,
+                destinations: destinations, // Enviar como array
+              };
+  
+              return this.itinerariesService.createItinerary(newItinerary);
+            })
+          );
+        })
+      ).subscribe({
+        next: (response) => {
+          console.log('Itinerario creado exitosamente:', response);
           this.getItineraries();
           this.showForm = false;
         },
@@ -65,54 +86,60 @@ export class ItinerariesComponent implements OnInit {
       console.error('Formulario inválido');
     }
   }
-
-  @HostListener('document:keydown.escape', ['$event'])
-  onEscapeKey(event: KeyboardEvent): void {
-    if (this.showForm) {
-      this.showForm = false;
-    }
+  
+  getItineraries(): void {
+    this.itinerariesService.getItineraries().subscribe({
+      next: (data: { itineraries: Itinerary[] }) => {
+        console.log('Datos recibidos:', data);
+        this.itineraries = data.itineraries;
+      },
+      error: (err: any) => {
+        this.errorMessage = 'No se pudieron cargar los itinerarios.';
+        console.error('Error al obtener itinerarios:', err);
+      }
+    });
   }
 
   async getCountries(): Promise<void> {
     try {
-      const response = await fetch('https://restcountries.com/v3.1/all');
-      const data = await response.json();
+      let response = await fetch('https://restcountries.com/v3.1/all');
+      let data = await response.json();
       this.countries = data
         .map((country: any) => ({
           code: country.cca2,
           name: country.name.common,
         }))
-        .sort((a: any, b: any) => a.name.localeCompare(b.name)); 
+        .sort((a: any, b: any) => a.name.localeCompare(b.name));
     } catch (error) {
       console.error('Error al obtener los países:', error);
     }
   }
 
   onCountriesChange(): void {
-    const selectedCountries = this.itineraryForm.get('destinations')?.value || [];
+    let selectedCountries = this.itineraryForm.get('destinations')?.value || [];
     console.log('Países seleccionados:', selectedCountries);
   }
+  /* onMapReady(map: google.maps.Map): void {
+    this.map = map;
+  
+    this.map.addListener('dblclick', async (event: google.maps.MapMouseEvent) => {
+      if (event.latLng) await this.addAdvancedMarker(event.latLng);
+    });
+  } */
 
-  async getItineraries(): Promise<void> {
-    try {
-      const observable = await this.itinerariesService.getItineraries();
-      observable.subscribe({
-        next: (data: { itineraries: Itinerary[] }) => {
-          console.log('Datos recibidos:', data);
-          this.itineraries = data.itineraries;
-        },
-        error: (err: any) => {
-          this.errorMessage = 'No se pudieron cargar los itinerarios.';
-          console.error('Error al obtener itinerarios:', err);
-        },
-      });
-    } catch (error) {
-      console.error('Error al obtener itinerarios:', error);
-      this.errorMessage = 'No se pudieron cargar los itinerarios.';
-    }
-  }
+  /* async addAdvancedMarker(position: google.maps.LatLng | google.maps.LatLngLiteral): Promise<void> {
+    let { AdvancedMarkerElement } = await google.maps.importLibrary(
+      'marker'
+    ) as google.maps.MarkerLibrary;
+  
+    let marker = new AdvancedMarkerElement({
+      map: this.map,
+      position: position,
+      title: 'Nuevo marcador',
+    });
+  } */
 
-  goToDestinations(itineraryId: number): void {
+  goToDestinations(itineraryId: number | undefined): void {
     this.router.navigate(['/destinations', itineraryId]);
   }
 }

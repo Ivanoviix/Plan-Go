@@ -8,10 +8,11 @@ class Itinerary(models.Model):
     creation_date = models.DateField()
     start_date = models.DateField()
     end_date = models.DateField()
-    
+    destinations = models.TextField()  # Almacena el JSON como string
+
     class Meta:
         verbose_name = 'Itinerary'
         verbose_name_plural = 'Itinerary'
-    
+
     def __str__(self):
         return f"Itinerary #{self.itinerary_id} by {self.creator_user}"

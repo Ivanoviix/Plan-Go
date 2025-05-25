@@ -51,11 +51,8 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.expenses',
     'apps.itineraries',
-    'apps.places'
-]
-
-INSTALLED_APPS += [
-    'corsheaders'
+    'apps.places',
+    'corsheaders',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -77,19 +74,39 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:4200'
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:4200',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:4200',
+]
+
+CSRF_COOKIE_HTTPONLY = False  
+
+CSRF_COOKIE_SECURE = False 
+
+CSRF_COOKIE_SAMESITE = 'None'
+
+CSRF_COOKIE_SECURE = True
+
 CORS_ALLOW_HEADERS = [
     'content-type',
     'authorization',  
     'x-requested-with',
+    'x-csrftoken',
 ]
 
 CORS_ALLOW_METHODS = [
     'GET',
     'POST',
     'PUT',
+    'PATCH',
     'DELETE',
     'OPTIONS',  
 ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:4200",

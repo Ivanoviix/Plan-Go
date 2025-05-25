@@ -20,7 +20,9 @@
       <div *ngIf="itineraries.length > 0" class="mt-6">
         <ul>
           <li *ngFor="let itinerary of itineraries" class="my-3">
-            <div class="flex flex-row items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300" (click)="goToDestinations(itinerary.itinerary_id)" style="cursor:pointer;">
+            <div 
+              *ngIf="itinerary.itinerary_id !== undefined"  
+              class="flex flex-row items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300" (click)="goToDestinations(itinerary.itinerary_id!)" style="cursor:pointer;">
               <h3 class="text-lg text text-white w-[30%]">{{ itinerary.itinerary_name }}</h3>
               <time class="text-lg text-white w-[40%] text-center" [attr.datetime]="itinerary.start_date">
                 {{ itinerary.start_date | date:'dd-MMMM-yyyy' }} - {{ itinerary.end_date | date:'dd-MMMM-yyyy' }}
@@ -30,7 +32,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                 </svg>
-                <p class="text-lg text-white">{{ itinerary.destinations_count || 0 }} destinos</p>
+                <p class="text-lg text-white">{{ itinerary.destinations || 0 }} destinos</p>
               </div>
             </div>
           </li>
@@ -72,7 +74,7 @@
           <ng-select 
             [items]="countries" 
             bindLabel="name" 
-            bindValue="code" 
+            bindValue="name" 
             formControlName="countries" 
             [multiple]="true" 
             class="w-full h-12 border rounded-full bg-white text-black border-gray-800">
