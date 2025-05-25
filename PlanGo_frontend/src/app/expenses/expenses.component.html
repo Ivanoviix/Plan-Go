@@ -7,8 +7,7 @@
           <h1 class="text-4xl font-bold text-gray-800">Gastos</h1>
           <hr class="flex-grow border-black border-2 mt-4">
         </div>
-        <button
-          class="add-expense h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300">
+        <button (click)="toggleForm()" class="add-expense h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300">
           Añadir gasto
         </button>
       </div>
@@ -29,16 +28,14 @@
       <div *ngIf="expenses.length > 0" class=" mt-6">
         <ul>
           <li *ngFor="let expense of expenses" class="my-3">
-            <div
-              class="flex flex-row items-center w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300 justify-between"
-              (click)="goToDestinations(expense.itinerary_id)" style="cursor:pointer;">
-              <div class="flex flex-col text-left">
-                <h3 class="text-lg text-white">{{ expense.itinerary_name }} - {{ expense.destination_name }}</h3>
+              <div class="flex flex-row items-center w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300 justify-between" (click)="getSelectedDestination(expense)" style="cursor:pointer;">
+                <div class="flex flex-col text-left">
+                  <h3 class="text-lg text-white">{{ expense.itinerary_name }} - {{ expense.destination_name }}</h3>
+                </div>
+                <div class="flex items-center justify-end">
+                    <p class="text-white">{{ expense.total_amount | number:'1.2-2' }} €</p>
+                </div>
               </div>
-              <div class="flex items-center justify-end">
-                <p class="text-white">{{ expense.total_amount | number:'1.2-2' }} €</p>
-              </div>
-            </div>
           </li>
         </ul>
       </div>
@@ -131,5 +128,84 @@
         </div>
       </div>
     </section>
+  </div>
+</div>
+
+
+<!-- Form Expense -->
+<div *ngIf="showForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white p-8 rounded-2xl shadow-lg w-[50%] max-w-[600px] h-auto relative">
+    <button (click)="toggleForm()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <div class="w-full">
+      <h1 class="text-3xl font-bold text-gray-800">New Expense</h1>
+      <hr class="w-[60%] border-black border-2 mt-4">
+    </div>
+
+    <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="mt-6">
+      <div class="flex flex-row gap-6 items-end">
+        <div class="flex flex-col w-1/2">
+          <label>Itinerario:</label>
+          <select formControlName="itinerary" (change)="onItineraryChange()" class="w-full h-12 px-4 py-2 rounded-full border border-gray-300">
+            <option *ngFor="let itin of itineraries" [value]="itin.itinerary_id">{{ itin.itinerary_name }}</option>
+          </select>
+        </div>
+        <div class="flex flex-col w-1/2">
+          <label>Destino:</label>
+          <select formControlName="destination" (change)="onDestinationsChange()" class="w-full h-12 px-4 py-2 rounded-full border border-gray-300">
+            <option *ngFor="let dest of destinations" [value]="dest.destination_id">{{ dest.city_name }}</option>
+          </select>
+        </div>
+      </div>
+    
+      <div class="flex flex-row gap-4 items-end mb-4 justify-between">
+        <div class="flex flex-col w-1/2">
+          <label>Pagador:</label>
+          <select formControlName="payer" (change)="onPayerChange()" class="w-[100%] h-12 px-4 py-2 rounded-full border border-gray-300">
+            <option *ngFor="let p of participants" [value]="p.participant_id">
+              {{ p.participant_name }}
+            </option>
+          </select>
+        </div>
+        <div class="flex flex-row items-center justify-end w-1/2">
+          <input type="number" formControlName="total_amount" placeholder="00.00" class="w-[40%] h-12 px-4 py-2 rounded-full border border-gray-300"/>
+        </div>
+      </div>
+
+
+      <label>Descripción:</label>
+      <textarea formControlName="description" placeholder="Escribe una descripción detallada sobre el gasto..." 
+        class="w-full h-32 px-4 py-2 rounded-2xl border border-gray-300 resize-y"></textarea>
+
+      <div formArrayName="debtors">
+        <div *ngFor="let debtor of debtorsControls; let i = index" [formGroupName]="i" class="flex flex-row gap-2 items-center mb-2">
+          <select formControlName="id" class="w-1/2 h-10 px-2 rounded border border-gray-300">
+            <option value="" disabled selected>Selecciona deudor</option>
+            <option *ngFor="let p of getPossibleDebtors(i)" [value]="p.participant_id">
+              {{ p.participant_name }}
+            </option>
+          </select>
+          <input type="number" formControlName="amount" placeholder="Cantidad gastada" class="w-1/2 h-10 px-2 rounded border border-gray-300"/>
+          <button type="button" (click)="removeDebtor(i)" class="ml-2 text-red-500">Eliminar</button>
+        </div>
+          <button type="button"
+                  (click)="addDebtor()"
+                  [disabled]="!expenseForm.value.payer"
+                  class="mt-2 bg-blue-500 text-white px-4 py-1 rounded-full">
+            Añadir deudor
+          </button>
+      </div>
+    
+
+      <div class="flex justify-center mt-6">
+        <button type="submit" class="bg-[--primary-color] text-white w-[60%] h-14 px-4 py-2 rounded-full hover:bg-[--secondary-color]">
+          Create gasto
+        </button>
+      </div>
+    </form>
   </div>
 </div>

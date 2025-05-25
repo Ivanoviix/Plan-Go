@@ -25,8 +25,7 @@ export class ParticipantsComponent {
       let participant = {
         participant_name: this.participantName,
         destination: this.destination,
-        user: userId
-      };
+      };      
       this.participantService.createParticipant(participant).subscribe({
         next: () => {
             console.log("HA SIDO CREADO!", this.participantName)

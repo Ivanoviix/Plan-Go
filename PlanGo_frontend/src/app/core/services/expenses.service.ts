@@ -6,14 +6,14 @@ import {globals} from '../globals';
 
 @Injectable({ providedIn: 'root' })
 export class ExpensesService {
-  private apiUrl = `${globals.apiBaseUrl}/expenses/expense/user/`;
+  //private apiUrl = `${globals.apiBaseUrl}/expenses/expense/user/`;
 
   constructor( 
-    private http: HttpClient, 
+    private httpClient: HttpClient, 
     @Inject(PLATFORM_ID) private platformId: Object) {}
 
   private createHeaders(): HttpHeaders {
-    
+
     let token = '';
     if (isPlatformBrowser(this.platformId)) {
       token = localStorage.getItem(globals.keys.accessToken) || '';
@@ -25,6 +25,13 @@ export class ExpensesService {
 
   getExpensesByLoggedUser(): Observable<any> {
     const headers = this.createHeaders();
-    return this.http.get(this.apiUrl, { headers });
+    return this.httpClient.get(`${globals.apiBaseUrl}/expenses/expense/user/`, { headers });
   }
+
+  createExpense(expense: any): Observable<any> {
+    const headers = this.createHeaders();
+    return this.httpClient.post(`${globals.apiBaseUrl}/expenses/create_expense/`, expense, { headers });
+  }
+
+  
 }

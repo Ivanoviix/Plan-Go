@@ -50,3 +50,32 @@ class ExpenseWithNamesSerializer(serializers.ModelSerializer):
         if obj.destination:
             return obj.destination.city_name
         return None
+    
+    
+class InsertExpenseSerializer(serializers.ModelSerializer):
+    user_Expense = serializers.SerializerMethodField()
+    
+    class Meta: 
+        model = Expense
+        fields = ['expense_id', 'description', 'total_amount', 'date', 'paid_by_user', 'paid_by_name', 'type_expense', 'itinerary_name', 'destination_name', 'user_expense_id', 'user', 'user_name', 'amount_paid', 'expected_share', 'debt']
+
+    def get_User_Expenses(self, obj):
+        if obj.userexpense:
+            return obj
+        return None
+    
+# resultado = {
+#     expense_id: auto,
+#     date: today,
+#     itinerary_name: string,
+#     destination_name: string,
+#     paid_by_user: number,
+#     paid_by_name: string,
+#     total_amount: float,
+#     description: string,
+#     user: number maybe null, 
+#     user_name: string maybe null,
+#     expected_share: float, 
+#     debt: float,
+      
+# }
