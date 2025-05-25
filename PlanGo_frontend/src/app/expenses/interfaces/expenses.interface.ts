@@ -1,12 +1,15 @@
+import { UserExpenses } from "./userExpenses.interface";
+
 export interface Expenses {
     expense_id: number;
     itinerary_id: number;
     itinerary_name: string;
-    destination_name: string;
+    destination: string;
     description: string;
     total_amount: number;
     date: Date;
     paid_by_user: number;
     paid_by_name: string;
+    user_expenses: UserExpenses
     type_expense: string;
   }
