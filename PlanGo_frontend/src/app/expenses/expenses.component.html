@@ -5,48 +5,131 @@
       <div class="expenses-header w-auto h-20 pb-3 flex flex-row justify-between items-center">
         <div class="w-[30%]">
           <h1 class="text-4xl font-bold text-gray-800">Gastos</h1>
-            <hr class="flex-grow border-black border-2 mt-4">
+          <hr class="flex-grow border-black border-2 mt-4">
         </div>
-        <button class="add-expense h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300">
+        <button
+          class="add-expense h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300">
           Añadir gasto
         </button>
       </div>
       <div class="expenses-header w-auto flex flex-col justify-between items-start">
         <div class="flex flex-row items-center justify-between w-full">
           <h3 class="text-xl font-bold text-gray-800 mr-4">Gastos Totales</h3>
-            <div *ngIf="expenses.length > 0" class="h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
-                {{ getTotalExpenses() | number:'1.2-2' }} €
+          <div *ngIf="expenses.length > 0"
+            class="h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+            {{ getTotalExpenses() | number:'1.2-2' }} €
           </div>
         </div>
         <hr class="w-full border-black border-2 mt-2">
       </div>
-      
+
       <div *ngIf="expenses.length == 0">
         <p class="text-xl pl-3 my-4">No hay gastos creados. ¡Añade el primero!</p>
       </div>
       <div *ngIf="expenses.length > 0" class=" mt-6">
         <ul>
           <li *ngFor="let expense of expenses" class="my-3">
-              <div class="flex flex-row items-center w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300 justify-between" (click)="goToDestinations(expense.itinerary_id)" style="cursor:pointer;">
-                <div class="flex flex-col text-left">
-                  <h3 class="text-lg text-white">{{ expense.itinerary_name }} - {{ expense.destination_name }}</h3>
-                </div>
-                <div class="flex items-center justify-end">
-                    <p class="text-white">{{ expense.total_amount | number:'1.2-2' }} €</p>
-                </div>
+            <div
+              class="flex flex-row items-center w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300 justify-between"
+              (click)="goToDestinations(expense.itinerary_id)" style="cursor:pointer;">
+              <div class="flex flex-col text-left">
+                <h3 class="text-lg text-white">{{ expense.itinerary_name }} - {{ expense.destination_name }}</h3>
               </div>
+              <div class="flex items-center justify-end">
+                <p class="text-white">{{ expense.total_amount | number:'1.2-2' }} €</p>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
     </section>
-
-    <section class="map w-[35%]">
-      <gmp-map 
-      [center]="center" 
-      [zoom]="zoom" 
-      [options]="mapOptions" 
-      style="height: 100%; width: 100%;">
-      </gmp-map>
+    <!-- añadir un section en esta posición para cuando no haya ningún gasto seleccionado y meter un <p> con mensaje de ningún gasto seleccionado -->
+    <section class="p-8 border-l-2 border-gray w-[35%] h-lvh overflow-y-auto">
+      <div class="cluster-1 w-full mb-4">
+        <div class="inline-block h-auto">
+          <h1 class="text-xl font-bold">Nombre del itinerario: </h1>
+          <hr class="border-black border-2 mt-2">
+        </div>
+        <div class="mb-4">
+          <div class="flex flex-row items-center justify-between">
+            <h2 class="text-md">Costes totales: </h2>
+            <div class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+              numero</div>
+          </div>
+          <hr class="w-full border-black border-2 mt-4">
+        </div>
+        <div>
+          <div class="flex flex-row items-center justify-between">
+            <h2 class="text-md">Pagado por: </h2>
+            <div class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+              numero</div>
+          </div>
+          <hr class="w-full border-black border-2 mt-4">
+        </div>
+      </div>
+      <div class="cluster-2">
+        <div>
+          <div class="h-auto mt-6">
+            <h1 class="text-xl font-bold">Gastos individuales</h1>
+            <hr class="w-[75%] border-black border-2 mt-2">
+          </div>
+          <div class="mb-4">
+            <div class="flex flex-row items-center justify-between">
+              <h2 class="text-md">User1: </h2>
+              <div class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+                numero</div>
+            </div>
+            <hr class="w-full border-black border-2 mt-4">
+          </div>
+          <div class="mb-4">
+            <div class="flex flex-row items-center justify-between">
+              <h2 class="text-md">User2: </h2>
+              <div class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+                numero</div>
+            </div>
+            <hr class="w-full border-black border-2 mt-4">
+          </div>
+          <div class="mb-4">
+            <div class="flex flex-row items-center justify-between">
+              <h2 class="text-md">User3: </h2>
+              <div class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+                numero</div>
+            </div>
+            <hr class="w-full border-black border-2 mt-4">
+          </div>
+        </div>
+      </div>
+      <div class="cluster-3 truncate">
+        <div class="h-auto mt-6">
+          <h1 class="text-xl font-bold">Descripción</h1>
+          <hr class="w-[75%] border-black border-2 mt-2">
+        </div>
+        <p class="text-md break-words whitespace-normal max-w-full mt-2">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+      </div>
+      <div class="cluster-4">
+        <div class="h-auto mt-6">
+          <h1 class="text-xl font-bold">Deuda</h1>
+          <hr class="w-[75%] border-black border-2 mt-2">
+        </div>
+        <div class="mb-4">
+          <div class="flex flex-row items-center justify-between">
+            <h2 class="text-md">User2: </h2>
+            <div class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+              numero</div>
+          </div>
+          <hr class="w-full border-black border-2 mt-4">
+        </div>
+        <div class="mb-4">
+          <div class="flex flex-row items-center justify-between">
+            <h2 class="text-md">User3: </h2>
+            <div class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+              numero</div>
+          </div>
+          <hr class="w-full border-black border-2 mt-4">
+        </div>
+      </div>
     </section>
   </div>
 </div>
