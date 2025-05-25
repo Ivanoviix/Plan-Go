@@ -92,25 +92,6 @@ export class ItinerariesComponent implements OnInit {
     const selectedCountries = this.itineraryForm.get('destinations')?.value || [];
     console.log('Países seleccionados:', selectedCountries);
   }
-  /* onMapReady(map: google.maps.Map): void {
-    this.map = map;
-  
-    this.map.addListener('dblclick', async (event: google.maps.MapMouseEvent) => {
-      if (event.latLng) await this.addAdvancedMarker(event.latLng);
-    });
-  } */
-  
-  /* async addAdvancedMarker(position: google.maps.LatLng | google.maps.LatLngLiteral): Promise<void> {
-    const { AdvancedMarkerElement } = await google.maps.importLibrary(
-      'marker'
-    ) as google.maps.MarkerLibrary;
-  
-    const marker = new AdvancedMarkerElement({
-      map: this.map,
-      position: position,
-      title: 'Nuevo marcador',
-    });
-  } */
 
   async getItineraries(): Promise<void> {
     try {
@@ -135,3 +116,23 @@ export class ItinerariesComponent implements OnInit {
     this.router.navigate(['/destinations', itineraryId]);
   }
 }
+  
+  /* onMapReady(map: google.maps.Map): void {
+    this.map = map;
+  
+    this.map.addListener('dblclick', async (event: google.maps.MapMouseEvent) => {
+      if (event.latLng) await this.addAdvancedMarker(event.latLng);
+    });
+  } */
+  
+  /* async addAdvancedMarker(position: google.maps.LatLng | google.maps.LatLngLiteral): Promise<void> {
+    const { AdvancedMarkerElement } = await google.maps.importLibrary(
+      'marker'
+    ) as google.maps.MarkerLibrary;
+  
+    const marker = new AdvancedMarkerElement({
+      map: this.map,
+      position: position,
+      title: 'Nuevo marcador',
+    });
+  } */

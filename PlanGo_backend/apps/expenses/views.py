@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.http import JsonResponse
 from .serializer import ExpenseSerializer, UserExpenseSerializer, ExpenseWithNamesSerializer
@@ -9,7 +10,11 @@ from apps.expenses.service import calculate_expected_share
 from apps.expenses.models.expense import Expense
 from apps.itineraries.models.itinerary import Itinerary
 from apps.expenses.models.user_expense import UserExpense
+from apps.itineraries.models.destination import Destination
+from apps.users.models.participant import Participant
+from apps.users.models.user import User
 from django.db.models import Q
+import json
 
 
 
@@ -195,4 +200,78 @@ def get_expenses_with_names_by_user(request):
     serializer = ExpenseWithNamesSerializer(expenses, many=True)
     return JsonResponse({'expenses': serializer.data})
 
+@csrf_exempt
+def create_expense(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            print("GASTOOO", data)
 
+            destination_id = data.get('destination')
+            description = data.get('description')
+            total_amount = data.get('total_amount')
+            date = data.get('date')
+            type_expense = data.get('type_expense')
+            paid_by_user = data.get('paid_by_user')
+            paid_by_name = data.get('paid_by_name')
+            debtors = data.get('debtors', [])
+
+
+            # Obtener instancia de destino
+            destination = Destination.objects.get(pk=destination_id)
+
+            # Obtener instancia de usuario si existe
+            user_obj = None
+            if paid_by_user:
+                user_obj = User.objects.get(pk=paid_by_user)
+
+           # Crear el gasto
+            expense = Expense.objects.create(
+                destination=destination,
+                description=description,
+                total_amount=total_amount,
+                date=date,
+                type_expense=type_expense,
+                paid_by_user=user_obj if user_obj else None,
+                paid_by_name=paid_by_name if not user_obj else None
+            )
+
+            # UserExpense del pagador
+            if user_obj:
+                UserExpense.objects.create(
+                    expense=expense,
+                    user=user_obj,
+                    user_name=None,
+                    amount_paid=total_amount,
+                    expected_share=0,
+                    debt=0
+                )
+            elif paid_by_name:
+                UserExpense.objects.create(
+                    expense=expense,
+                    user=None,
+                    user_name=paid_by_name,
+                    amount_paid=total_amount,
+                    expected_share=0,
+                    debt=0
+                )
+
+            for debtor in debtors:
+                debtor_user_id = debtor.get('user')
+                debtor_name = debtor.get('user_name')
+
+                # Si hay user, busca el objeto User, si no, deja None
+                debtor_user = User.objects.get(pk=debtor_user_id) if debtor_user_id else None
+
+                UserExpense.objects.create(
+                    expense=expense,
+                    user=debtor_user,
+                    user_name=debtor_name,
+                    amount_paid=0,
+                    expected_share=0,
+                    debt=debtor.get('amount', 0)
+                )
+
+            return JsonResponse({'success': True, 'expense_id': expense.expense_id}, status=201)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)

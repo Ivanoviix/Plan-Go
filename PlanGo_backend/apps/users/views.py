@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views import View
 from apps.users.models.user import User
+from apps.users.models.participant import Participant
 from .serializer import ParticipantSerializer
 import json
 from firebase_admin import auth
@@ -158,6 +159,37 @@ def get_userId_by_userUid(request):
 
 # PARTICIPANTS
 @csrf_exempt
+def get_participants_by_destination(request, destination_id):
+    participants = Participant.objects.filter(destination=destination_id)
+    if not participants.exists():
+        return JsonResponse({'error': 'No hay destinos creados con este usuario.'}, status=404)
+
+    data = [
+        {
+            'participant_id': p.participant_id,
+            'destination_id': p.destination.id,
+            'user': p.user.id if p.user else None,
+            'participant_name': p.participant_name,
+            'is_user': False
+        }
+        for p in participants
+    ]
+    print("USUARIOOO", request.user)
+
+    user = request.user
+    if user.is_authenticated:
+        data.insert(0, {
+            'participant_id': None,
+            'destination_id': destination_id,
+            'user': user.id,
+            'participant_name': user.username,
+            'is_user': True
+        })
+    print("DATOS USUARIO!!!!", data)
+    return JsonResponse({'Participants': data})
+    
+    
+@csrf_exempt
 def create_participant(request):
     if request.method == 'POST':
             try:
@@ -170,3 +202,4 @@ def create_participant(request):
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=400)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+

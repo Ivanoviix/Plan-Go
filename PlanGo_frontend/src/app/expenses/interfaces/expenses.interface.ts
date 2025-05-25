@@ -10,3 +10,13 @@ export interface Expenses {
     paid_by_name: string;
     type_expense: string;
   }
+
+export interface UserExpenses {
+    user_expense_id: number;
+    expense: number;
+    user: number;
+    user_name: string;
+    amount_paid: number;
+    debt: number;
+    expected_share: number;
+}
