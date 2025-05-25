@@ -64,12 +64,10 @@ export class ExpensesComponent implements OnInit {
       error: (err) => this.errorMessage = 'No se pudieron cargar los destinos.'
     })
 
-    this.itinerariesService.getItineraries().then(obs => {
-      obs.subscribe({
+    this.itinerariesService.getItineraries().subscribe({
         next: (data: any) => this.itineraries = data.itineraries,
         error: (err: any) => this.itineraries = []
       });
-    });
   }
 
   toggleForm(): void {
