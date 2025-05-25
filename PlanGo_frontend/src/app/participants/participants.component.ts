@@ -21,7 +21,6 @@ export class ParticipantsComponent {
 
   async addParticipant() {
     try {
-      let userId = await this.itinerariesService.getIdUser()
       let participant = {
         participant_name: this.participantName,
         destination: this.destination,

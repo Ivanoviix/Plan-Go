@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, PLATFORM_ID, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { DestinationService } from '../core/services/destinations.service';
 import { ItinerariesService } from '../core/services/itineraries.service';
@@ -39,15 +39,15 @@ export class ExpensesComponent implements OnInit {
   };
 
 
-  constructor(private expensesService: ExpensesService, private destinationService: DestinationService, private itinerariesService: ItinerariesService, private participantsService: ParticipantsService, private router: Router, private formBuilder: FormBuilder) {
+  constructor(private expensesService: ExpensesService, private destinationService: DestinationService, private itinerariesService: ItinerariesService, private participantsService: ParticipantsService, private router: Router, private formBuilder: FormBuilder,   private cdr: ChangeDetectorRef) {
     this.expenseForm = this.formBuilder.group({
       itinerary: [null, Validators.required],
       destination: [null, Validators.required],
       payer: [null, Validators.required],
       total_amount: ['', Validators.required],
-      description: ['', Validators.required],
+      description: [''],
       date: [null],
-      type_expense: ['Personalized', Validators.required],
+      type_expense: ['', Validators.required],
       debtors: this.formBuilder.array([]),
     });
   }
@@ -151,7 +151,6 @@ export class ExpensesComponent implements OnInit {
     if (itineraryId) {
       this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
         next: (data: any) => {
-          // Asegúrate de que destinations es un array
           this.destinations = Array.isArray(data) ? data : data['User destinations'] || [];
         },
         error: (err: any) => this.destinations = []
@@ -204,13 +203,41 @@ export class ExpensesComponent implements OnInit {
     return this.participants.filter(p => (p.user || p.participant_id) !== payerId);
   }
 
+  setEqualitarian() {
+    this.expenseForm.get('type_expense')?.setValue('Equalitarian');
+    const debtorsArray = this.expenseForm.get('debtors') as FormArray;
+    debtorsArray.controls.forEach(ctrl => {
+      ctrl.get('amount')?.clearValidators();
+      ctrl.get('amount')?.setErrors(null);
+      ctrl.get('amount')?.disable();
+      ctrl.get('amount')?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+    });
+    this.cdr.detectChanges();
+  }
+
+  setPersonalized() {
+    this.expenseForm.get('type_expense')?.setValue('Personalized');
+    const debtorsArray = this.expenseForm.get('debtors') as FormArray;
+    debtorsArray.controls.forEach(ctrl => {
+      ctrl.get('amount')?.setValidators(Validators.required);
+      ctrl.get('amount')?.enable();
+      ctrl.get('amount')?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+    });
+    this.cdr.detectChanges();
+  }
 
   addDebtor(): void {
     const debtorsArray = this.expenseForm.get('debtors') as FormArray;
-    debtorsArray.push(this.formBuilder.group({
+    const isEqualitarian = this.expenseForm.get('type_expense')?.value === 'Equalitarian';
+    const group = this.formBuilder.group({
       id: [null, Validators.required],
-      amount: ['', Validators.required]
-    }));
+      amount: ['', isEqualitarian ? [] : Validators.required]
+    });
+    if (isEqualitarian) {
+      group.get('amount')?.disable();
+      group.get('amount')?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+    }
+    debtorsArray.push(group);
   }
 
   removeDebtor(index: number): void {
@@ -224,9 +251,6 @@ export class ExpensesComponent implements OnInit {
     const selectedIds = debtorsArray.controls
       .map((ctrl, idx) => idx !== i ? String(ctrl.value.id) : null)
       .filter(id => id !== null); 
-      console.log('Payer ID:', payerParticipantId);
-      console.log('Selected debtor IDs:', selectedIds);
-      console.log('All participants:', this.participants);
     return this.participants.filter(p => {
       const id = String(p.participant_id);
       return id !== payerParticipantId && !selectedIds.includes(id);
