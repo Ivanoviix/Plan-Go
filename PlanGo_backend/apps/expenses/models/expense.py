@@ -15,7 +15,7 @@ class Expense(models.Model):
     date = models.DateField(blank=True, null=True)
     paid_by_user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='paid_expenses')
     paid_by_name = models.CharField(max_length=100, blank=True, null=True)
-    type_expense = models.CharField(max_length=20, choices=TYPE_EXPENSE, default='Equalitarian')
+    type_expense = models.CharField(max_length=20, choices=TYPE_EXPENSE, default='Personalized')
 
 
     class Meta:
