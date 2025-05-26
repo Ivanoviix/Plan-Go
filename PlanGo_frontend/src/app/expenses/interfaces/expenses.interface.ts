@@ -1,5 +1,3 @@
-import { UserExpenses } from "./userExpenses.interface";
-
 export interface Expenses {
     expense_id: number;
     itinerary_id: number;
@@ -13,3 +11,13 @@ export interface Expenses {
     user_expenses: UserExpenses
     type_expense: string;
   }
+
+export interface UserExpenses {
+    user_expense_id: number;
+    expense: number;
+    user: number;
+    user_name: string;
+    amount_paid: number;
+    debt: number;
+    expected_share: number;
+}

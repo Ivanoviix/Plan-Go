@@ -108,6 +108,10 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:4200",
+]
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [

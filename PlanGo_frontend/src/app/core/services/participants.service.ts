@@ -34,4 +34,9 @@ export class ParticipantsService extends BaseHttpService {
       Authorization: `Bearer ${token}`,
     });
   }
+
+  getParticipantsByDestination(destinationId: number): Observable<any> {
+    const headers = this.createHeaders();
+    return this.httpClient.get(`${globals.apiBaseUrl}/users/participants/by_destination/${destinationId}`, { headers });
+  }
 }
