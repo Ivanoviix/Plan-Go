@@ -17,14 +17,14 @@ class DestinationSerializer(serializers.ModelSerializer):
       
 
 class FormItinerarySerializer(serializers.ModelSerializer):
-    destinations = serializers.ListField(child=serializers.CharField(), write_only=True)
+    countries = serializers.ListField(child=serializers.CharField(), write_only=True)
 
     class Meta:
         model = Itinerary
-        fields = ['itinerary_name', 'creator_user', 'creation_date', 'start_date', 'end_date', 'destinations']
+        fields = ['itinerary_name', 'creator_user', 'creation_date', 'start_date', 'end_date', 'countries']
 
     def create(self, validated_data):
-        destinations = validated_data.pop('destinations', [])
-        validated_data['destinations'] = ','.join(destinations)  # Convertir a string separado por comas
+        countries = validated_data.pop('countries', [])
+        validated_data['countries'] = ','.join(countries)  # Convertir a string separado por comas
         itinerary = Itinerary.objects.create(**validated_data)
         return itinerary
