@@ -2,6 +2,7 @@ export interface Expenses {
     expense_id: number;
     itinerary_id: number;
     itinerary_name: string;
+    city_name: string; 
     destination: string;
     description: string;
     total_amount: number;
@@ -18,6 +19,6 @@ export interface UserExpenses {
     user: number;
     user_name: string;
     amount_paid: number;
-    debt: number;
+    debt?: number;
     expected_share: number;
 }

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import get_expenses, get_user_expenses, get_user_expenses_by_expense_id, get_expenses_by_destination, create_expense_with_users, expenses_with_users, get_expenses_with_names, get_expenses_with_names_by_user, create_expense
+from .views import get_expenses, get_user_expenses, get_user_expenses_by_expense_id, get_expenses_by_destination, create_expense_with_users, expenses_with_users, get_expenses_with_names, get_expenses_with_names_by_user, create_expense, get_expense_detail
 
 urlpatterns = [
     # EXPENSES
@@ -15,4 +15,5 @@ urlpatterns = [
     # EXPENSES - USER EXPENSES
     path('create_expense/', create_expense, name='create_expense'),
     path('expenses_with_users/<int:destination_id>', expenses_with_users, name='expenses_with_users'),
+    path('expense/<int:expense_id>/', get_expense_detail, name='get_expense_detail'),
 ]

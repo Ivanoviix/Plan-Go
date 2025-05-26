@@ -25,6 +25,7 @@ export class ExpensesComponent implements OnInit {
   destinations: any[] = [];
   selectedItineraryId: number | null = null;
   selectedDestinationId: number | null = null;
+  selectedExpense: any = null;
   expenses: Expenses[] = [];
   participants: any[] = [];
   expenseForm: FormGroup;
@@ -133,17 +134,6 @@ export class ExpensesComponent implements OnInit {
   getSelectedDestination(destinationId: Expenses): void {
     this.selectedDestination = this.destinations.find(dest => dest.destination_id === destinationId);
     console.log("DESTINO SELECCIONADO!: ",this.selectedDestination)
-    /*const expense = {
-      date: "2025-05-16",
-      description: "Billares y cervezas ROCKZ",
-      destination_name: "Potsdam",
-      expense_id: 2,
-      itinerary_name: "Tu mama",
-      paid_by_name: null,
-      paid_by_user: 12,
-      total_amount: "31.31",
-      type_expense: "Equalitarian"
-    };*/
   }
 
   onItineraryChange(): void {
@@ -160,7 +150,6 @@ export class ExpensesComponent implements OnInit {
     }
     this.selectedDestinationId = null;
   }
-
     
   onDestinationsChange(): void {
     
@@ -178,6 +167,14 @@ export class ExpensesComponent implements OnInit {
     const debtorsArray = this.expenseForm.get('debtors') as FormArray;
     debugger
     debtorsArray.clear();
+  }
+
+  
+  onClickExpense(expense: any): void {
+    this.expensesService.getExpenseDetail(expense.expense_id).subscribe({
+      next: (data) => this.selectedExpense = data,
+      error: (err) => this.selectedExpense = null
+    });
   }
 
   loadParticipants(destinationId: number): void {

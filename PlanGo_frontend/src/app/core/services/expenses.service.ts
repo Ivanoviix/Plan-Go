@@ -28,10 +28,14 @@ export class ExpensesService {
     return this.httpClient.get(`${globals.apiBaseUrl}/expenses/expense/user/`, { headers });
   }
 
+  getExpenseDetail(expense_id: number): Observable<any> {
+    const headers = this.createHeaders();
+    return this.httpClient.get(`${globals.apiBaseUrl}/expenses/expense/${expense_id}/`, { headers });
+  }
+
   createExpense(expense: any): Observable<any> {
     const headers = this.createHeaders();
     return this.httpClient.post(`${globals.apiBaseUrl}/expenses/create_expense/`, expense, { headers });
   }
-
   
 }

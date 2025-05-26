@@ -6,7 +6,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.http import JsonResponse
 from .serializer import ExpenseSerializer, UserExpenseSerializer, ExpenseWithNamesSerializer
-from apps.expenses.service import calculate_expected_share
 from apps.expenses.models.expense import Expense
 from apps.itineraries.models.itinerary import Itinerary
 from apps.expenses.models.user_expense import UserExpense
@@ -132,7 +131,7 @@ def expenses_with_users(request, destination_id):
             for ue in users_expenses
         ]
     
-    user_expenses_calculated = calculate_expected_share(expense.type_expense, user_expense_data, expense.total_amount)
+    user_expenses_calculated = (expense.type_expense, user_expense_data, expense.total_amount)
     
     data.append({
             'expense_id': expense.expense_id,
@@ -165,20 +164,6 @@ def create_expense_with_users(request):
         return Response(expense_serializer.data, status=status.HTTP_201_CREATED)
     return Response(expense_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# {
-#   "destination": 1,
-#   "description": "Cena en restaurante",
-#   "total_amount": 120.00,
-#   "date": "2025-05-20",
-#   "paid_by_user": 2,
-#   "paid_by_name": "Tomeu",
-#   "user_expenses": [
-#     {"user": 2, "user_name": "Tomeu", "amount_paid": 120.00, "expected_share": 40.00, "debt": 00.00},
-#     {"user": 3, "user_name": "Ivan", "amount_paid": 0.00, "expected_share": 40.00, "debt": 40.00},
-#     {"user": 4, "user_name": "Maria", "amount_paid": 0.00, "expected_share": 40.00, "debt": 40.00}
-#   ]
-# }
-
 
 def get_expenses_with_names(request):
     expenses = Expense.objects.all()
@@ -190,13 +175,12 @@ def get_expenses_with_names(request):
 # @permission_classes([IsAuthenticated])
 def get_expenses_with_names_by_user(request):
     user = request.user
-    print(request.user)
+    print("PRUEBAAAA ", request.user)
     if not user or not user.is_authenticated:
         return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
     
     itineraries = Itinerary.objects.filter(creator_user=user)
     expenses = Expense.objects.filter(destination__itinerary__in=itineraries).distinct()
-    print("HOlaaaa", expenses)
     serializer = ExpenseWithNamesSerializer(expenses, many=True)
     return JsonResponse({'expenses': serializer.data})
 
@@ -236,42 +220,99 @@ def create_expense(request):
                 paid_by_name=paid_by_name if not user_obj else None
             )
 
-            # UserExpense del pagador
-            if user_obj:
-                UserExpense.objects.create(
-                    expense=expense,
-                    user=user_obj,
-                    user_name=None,
-                    amount_paid=total_amount,
-                    expected_share=0,
-                    debt=0
-                )
-            elif paid_by_name:
-                UserExpense.objects.create(
-                    expense=expense,
-                    user=None,
-                    user_name=paid_by_name,
-                    amount_paid=total_amount,
-                    expected_share=0,
-                    debt=0
-                )
+            match type_expense:
+                case 'Personalized':
+                    total_expenses = sum(float(debtor.get('amount', 0)) for debtor in debtors)
+                    # UserExpense del pagador
+                    if user_obj:
+                        UserExpense.objects.create(
+                            expense=expense,
+                            user=user_obj,
+                            user_name=None,
+                            amount_paid=total_amount,
+                            expected_share=total_expenses,
+                            debt=float(total_amount) - total_expenses
+                        )
+                    elif paid_by_name:
+                        UserExpense.objects.create(
+                            expense=expense,
+                            user=None,
+                            user_name=paid_by_name,
+                            amount_paid=total_amount,
+                            expected_share=total_expenses,
+                            debt=float(total_amount) - total_expenses
+                        )
+                    for debtor in debtors:
+                        debtor_user_id = debtor.get('user')
+                        debtor_name = debtor.get('user_name')
+                        debtor_amount = float(debtor.get('amount', 0))
+                        # Si hay user, busca el objeto User, si no, deja None
+                        debtor_user = User.objects.get(pk=debtor_user_id) if debtor_user_id else None
 
-            for debtor in debtors:
-                debtor_user_id = debtor.get('user')
-                debtor_name = debtor.get('user_name')
+                        UserExpense.objects.create(
+                            expense=expense,
+                            user=debtor_user,
+                            user_name=debtor_name,
+                            amount_paid=0,
+                            expected_share=debtor_amount,
+                            debt= debtor_amount
+                        )
+                    
+                    return JsonResponse({'success': True, 'expense_id': expense.expense_id}, status=201)
 
-                # Si hay user, busca el objeto User, si no, deja None
-                debtor_user = User.objects.get(pk=debtor_user_id) if debtor_user_id else None
+                case 'Equalitarian':
+                    participants_count = len(debtors) + 1
+                    share_expense = round(float(total_amount) / participants_count, 2)
+                    # UserExpense del pagador
+                    if user_obj:
+                        UserExpense.objects.create(
+                            expense=expense,
+                            user=user_obj,
+                            user_name=None,
+                            amount_paid=total_amount,
+                            expected_share=share_expense,
+                            debt=float(total_amount) - share_expense,
+                        )
+                    elif paid_by_name:
+                        UserExpense.objects.create(
+                            expense=expense,
+                            user=None,
+                            user_name=paid_by_name,
+                            amount_paid=total_amount,
+                            expected_share=share_expense,
+                            debt=float(total_amount) - share_expense,
+                        )
+                    for debtor in debtors:
+                        debtor_user_id = debtor.get('user')
+                        debtor_name = debtor.get('user_name')
+                        # Si hay user, busca el objeto User, si no, deja None
+                        debtor_user = User.objects.get(pk=debtor_user_id) if debtor_user_id else None
 
-                UserExpense.objects.create(
-                    expense=expense,
-                    user=debtor_user,
-                    user_name=debtor_name,
-                    amount_paid=0,
-                    expected_share=0,
-                    debt=debtor.get('amount', 0)
-                )
+                        UserExpense.objects.create(
+                            expense=expense,
+                            user=debtor_user,
+                            user_name=debtor_name,
+                            amount_paid=0,
+                            expected_share=share_expense,
+                            debt= share_expense,
+                        )
+                    return JsonResponse({'success': True, 'expense_id': expense.expense_id}, status=201)
 
-            return JsonResponse({'success': True, 'expense_id': expense.expense_id}, status=201)
+                case _:
+                    return JsonResponse({'error': 'Tipo de gasto no válido'}, status=400)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+        
+        
+
+@csrf_exempt
+def get_expense_detail(request, expense_id):
+    try:
+        expense = Expense.objects.get(pk=expense_id)
+        serializer = ExpenseWithNamesSerializer(expense)
+        
+        print("EXPENSE", expense)
+        print("SERIALEZER", serializer)
+        return JsonResponse({'success': True, 'Gasto': serializer.data})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
