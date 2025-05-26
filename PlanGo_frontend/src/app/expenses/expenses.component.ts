@@ -5,6 +5,7 @@ import { ItinerariesService } from '../core/services/itineraries.service';
 import { ParticipantsService } from '../core/services/participants.service';
 import { ExpensesService } from '../core/services/expenses.service';
 import { Expenses } from './interfaces/expenses.interface';
+import { UserExpenses } from './interfaces/userExpenses.interface';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { GoogleMapsModule } from '@angular/google-maps';
@@ -37,7 +38,6 @@ export class ExpensesComponent implements OnInit {
     mapId: 'DEMO_MAP_ID',
     disableDefaultUI: true,
   };
-
 
   constructor(private expensesService: ExpensesService, private destinationService: DestinationService, private itinerariesService: ItinerariesService, private participantsService: ParticipantsService, private router: Router, private formBuilder: FormBuilder,   private cdr: ChangeDetectorRef) {
     this.expenseForm = this.formBuilder.group({
@@ -255,5 +255,26 @@ export class ExpensesComponent implements OnInit {
       const id = String(p.participant_id);
       return id !== payerParticipantId && !selectedIds.includes(id);
     });
+  }
+
+
+  get userExpenses() {
+    return this.expenseForm.get('userExpenses') as FormArray;
+  }
+  
+  addUserExpense(): void {
+    this.userExpenses.push(
+      this.formBuilder.group({
+        user: [''], 
+        userName: [''],
+        amountPaid: [''],
+        expectedShare: [''],
+        debt: [''], 
+      })
+    );
+  }
+  
+  removeUserExpense(index: number): void {
+    this.userExpenses.removeAt(index);
   }
 }
