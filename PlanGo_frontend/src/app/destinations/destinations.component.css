@@ -1,0 +1,64 @@
+::ng-deep ng-dropdown-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 0.5rem;
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1050;
+}
+
+::ng-deep ng-dropdown-panel .ng-option {
+    padding: 0.5rem 1rem;
+    color: #374151;
+    cursor: pointer;
+}
+
+::ng-deep ng-dropdown-panel .ng-option:hover {
+    background-color: #e5e7eb;
+}
+
+::ng-deep .ng-select .ng-value {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 3rem;
+    padding: 0.3rem;
+    margin-right: 0.2rem;
+    font-size: 0.9rem;
+}
+
+::ng-deep .ng-select .ng-value .ng-value-icon {
+    color: #ffffff;
+    margin-right: 0.5rem;
+}
+
+::ng-deep .ng-select .ng-value .ng-value-icon:hover {
+    color: #ef4444;
+}
+
+::ng-deep .ng-select {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 0.5rem 1rem;
+    min-height: 3rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+::ng-deep .ng-select .ng-value-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+::ng-deep .ng-select .ng-input {
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    align-self: center;
+}
