@@ -9,13 +9,22 @@ import { HeaderComponent } from '../header/header.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MapComponent } from '../map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CounterDatesComponent } from '../counter-dates/counter-dates.component';
 
 @Component({
   standalone: true,
   selector: 'app-destinations',
   templateUrl: './destinations.component.html',
   styleUrl: './destinations.component.css',
-  imports: [CommonModule, FormsModule, HeaderComponent, ParticipantsComponent, GoogleMapsModule, MapComponent, NgSelectModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    HeaderComponent, 
+    ParticipantsComponent, 
+    GoogleMapsModule, 
+    MapComponent, 
+    NgSelectModule, 
+    CounterDatesComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA], 
 
 })
@@ -34,6 +43,11 @@ constructor(private destinationService: DestinationService, private route: Activ
         this.fetchDestinationsByItinerary(itineraryId);
       }
     });
+  }
+
+  guardarFechas(event: { idDestino: number; fechaInicio: string; fechaFin: string }): void {
+    console.log('Fechas confirmadas:', event);
+    // Handle the event here (e.g., save to the database or update the UI)
   }
   
   fetchDestinationsByItinerary(itineraryId: number): void {
