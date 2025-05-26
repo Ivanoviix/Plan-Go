@@ -85,20 +85,23 @@
       </div>
       <div class="flex flex-row mt-6 items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300"
         style="cursor:pointer;">
-        <h3 class="text-lg text text-white w-[30%]">Amsterdam</h3>
+        <h3 class="text-lg text text-white">Amsterdam</h3>
         <!-- <time class="text-lg text-white w-[40%] text-center">
           1st May 2025 - 6th May 2025
         </time> -->
-
-       
-      </div>
-      <app-day-counter
-        [idDestino]="3"
-        city="Amsterdam"
-        [max]="5"
-        startDateStr="2025-06-01"
-        (fechasConfirmadas)="guardarFechas($event)">
-      </app-day-counter>
+        <app-day-counter
+          class=""
+          [idDestino]="3"
+          city="Amsterdam"
+          [max]="5"
+          startDateStr="2025-06-01"
+          (fechasConfirmadas)="guardarFechas($event)">
+        </app-day-counter>
+        <h1 class="text-xl w-24 flex justify-center items-center text-center text-white">1</h1>
+        <h1 class="text-xl w-24 flex justify-center items-center text-center text-white">3</h1>
+        <h1 class="text-xl w-24 flex justify-center items-center text-center text-white">6</h1>
+        <div class="rounded-full w-20 h-12 bg-white text-center flex flex-row justify-center items-center"> 80€</div>
+      </div>   
     </section>
 
     <section class="map w-[35%]">
