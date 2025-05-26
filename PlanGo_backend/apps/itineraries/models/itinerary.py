@@ -8,7 +8,7 @@ class Itinerary(models.Model):
     creation_date = models.DateField()
     start_date = models.DateField()
     end_date = models.DateField()
-    destinations = models.TextField()  # Almacena el JSON como string
+    countries = models.TextField()  # Almacena el JSON como string
 
     class Meta:
         verbose_name = 'Itinerary'

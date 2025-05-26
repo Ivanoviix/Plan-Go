@@ -2,7 +2,7 @@ from django.db import models
 from .itinerary import Itinerary
 
 class Destination(models.Model):
-    itinerary = models.ForeignKey(Itinerary, on_delete=models.CASCADE, related_name='destination_list') 
+    itinerary = models.ForeignKey(Itinerary, on_delete=models.CASCADE, related_name='countires_list') 
     country = models.CharField(max_length=150)
     city_name = models.CharField(max_length=150)
     start_date = models.DateField()

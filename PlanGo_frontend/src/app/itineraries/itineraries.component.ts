@@ -57,7 +57,7 @@ export class ItinerariesComponent implements OnInit {
   
           return this.itinerariesService.getIdUser().pipe(
             switchMap((userId) => {
-              const destinations = this.itineraryForm.get('countries')?.value.map((country: string) => country);
+              const countries = this.itineraryForm.get('countries')?.value.map((country: string) => country);
   
               const newItinerary: Itinerary = {
                 itinerary_name: this.itineraryForm.get('itineraryName')?.value,
@@ -65,7 +65,7 @@ export class ItinerariesComponent implements OnInit {
                 creation_date: new Date().toISOString().split('T')[0],
                 start_date: this.itineraryForm.get('startDate')?.value,
                 end_date: this.itineraryForm.get('endDate')?.value,
-                destinations: destinations, // Enviar como array
+                countries: countries, // Enviar como array
               };
   
               return this.itinerariesService.createItinerary(newItinerary);

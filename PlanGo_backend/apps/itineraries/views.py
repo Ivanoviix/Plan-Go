@@ -53,9 +53,9 @@ def get_itineraries_by_user(request, user_id):
         return JsonResponse({'error': 'No hay itinerarios creados con este usuario.'}, status=404)
     data = []
     for i in itineraries:
-        destinations = i.destinations.split(',') if i.destinations else []
-        destinations_count = len(destinations)
-
+        countries = i.countries.split(',') if i.countries else []
+        countries_count = len(countries)
+        destinations_count = Destination.objects.filter(itinerary=i).count()
         data.append({
             'itinerary_id': i.itinerary_id,
             'itinerary_name': i.itinerary_name,
@@ -63,6 +63,7 @@ def get_itineraries_by_user(request, user_id):
             'creation_date': i.creation_date,
             'start_date': i.start_date,
             'end_date': i.end_date,
+            'countries': countries_count,
             'destinations_count': destinations_count,
         })
     return JsonResponse({'itineraries': data})
