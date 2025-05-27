@@ -10,7 +10,7 @@ from apps.expenses.models.expense import Expense
 from apps.users.models.user import User
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware.csrf import get_token
-from django.views.decorators.http import require_http_methods, require_POST
+from django.views.decorators.http import require_http_methods, require_POST, require_GET
 from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -221,19 +221,23 @@ def country_names_to_codes(names):
 
 
 @csrf_exempt
-@require_POST
+@require_GET
 def google_places_autocomplete(request):
-    print("holaaaa", request)
     input_text = request.GET.get('input')
     country_code = request.GET.get('country')
-    api_key = 'AIzaSyCAPQZNdVcJsRe9gaeaUuNPhu-APgGuIdE'
+    api_key = 'AIzaSyCAPQZNdVcJsRe9gaeaUuNPhu-APgGuIdE'  # Reemplaza con tu API key válida
 
     if not input_text or not country_code:
         return JsonResponse({'error': 'Missing input or country'}, status=400)
 
+    # Endpoint actualizado para Places API (New)
     url = (
         f'https://maps.googleapis.com/maps/api/place/autocomplete/json'
-        f'?input={input_text}&types=(cities)&components=country:{country_code}&key={api_key}'
+        f'?input={input_text}&components=country:{country_code}&key={api_key}'
     )
     response = requests.get(url)
+
+    if response.status_code != 200:
+        return JsonResponse({'error': 'Failed to fetch data from Google Places API'}, status=response.status_code)
+
     return JsonResponse(response.json())
