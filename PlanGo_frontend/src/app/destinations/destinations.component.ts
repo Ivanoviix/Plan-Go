@@ -41,11 +41,13 @@ export class DestinationsComponent implements OnInit {
 
 constructor(private destinationService: DestinationService, private route: ActivatedRoute) {}
 
-  ngOnInit(): void { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
+  async ngOnInit() { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
+    await this.getCountries();
     this.route.paramMap.subscribe(params => {
       const itineraryId = Number(params.get('itineraryId'));
       if (itineraryId) {
         this.fetchDestinationsByItinerary(itineraryId);
+        this.fetchCountriesByItinerary(itineraryId);
       }
     });
   }
@@ -56,20 +58,33 @@ constructor(private destinationService: DestinationService, private route: Activ
   }
   
   fetchDestinationsByItinerary(itineraryId: number): void {
-  this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
-    next: (data: any) => {
+    this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
+      next: (data: any) => {
 
-      this.destinations = data['User destinations'] || [];
-      this.destinations.forEach(dest => {
-        this.fetchDestinationSummary(dest.destination_id);
-      });
-    },
-    error: (err: any) => {
-      this.errorMessage = 'No se pudieron cargar los destinos.';
-      console.error(err);
-    }
-  });
-}
+        this.destinations = data['User destinations'] || [];
+        this.destinations.forEach(dest => {
+          this.fetchDestinationSummary(dest.destination_id);
+        });
+      },
+      error: (err: any) => {
+        this.errorMessage = 'No se pudieron cargar los destinos.';
+        console.error(err);
+      }
+    });
+  }
+
+  fetchCountriesByItinerary(itineraryId: number): void {
+    this.destinationService.getCountriesByItinerary(itineraryId).subscribe({
+      next: (data: any) => {
+          this.countries = data.countries;
+      },
+      error: () => {
+        this.countries = [];
+        console.log("No hay países en su destino")
+      }
+    });
+  }
+
   getTotalExpenses(): number {
     return this.destinations.reduce((sum, dest) => {
       const resumen = this.summary[dest.destination_id];
@@ -103,7 +118,7 @@ constructor(private destinationService: DestinationService, private route: Activ
 
   async getCountries(): Promise<void> {
     try {
-      let response = await fetch('https://restcountries.com/v3.1/all');
+      let response = await fetch('https://restcountries.com/v3.1/all')
       let data = await response.json();
       this.allCountries = data
         .map((country: any) => ({
@@ -115,13 +130,14 @@ constructor(private destinationService: DestinationService, private route: Activ
       console.error('Error al obtener los países:', error);
     }
   }
-
+  
+  
   getCountryCodesByNames(names: string[]): string[] {
     return this.allCountries
-      .filter(c => names.includes(c.name))
-      .map(c => c.code);
+    .filter(c => names.some(n => n.trim().toLowerCase() === c.name.trim().toLowerCase()))
+    .map(c => c.code)
   }
-
+  
   getCitiesMultipleCountries(input: string, countryCodes: string[]): Observable<string[]> {
     const calls = countryCodes.map(code => this.destinationService.getCitiesFromGoogle(input, code));
     return forkJoin(calls).pipe(
@@ -130,9 +146,12 @@ constructor(private destinationService: DestinationService, private route: Activ
       )
     );
   }
-
+  
   onCitySearch() {
     const countryCodes = this.getCountryCodesByNames(this.countries);
+    console.log('Texto buscado:', this.searchText);
+    console.log('Países (names):', this.countries);
+    console.log('Códigos de país:', countryCodes);
     if (this.searchText && countryCodes.length > 0) {
       this.getCitiesMultipleCountries(this.searchText, countryCodes).subscribe({
         next: (results: string[]) => this.cities = results,

@@ -23,6 +23,7 @@ from django.db.models import Sum
 from django.db import models
 import json
 import pycountry
+import requests
 # Create your views here.
         
 # ITINERARIOS
@@ -69,6 +70,17 @@ def get_itineraries_by_user(request, user_id):
         })
     return JsonResponse({'itineraries': data})
 
+# PlanGo_backend/apps/itineraries/views.py
+
+@api_view(['GET'])
+def get_countries_by_itinerary(request, itinerary_id):
+    try:
+        itinerary = Itinerary.objects.get(pk=itinerary_id)
+        countries_str = itinerary.countries or ''
+        countries_list = [c.strip() for c in countries_str.split(',') if c.strip()]
+        return Response({'countries': countries_list})
+    except Itinerary.DoesNotExist:
+        return Response({'error': 'Itinerario no encontrado'}, status=404)
 
 # Un decorador que indica que una vista no requiere validación CSRF (Cross-Site Request Forgery).
 @csrf_exempt
@@ -206,3 +218,22 @@ def country_name_to_code(name):
     
 def country_names_to_codes(names):
     return [country_name_to_code(name) for name in names if country_name_to_code(name)]
+
+
+@csrf_exempt
+@require_POST
+def google_places_autocomplete(request):
+    print("holaaaa", request)
+    input_text = request.GET.get('input')
+    country_code = request.GET.get('country')
+    api_key = 'AIzaSyCAPQZNdVcJsRe9gaeaUuNPhu-APgGuIdE'
+
+    if not input_text or not country_code:
+        return JsonResponse({'error': 'Missing input or country'}, status=400)
+
+    url = (
+        f'https://maps.googleapis.com/maps/api/place/autocomplete/json'
+        f'?input={input_text}&types=(cities)&components=country:{country_code}&key={api_key}'
+    )
+    response = requests.get(url)
+    return JsonResponse(response.json())
