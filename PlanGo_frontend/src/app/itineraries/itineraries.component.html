@@ -5,7 +5,7 @@
       <div class="itineraries-header w-auto h-20 flex flex-row justify-between items-center">
         <div class="w-[30%]">
           <h1 class="text-4xl font-bold text-gray-800">Itinerarios</h1>
-          <hr class="flex-grow border-black border-2 mt-4">
+          <hr class="flex-grow border-black border-[1px] mt-4">
         </div>
         <button 
           (click)="toggleForm()"
@@ -57,7 +57,7 @@
 
     <div class="w-full">
       <h1 class="text-3xl font-bold text-gray-800">New itinerary</h1>
-      <hr class="w-[60%] border-black border-2 mt-4">
+      <hr class="w-[60%] border-black border-[1px] mt-4">
     </div>
     <form [formGroup]="itineraryForm" (ngSubmit)="onSubmit()" class="mt-6">
       <div class="mb-4 h-20">
