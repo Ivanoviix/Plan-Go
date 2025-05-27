@@ -10,6 +10,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { MapComponent } from '../map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CounterDatesComponent } from '../counter-dates/counter-dates.component';
+import { forkJoin, map, Observable } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -33,6 +34,10 @@ export class DestinationsComponent implements OnInit {
   errorMessage: string = '';
   selectedItineraryId: number | null = null;
   summary: { [key: number]: any } = {};
+  countries: any[] = [];
+  allCountries: { code: string, name: string }[] = [];
+  searchText: string = '';
+  cities: string[] = [];
 
 constructor(private destinationService: DestinationService, private route: ActivatedRoute) {}
 
@@ -84,11 +89,23 @@ constructor(private destinationService: DestinationService, private route: Activ
     });
   }
 
+  fetchCountriesByDestination(destinationId: number): void {
+    this.destinationService.getCountriesByDestination(destinationId).subscribe({
+      next: (data: any) => {
+        this.countries = data.countries;
+      error: () => {
+        this.countries = [];
+        console.log("No hay países en su destino")
+      }
+      }
+    })
+  }
+
   async getCountries(): Promise<void> {
     try {
       let response = await fetch('https://restcountries.com/v3.1/all');
       let data = await response.json();
-      this.destinations = data
+      this.allCountries = data
         .map((country: any) => ({
           code: country.cca2,
           name: country.name.common,
@@ -98,5 +115,35 @@ constructor(private destinationService: DestinationService, private route: Activ
       console.error('Error al obtener los países:', error);
     }
   }
+
+  getCountryCodesByNames(names: string[]): string[] {
+    return this.allCountries
+      .filter(c => names.includes(c.name))
+      .map(c => c.code);
+  }
+
+  getCitiesMultipleCountries(input: string, countryCodes: string[]): Observable<string[]> {
+    const calls = countryCodes.map(code => this.destinationService.getCitiesFromGoogle(input, code));
+    return forkJoin(calls).pipe(
+      map(results =>
+        results.flatMap(r => r.predictions.map((p: any) => p.description))
+      )
+    );
+  }
+
+  onCitySearch() {
+    const countryCodes = this.getCountryCodesByNames(this.countries);
+    if (this.searchText && countryCodes.length > 0) {
+      this.getCitiesMultipleCountries(this.searchText, countryCodes).subscribe({
+        next: (results: string[]) => this.cities = results,
+        error: () => this.cities = [],
+      });
+    } else {
+      this.cities = [];
+      console.log("No se ha escrito nada en el input")
+    }
+  }
+  
+
 
 }

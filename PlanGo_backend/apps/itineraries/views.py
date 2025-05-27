@@ -22,6 +22,7 @@ from django.http import JsonResponse
 from django.db.models import Sum
 from django.db import models
 import json
+import pycountry
 # Create your views here.
         
 # ITINERARIOS
@@ -183,3 +184,25 @@ def destination_summary(request, destination_id):
         'restaurants_count': restaurants_count,
         'total_expenses': float(total_expenses),
     })
+    
+
+@api_view(['GET'])
+def get_countries_by_destination(request, destination_id):
+    try:
+        destination = Destination.objects.get(pk=destination_id)
+        itinerary = destination.itinerary
+        countries_str = itinerary.countries or ''
+        countries_list = [c.strip() for c in countries_str.split(',') if c.strip()]
+        return Response({'countries': countries_list, 'itinerary_id': itinerary.itinerary_id})
+    except Destination.DoesNotExist:
+        return Response({'error': 'Destino no encontrado'}, status=404)
+
+def country_name_to_code(name):
+    try:
+        country = pycountry.countries.search_fuzzy(name)[0]
+        return country.alpha_2
+    except LookupError:
+        return None
+    
+def country_names_to_codes(names):
+    return [country_name_to_code(name) for name in names if country_name_to_code(name)]

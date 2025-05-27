@@ -110,6 +110,9 @@ export class ExpensesComponent implements OnInit {
 
       this.expensesService.createExpense(newExpense).subscribe({
         next: () => {
+          this.expensesService.getExpensesByLoggedUser().subscribe({
+            next: (data) => this.expenses = data.expenses
+          });
           this.getTotalExpenses();
           this.showForm = false;
         },

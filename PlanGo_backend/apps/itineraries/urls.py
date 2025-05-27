@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import get_itineraries, get_itineraries_by_user, get_destinations, get_destinations_by_itinerary, create_destination, update_destination, create_itinerary, destination_summary, get_csrf_token
+from .views import get_itineraries, get_itineraries_by_user, get_destinations, get_destinations_by_itinerary, create_destination, update_destination, create_itinerary, destination_summary, get_countries_by_destination, get_csrf_token
 
 urlpatterns = [
     path('csrf-token/', get_csrf_token, name='get_csrf_token'),
@@ -14,5 +14,6 @@ urlpatterns = [
     path('destination/create/', create_destination, name='create_destination'),
     path('destination/update/<int:destination_id>/', update_destination, name='update_destination'),
     path('destination/<int:destination_id>/summary/', destination_summary, name='destination_summary'),
+    path('destination/<int:destination_id>/countries/', get_countries_by_destination, name='get_countries_by_destination'),
 
 ]

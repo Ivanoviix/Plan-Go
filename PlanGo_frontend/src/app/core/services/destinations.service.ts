@@ -11,6 +11,9 @@ import { MessageService } from '../messageService';
   providedIn: 'root',
 })
 export class DestinationService extends BaseHttpService {
+  map(arg0: (code: any) => any) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     public override httpClient: HttpClient, 
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -34,6 +37,16 @@ export class DestinationService extends BaseHttpService {
     return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/destination/${destinationId}/summary/`, { headers });
   }
 
+  getCountriesByDestination(destinationId: number): Observable<any> {
+    const headers = this.createHeaders();
+    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/destination/${destinationId}`, { headers })
+  }
+
+  getCitiesFromGoogle(input: string, countryCode: string): Observable<any> {
+    const apiKey = 'AIzaSyCAPQZNdVcJsRe9gaeaUuNPhu-APgGuIdE';
+    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&types=(cities)&components=country:${countryCode}&key=${apiKey}`;
+    return this.httpClient.get(url);
+  }
 
   private createHeaders(): HttpHeaders {
     let token = '';
