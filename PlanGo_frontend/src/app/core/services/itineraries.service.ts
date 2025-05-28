@@ -26,9 +26,14 @@ export class ItinerariesService extends BaseHttpService {
     return this.getIdUser().pipe(
       switchMap((userId) => {
         const headers = this.createHeaders();
-        return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/${userId}`, { headers });
+        return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/user/${userId}/`, { headers });
       })
     );
+  }
+
+  getItineraryById(itineraryId: number): Observable<any> {
+    const headers = this.createHeaders();
+    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/itinerary/${itineraryId}/`, { headers });
   }
   
   createItinerary(itinerary: Itinerary): Observable<any> {
