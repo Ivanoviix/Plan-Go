@@ -3,6 +3,7 @@ import { DestinationService } from '../core/services/destinations.service';
 import { ParticipantsComponent } from '../participants/participants.component';
 import { Destination } from './interfaces/destinations.interface'; 
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
@@ -39,7 +40,8 @@ export class DestinationsComponent implements OnInit {
 constructor(
   private destinationService: DestinationService, 
   private route: ActivatedRoute,
-  private itineraryService: ItinerariesService
+  private router: Router,
+  private itineraryService: ItinerariesService,
 ) {}
 
   ngOnInit(): void { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
@@ -124,6 +126,10 @@ constructor(
     } catch (error) {
       console.error('Error al obtener los países:', error);
     }
+  }
+
+  goPlaces(){
+    this.router.navigate(['/search/places']);
   }
 
 }
