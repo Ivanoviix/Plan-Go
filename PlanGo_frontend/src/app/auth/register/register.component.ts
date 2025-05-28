@@ -5,11 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { RegisterService } from '../../core/services/register.service';
+import { AnimatedBackgroundComponent } from '../../core/animated-background/animated-background.component';
 
 @Component({
   standalone: true,
   selector: 'app-register',
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, AnimatedBackgroundComponent],
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
