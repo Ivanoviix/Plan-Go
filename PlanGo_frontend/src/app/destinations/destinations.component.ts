@@ -10,6 +10,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { MapComponent } from '../map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CounterDatesComponent } from '../counter-dates/counter-dates.component';
+import { ItinerariesService } from '../core/services/itineraries.service';
 
 @Component({
   standalone: true,
@@ -30,17 +31,43 @@ import { CounterDatesComponent } from '../counter-dates/counter-dates.component'
 })
 export class DestinationsComponent implements OnInit {
   destinations: Destination[] = [];
+  selectedItinerary: any = null;
   errorMessage: string = '';
   selectedItineraryId: number | null = null;
   summary: { [key: number]: any } = {};
 
-constructor(private destinationService: DestinationService, private route: ActivatedRoute) {}
+constructor(
+  private destinationService: DestinationService, 
+  private route: ActivatedRoute,
+  private itineraryService: ItinerariesService
+) {}
 
   ngOnInit(): void { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
     this.route.paramMap.subscribe(params => {
       const itineraryId = Number(params.get('itineraryId'));
       if (itineraryId) {
         this.fetchDestinationsByItinerary(itineraryId);
+      }
+    });
+
+    this.route.paramMap.subscribe(params => {
+      const itineraryId = Number(params.get('itineraryId'));
+      if (itineraryId) {
+        this.fetchItineraryDetails(itineraryId); // Obtener el objeto completo del itinerario
+      }
+    });
+  }
+
+  fetchItineraryDetails(itineraryId: number): void {
+    console.log('Fetching itinerary with ID:', itineraryId); // Debugging
+    this.itineraryService.getItineraryById(itineraryId).subscribe({
+      next: (itinerary: any) => {
+        console.log('Itinerary data:', itinerary);
+        this.selectedItinerary = itinerary;
+      },
+      error: (err: any) => {
+        console.error('Error fetching itinerary:', err);
+        this.selectedItinerary = null;
       }
     });
   }

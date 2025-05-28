@@ -10,8 +10,8 @@
       <div class="sticky top-0 bg-white z-10 pb-3">
         <div class="h-20 flex flex-row justify-between items-center">
           <div class="flex flex-col">
-            <h1 class="text-2xl font-bold">Nombre itinerario</h1>
-            <h2 class="text-xl">1st May 2025 - 6th May 2025</h2>
+            <h1 class="text-2xl font-bold">{{ selectedItinerary?.itinerary_name }}</h1>
+            <time class="text-xl">{{ selectedItinerary?.start_date | date:'dd-MMMM-yyyy' }} - {{ selectedItinerary?.end_date | date:'dd-MMMM-yyyy' }}</time>
           </div>
           <div class="flex flex-row items-center">
             <div class="h-10 w-px bg-gray-700 mx-4"></div>
@@ -31,12 +31,12 @@
             <div class="h-10 w-px bg-gray-700 mx-4"></div>
             <div
               class="bg-[--primary-color] text-white rounded-full text-center text-xl h-10 w-20 flex items-center justify-center">
-              250€
+              {{ getTotalExpenses() | currency:'EUR' }}
             </div>
           </div>
         </div>
         <div class="h-24 w-full flex justify-center items-center">
-          <h1 class="text-4xl font-bold">Germany and Holland</h1>
+          <h1 class="text-4xl font-bold">{{ selectedItinerary?.countries }}</h1>
         </div>
       </div>
       
@@ -92,22 +92,22 @@
       <!-- Destinations List -->
       <div class="container-destinations flex-grow overflow-y-auto">
         <div
-          *ngFor="let i of [].constructor(12)"
+          *ngFor="let destination of destinations"
           class="flex flex-row mt-4 items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300"
           style="cursor:pointer;">
-          <h3 class="text-lg text-white">Amsterdam</h3>
+          <h3 class="text-lg text-white">{{ destination.city_name }}</h3>
           <app-day-counter 
             class="-translate-x-4" 
-            [idDestino]="3" 
-            city="Amsterdam" 
+            [idDestino]="destination.destination_id" 
+            [city]="destination.city_name" 
             [max]="5" 
-            startDateStr="2025-06-01"
+            [startDateStr]="(destination.start_date | date:'yyyy-MM-dd') ?? ''"
             (fechasConfirmadas)="guardarFechas($event)">
           </app-day-counter>
-          <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-6">1</h1>
-          <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">3</h1>
-          <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">6</h1>
-          <div class="rounded-full w-20 h-12 bg-white text-center flex flex-row justify-center items-center">80€</div>
+          <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-6">{{ summary[destination.destination_id]?.accommodations_count }}</h1>
+          <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">{{ summary[destination.destination_id]?.restaurants_count }}</h1>
+          <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">{{ summary[destination.destination_id]?.activities_count }}</h1>
+          <div class="rounded-full w-20 h-12 bg-white text-center flex flex-row justify-center items-center">{{ summary[destination.destination_id]?.total_expenses | currency:'EUR' }}</div>
         </div>
       </div>
     </section>
