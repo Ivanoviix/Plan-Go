@@ -77,6 +77,8 @@ export class ItinerariesService extends BaseHttpService {
   }
   
   getCsrfTokenFromServer(): Observable<string> {
+    if (!isPlatformBrowser(this.platformId)) return throwError(() => new Error('localStorage is not available in this environment'));
+  
     const token = localStorage.getItem(globals.keys.accessToken) || '';
     if (!token) {
       return throwError(() => new Error('Token de usuario no disponible'));
