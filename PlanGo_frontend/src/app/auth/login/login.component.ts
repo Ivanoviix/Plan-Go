@@ -1,23 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { LoginService } from '../../core/services/login.service'; // Importa el servicio
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { globals } from '../../core/globals';
+import { AnimatedBackgroundComponent } from '../../core/animated-background/animated-background.component';
 
 @Component({
   standalone: true,
   selector: 'app-login',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, AnimatedBackgroundComponent],
   templateUrl: './login.component.html',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class LoginComponent {
   errorMessage = '';
   email = '';
   password = '';
 
-  constructor(private auth: Auth, private router: Router, private loginService: LoginService) {}
+  constructor(
+    private auth: Auth,
+    private router: Router, 
+    private loginService: LoginService,
+  ) {}
 
   async loginWithGoogle() {
     try {
