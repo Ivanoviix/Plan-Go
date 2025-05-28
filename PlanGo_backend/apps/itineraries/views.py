@@ -63,11 +63,21 @@ def get_itineraries_by_user(request, user_id):
             'creation_date': i.creation_date,
             'start_date': i.start_date,
             'end_date': i.end_date,
-            'countries': countries_count,
+            'countries': countries,
             'destinations_count': destinations_count,
         })
     return JsonResponse({'itineraries': data})
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_itinerary_by_id(request, itinerary_id):
+    print("Usuario autenticado:", request.user)
+    try:
+        itinerary = Itinerary.objects.get(pk=itinerary_id, creator_user=request.user)
+        serializer = ItinerarySerializer(itinerary)
+        return JsonResponse(serializer.data, safe=False)
+    except Itinerary.DoesNotExist:
+        return JsonResponse({'error': 'Itinerario no encontrado o no tienes permiso para acceder a él.'}, status=404)
 
 # Un decorador que indica que una vista no requiere validación CSRF (Cross-Site Request Forgery).
 @csrf_exempt
