@@ -128,6 +128,24 @@ constructor(
     }
   }
 
+  formatCountries(): string {
+    if (!this.selectedItinerary?.countries) {
+      return '';
+    }
+  
+    const countriesArray = this.selectedItinerary.countries.split(',');
+    const length = countriesArray.length;
+  
+    if (length === 2) {
+      return countriesArray.join(' y ');
+    } else if (length > 2) {
+      const lastCountry = countriesArray.pop();
+      return `${countriesArray.join(', ')} y ${lastCountry}`;
+    }
+  
+    return this.selectedItinerary.countries; // Return as is if there's only one country
+  }
+
   goPlaces(){
     this.router.navigate(['/search/places']);
   }
