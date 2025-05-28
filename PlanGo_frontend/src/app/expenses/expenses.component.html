@@ -56,9 +56,17 @@
     <section class="p-8 border-l-2 border-gray w-[35%] h-screen overflow-y-auto">
       <div *ngIf="selectedExpense; else noExpense">
         <!-- Cluster 1 -->
-        <div class="mb-8 flex flex-row">
-          <h1 class="text-xl font-bold">Nombre: </h1> 
-          <h1 class="text-xl font-normal"> {{ selectedExpense.Gasto.itinerary_name }} - {{ selectedExpense.Gasto.city_name }}</h1>
+        <div class="mb-8 flex flex-col items-center justify-between">
+          <div class="flex flex-col">
+            <div class="flex flex-row">
+              <h1 class="text-xl font-bold">Nombre: </h1> 
+              <span class="mx-2"></span>
+              <h1 class="text-xl font-normal flex flex-row justify-between"> {{ selectedExpense.Gasto.itinerary_name }} - {{ selectedExpense.Gasto.city_name }}</h1>
+            </div>
+          </div>
+            <div class="rounded-full mt-6 bg-[--primary-color] h-12 text-center text-white font-bold flex px-4 items-center">
+            Tipo: {{ selectedExpense.Gasto.type_expense === 'Equalitarian' ? 'Equitativo' : 'Personalizado' }}
+            </div>
         </div>
         <div class="my-4 flex flex-row justify-between items-center">
           <h2 class="text-md">Costes totales:</h2>
