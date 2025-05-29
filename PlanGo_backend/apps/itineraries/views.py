@@ -233,7 +233,7 @@ def google_places_autocomplete(request):
     # Endpoint actualizado para Places API (New)
     url = (
         f'https://maps.googleapis.com/maps/api/place/autocomplete/json'
-        f'?input={input_text}&components=country:{country_code}&key={api_key}'
+        f'?input={input_text}&types=(cities)&components=country:{country_code}&key={api_key}'
     )
     response = requests.get(url)
 
