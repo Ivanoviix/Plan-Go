@@ -222,6 +222,7 @@ def create_expense(request):
 
             match type_expense:
                 case 'Personalized':
+                    print("PRINT! ", type_expense)
                     total_expenses = sum(float(debtor.get('amount', 0)) for debtor in debtors)
                     # UserExpense del pagador
                     if user_obj:
@@ -230,7 +231,7 @@ def create_expense(request):
                             user=user_obj,
                             user_name=None,
                             amount_paid=total_amount,
-                            expected_share=total_expenses,
+                            expected_share=float(total_amount) - total_expenses,
                             debt=float(total_amount) - total_expenses
                         )
                     elif paid_by_name:
@@ -239,7 +240,7 @@ def create_expense(request):
                             user=None,
                             user_name=paid_by_name,
                             amount_paid=total_amount,
-                            expected_share=total_expenses,
+                            expected_share=float(total_amount) - total_expenses,
                             debt=float(total_amount) - total_expenses
                         )
                     for debtor in debtors:

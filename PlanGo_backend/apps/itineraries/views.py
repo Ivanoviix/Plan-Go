@@ -10,7 +10,7 @@ from apps.expenses.models.expense import Expense
 from apps.users.models.user import User
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware.csrf import get_token
-from django.views.decorators.http import require_http_methods, require_POST
+from django.views.decorators.http import require_http_methods, require_POST, require_GET
 from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -22,6 +22,8 @@ from django.http import JsonResponse
 from django.db.models import Sum
 from django.db import models
 import json
+import pycountry
+import requests
 # Create your views here.
         
 # ITINERARIOS
@@ -78,6 +80,17 @@ def get_itinerary_by_id(request, itinerary_id):
         return JsonResponse(serializer.data, safe=False)
     except Itinerary.DoesNotExist:
         return JsonResponse({'error': 'Itinerario no encontrado o no tienes permiso para acceder a él.'}, status=404)
+# PlanGo_backend/apps/itineraries/views.py
+
+@api_view(['GET'])
+def get_countries_by_itinerary(request, itinerary_id):
+    try:
+        itinerary = Itinerary.objects.get(pk=itinerary_id)
+        countries_str = itinerary.countries or ''
+        countries_list = [c.strip() for c in countries_str.split(',') if c.strip()]
+        return Response({'countries': countries_list})
+    except Itinerary.DoesNotExist:
+        return Response({'error': 'Itinerario no encontrado'}, status=404)
 
 # Un decorador que indica que una vista no requiere validación CSRF (Cross-Site Request Forgery).
 @csrf_exempt
@@ -193,3 +206,48 @@ def destination_summary(request, destination_id):
         'restaurants_count': restaurants_count,
         'total_expenses': float(total_expenses),
     })
+    
+
+@api_view(['GET'])
+def get_countries_by_destination(request, destination_id):
+    try:
+        destination = Destination.objects.get(pk=destination_id)
+        itinerary = destination.itinerary
+        countries_str = itinerary.countries or ''
+        countries_list = [c.strip() for c in countries_str.split(',') if c.strip()]
+        return Response({'countries': countries_list, 'itinerary_id': itinerary.itinerary_id})
+    except Destination.DoesNotExist:
+        return Response({'error': 'Destino no encontrado'}, status=404)
+
+def country_name_to_code(name):
+    try:
+        country = pycountry.countries.search_fuzzy(name)[0]
+        return country.alpha_2
+    except LookupError:
+        return None
+    
+def country_names_to_codes(names):
+    return [country_name_to_code(name) for name in names if country_name_to_code(name)]
+
+
+@csrf_exempt
+@require_GET
+def google_places_autocomplete(request):
+    input_text = request.GET.get('input')
+    country_code = request.GET.get('country')
+    api_key = 'AIzaSyCAPQZNdVcJsRe9gaeaUuNPhu-APgGuIdE'  # Reemplaza con tu API key válida
+
+    if not input_text or not country_code:
+        return JsonResponse({'error': 'Missing input or country'}, status=400)
+
+    # Endpoint actualizado para Places API (New)
+    url = (
+        f'https://maps.googleapis.com/maps/api/place/autocomplete/json'
+        f'?input={input_text}&types=(cities)&components=country:{country_code}&key={api_key}'
+    )
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        return JsonResponse({'error': 'Failed to fetch data from Google Places API'}, status=response.status_code)
+
+    return JsonResponse(response.json())
