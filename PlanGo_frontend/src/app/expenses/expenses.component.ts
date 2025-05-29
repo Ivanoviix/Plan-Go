@@ -45,10 +45,10 @@ export class ExpensesComponent implements OnInit {
       itinerary: [null, Validators.required],
       destination: [null, Validators.required],
       payer: [null, Validators.required],
-      total_amount: ['', Validators.required],
+      total_amount: ['', Validators.min(0.01)],
       description: [''],
       date: [null],
-      type_expense: ['', Validators.required],
+      type_expense: ['Personalized', Validators.required],
       debtors: this.formBuilder.array([]),
     });
   }
@@ -73,6 +73,18 @@ export class ExpensesComponent implements OnInit {
 
   toggleForm(): void {
     this.showForm = !this.showForm;
+  
+    if (this.showForm) {
+      this.expenseForm.reset({
+        itinerary: '',
+        destination: '',
+        payer: '',
+        total_amount: '',
+        description: '',
+        type_expense: 'Personalized', 
+        debtors: [],
+      });
+    }
   }
 
   onSubmit(): void {

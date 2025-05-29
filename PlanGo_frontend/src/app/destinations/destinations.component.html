@@ -10,8 +10,8 @@
       <div class="sticky top-0 bg-white z-10 pb-3">
         <div class="h-20 flex flex-row justify-between items-center">
           <div class="flex flex-col">
-            <h1 class="text-2xl font-bold">Nombre itinerario</h1>
-            <h2 class="text-xl">1st May 2025 - 6th May 2025</h2>
+            <h1 class="text-2xl font-bold">{{ selectedItinerary?.itinerary_name }}</h1>
+            <time class="text-xl">{{ selectedItinerary?.start_date | date:'dd-MMMM-yyyy' }} - {{ selectedItinerary?.end_date | date:'dd-MMMM-yyyy' }}</time>
           </div>
           <div class="flex flex-row items-center">
             <div class="h-10 w-px bg-gray-700 mx-4"></div>
@@ -32,12 +32,12 @@
             <div class="h-10 w-px bg-gray-700 mx-4"></div>
             <div
               class="bg-[--primary-color] text-white rounded-full text-center text-xl h-10 w-20 flex items-center justify-center">
-              250€
+              {{ getTotalExpenses() | currency:'EUR' }}
             </div>
           </div>
         </div>
         <div class="h-24 w-full flex justify-center items-center">
-          <h1 class="text-4xl font-bold">Germany and Holland</h1>
+          <h1 class="text-4xl font-bold">{{ formatCountries() }}</h1>
         </div>
       </div>
 
@@ -105,11 +105,18 @@
 
       <!-- Destinations List -->
       <div *ngIf="destinations.length > 0" class="container-destinations flex-grow overflow-y-auto">
-        <div *ngFor="let destination of destinations"
+        <div
+          *ngFor="let destination of destinations"
+          (click)="goPlaces()"
           class="flex flex-row mt-4 items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300"
           style="cursor:pointer;">
-          <h3 class="text-lg text-white">{{ destination.city_name }}, {{ destination.country }}</h3>
-          <app-day-counter class="-translate-x-4" [idDestino]="3" city="Amsterdam" [max]="5" startDateStr="2025-06-01"
+          <h3 class="text-lg text-white w-[93px]">{{ destination.city_name }}</h3>
+          <app-day-counter 
+            class="-translate-x-4" 
+            [idDestino]="destination.destination_id" 
+            [city]="destination.city_name" 
+            [max]="5" 
+            [startDateStr]="(destination.start_date | date:'yyyy-MM-dd') ?? ''"
             (fechasConfirmadas)="guardarFechas($event)">
             <!-- {{ destination.start_date }} - {{ destination.end_date }} -->
           </app-day-counter>

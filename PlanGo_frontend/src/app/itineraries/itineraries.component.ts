@@ -107,7 +107,7 @@ export class ItinerariesComponent implements OnInit {
       this.countries = data
         .map((country: any) => ({
           code: country.cca2,
-          name: country.name.common,
+          name: country.translations?.spa?.common || country.name.common, // Nombre en español o común si no está disponible
         }))
         .sort((a: any, b: any) => a.name.localeCompare(b.name));
     } catch (error) {

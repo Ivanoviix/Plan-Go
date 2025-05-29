@@ -5,6 +5,7 @@ import { ItinerariesComponent } from './itineraries/itineraries.component';
 import { DestinationsComponent} from './destinations/destinations.component';
 import { ExpensesComponent } from './expenses/expenses.component';
 import { ParticipantsComponent } from './participants/participants.component';
+import { SearchLocationsComponent } from './search-locations/search-locations.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, data: { animation: 'LoginPage' } },
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'itineraries', component: ItinerariesComponent },
   { path: 'participants', component: ParticipantsComponent },
   { path: 'destinations/:itineraryId', component: DestinationsComponent },
+  { path: 'search/places', component: SearchLocationsComponent },
   { path: 'expenses', component: ExpensesComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },

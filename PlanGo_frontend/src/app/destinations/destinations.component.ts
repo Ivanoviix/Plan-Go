@@ -3,6 +3,7 @@ import { DestinationService } from '../core/services/destinations.service';
 import { ParticipantsComponent } from '../participants/participants.component';
 import { Destination } from './interfaces/destinations.interface'; 
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
@@ -10,6 +11,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { MapComponent } from '../map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CounterDatesComponent } from '../counter-dates/counter-dates.component';
+import { ItinerariesService } from '../core/services/itineraries.service';
 import { forkJoin, map, Observable } from 'rxjs';
 
 @Component({
@@ -31,6 +33,7 @@ import { forkJoin, map, Observable } from 'rxjs';
 })
 export class DestinationsComponent implements OnInit {
   destinations: Destination[] = [];
+  selectedItinerary: any = null;
   errorMessage: string = '';
   selectedItineraryId: number | null = null;
   summary: { [key: number]: any } = {};
@@ -39,7 +42,12 @@ export class DestinationsComponent implements OnInit {
   searchText: string = '';
   cities: string[] = [];
 
-constructor(private destinationService: DestinationService, private route: ActivatedRoute) {}
+constructor(
+  private destinationService: DestinationService, 
+  private route: ActivatedRoute,
+  private router: Router,
+  private itineraryService: ItinerariesService,
+) {}
 
   async ngOnInit() { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
     await this.getCountries();
@@ -50,7 +58,50 @@ constructor(private destinationService: DestinationService, private route: Activ
         this.fetchCountriesByItinerary(itineraryId);
       }
     });
+
+    this.route.paramMap.subscribe(params => {
+      const itineraryId = Number(params.get('itineraryId'));
+      if (itineraryId) {
+        this.fetchItineraryDetails(itineraryId); // Obtener el objeto completo del itinerario
+      }
+    });
   }
+
+  // CUAL DE LAS 2 ES LA QUE SE UTILIZA?
+  fetchItineraryDetails(itineraryId: number): void {
+    console.log('Fetching itinerary with ID:', itineraryId); // Debugging
+    this.itineraryService.getItineraryById(itineraryId).subscribe({
+      next: (itinerary: any) => {
+        console.log('Itinerary data:', itinerary);
+        this.selectedItinerary = itinerary;
+      },
+      error: (err: any) => {
+        console.error('Error fetching itinerary:', err);
+        this.selectedItinerary = null;
+      }
+    });
+
+    this.route.paramMap.subscribe(params => {
+      const itineraryId = Number(params.get('itineraryId'));
+      if (itineraryId) {
+        this.fetchItineraryDetails(itineraryId); // Obtener el objeto completo del itinerario
+      }
+    });
+  }
+
+  // fetchItineraryDetails(itineraryId: number): void {
+  //   console.log('Fetching itinerary with ID:', itineraryId); // Debugging
+  //   this.itineraryService.getItineraryById(itineraryId).subscribe({
+  //     next: (itinerary: any) => {
+  //       console.log('Itinerary data:', itinerary);
+  //       this.selectedItinerary = itinerary;
+  //     },
+  //     error: (err: any) => {
+  //       console.error('Error fetching itinerary:', err);
+  //       this.selectedItinerary = null;
+  //     }
+  //   });
+  // }
 
   guardarFechas(event: { idDestino: number; fechaInicio: string; fechaFin: string }): void {
     console.log('Fechas confirmadas:', event);
@@ -130,7 +181,7 @@ constructor(private destinationService: DestinationService, private route: Activ
       console.error('Error al obtener los países:', error);
     }
   }
-  
+
   
   getCountryCodesByNames(names: string[]): string[] {
     return this.allCountries
@@ -163,6 +214,26 @@ constructor(private destinationService: DestinationService, private route: Activ
     }
   }
   
+formatCountries(): string {
+    if (!this.selectedItinerary?.countries) {
+      return '';
+    }
+  
+    const countriesArray = this.selectedItinerary.countries.split(',');
+    const length = countriesArray.length;
+  
+    if (length === 2) {
+      return countriesArray.join(' y ');
+    } else if (length > 2) {
+      const lastCountry = countriesArray.pop();
+      return `${countriesArray.join(', ')} y ${lastCountry}`;
+    }
+  
+    return this.selectedItinerary.countries; // Return as is if there's only one country
+  }
 
+  goPlaces(){
+    this.router.navigate(['/search/places']);
+  }
 
 }
