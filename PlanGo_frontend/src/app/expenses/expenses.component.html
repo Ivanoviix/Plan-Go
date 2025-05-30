@@ -176,7 +176,7 @@
             <option value="" disabled selected>Selecciona un itinerario</option>
             <option *ngFor="let itin of itineraries" [value]="itin.itinerary_id">{{ itin.itinerary_name }}</option>
           </select>
-          <div *ngIf="formSubmitted && expenseForm.errors && expenses.errors.itineraryRequired"
+          <div *ngIf="formSubmitted && expenseForm.errors && expenses.errors['itineraryRequired']"
             class="text-red-500 mb-4">
             {{ validatorMessages['itineraryRequired'] }}
           </div>
@@ -189,7 +189,7 @@
             <option value="" disabled selected>Selecciona un destino</option>
             <option *ngFor="let dest of destinations" [value]="dest.destination_id">{{ dest.city_name }}</option>
           </select>
-          <div *ngIf="formSubmitted && expenseForm.errors && expenses.errors.destinationRequired"
+          <div *ngIf="formSubmitted && expenseForm.errors && expenses.errors['destinationRequired']"
             class="text-red-500 mb-4">
             {{ validatorMessages['destinationRequired'] }}
           </div>
