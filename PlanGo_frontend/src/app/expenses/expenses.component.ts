@@ -3,12 +3,14 @@ import { FormGroup, FormBuilder, Validators, FormArray, ReactiveFormsModule } fr
 import { DestinationService } from '../core/services/destinations.service';
 import { ItinerariesService } from '../core/services/itineraries.service';
 import { ParticipantsService } from '../core/services/participants.service';
+import { ValidatorMessages } from '../core/validators/validator-messages';
+import { CustomValidators } from '../core/validators/custom-validators';
 import { ExpensesService } from '../core/services/expenses.service';
-import { Expenses } from './interfaces/expenses.interface';
 import { UserExpenses } from './interfaces/userExpenses.interface';
-import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
+import { Expenses } from './interfaces/expenses.interface';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
@@ -30,26 +32,33 @@ export class ExpensesComponent implements OnInit {
   participants: any[] = [];
   expenseForm: FormGroup;
   showForm: boolean = false;
+  formSubmitted: boolean = false;
   errorMessage: string = '';
+  validatorMessages = ValidatorMessages;
   center = { lat: 39.720007, lng: 2.910419 };
   zoom = 13;
   map!: google.maps.Map;
   selectedDestination: any = null;
-  mapOptions: google.maps.MapOptions = {
+  mapOptions: google.maps.MapOptions = {  
     mapId: 'DEMO_MAP_ID',
     disableDefaultUI: true,
   };
 
   constructor(private expensesService: ExpensesService, private destinationService: DestinationService, private itinerariesService: ItinerariesService, private participantsService: ParticipantsService, private router: Router, private formBuilder: FormBuilder,   private cdr: ChangeDetectorRef) {
     this.expenseForm = this.formBuilder.group({
-      itinerary: [null, Validators.required],
-      destination: [null, Validators.required],
-      payer: [null, Validators.required],
-      total_amount: ['', Validators.min(0.01)],
+      itinerary: [null],
+      destination: [null],
+      payer: [null],
+      total_amount: [''],
       description: [''],
       date: [null],
       type_expense: ['Personalized', Validators.required],
       debtors: this.formBuilder.array([]),
+    }, {
+      validators: [
+        CustomValidators.payerAndAmountRequired(),
+        CustomValidators.debtorsNotExceedTotalAmount()
+      ]
     });
   }
 
@@ -73,7 +82,8 @@ export class ExpensesComponent implements OnInit {
 
   toggleForm(): void {
     this.showForm = !this.showForm;
-  
+    this.formSubmitted = false; 
+    this.errorMessage = '';
     if (this.showForm) {
       this.expenseForm.reset({
         itinerary: '',
@@ -88,8 +98,10 @@ export class ExpensesComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.formSubmitted = true;
     if (this.expenseForm.valid) {
       const formValue = this.expenseForm.value;
+
       const payerId = Number(formValue.payer);
       const payer = this.participants.find(p => p.participant_id === payerId);
 
@@ -119,7 +131,6 @@ export class ExpensesComponent implements OnInit {
         type_expense: formValue.type_expense,
         debtors
       };
-
       this.expensesService.createExpense(newExpense).subscribe({
         next: () => {
           this.expensesService.getExpensesByLoggedUser().subscribe({
@@ -180,8 +191,8 @@ export class ExpensesComponent implements OnInit {
 
   onPayerChange(): void {
     const debtorsArray = this.expenseForm.get('debtors') as FormArray;
-    debugger
     debtorsArray.clear();
+    this.expenseForm.updateValueAndValidity();
   }
 
   
@@ -211,7 +222,6 @@ export class ExpensesComponent implements OnInit {
   
   get possibleDebtors() {
     const payerId = this.expenseForm?.value?.payer;
-    debugger
     return this.participants.filter(p => (p.user || p.participant_id) !== payerId);
   }
 

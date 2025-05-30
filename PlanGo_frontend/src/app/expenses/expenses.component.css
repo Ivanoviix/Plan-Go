@@ -1,0 +1,12 @@
+/* Lo pondré para ocultar las flechitas en Chrome, Safari, Edge, Opera */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Y también para ocultar las flechitas en Firefox */
+.no-spinner[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
