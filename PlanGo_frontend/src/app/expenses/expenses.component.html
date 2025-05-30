@@ -59,14 +59,16 @@
         <div class="mb-8 flex flex-col items-center justify-between">
           <div class="flex flex-col">
             <div class="flex flex-row">
-              <h1 class="text-xl font-bold">Nombre: </h1> 
+              <h1 class="text-xl font-bold">Nombre: </h1>
               <span class="mx-2"></span>
-              <h1 class="text-xl font-normal flex flex-row justify-between"> {{ selectedExpense.Gasto.itinerary_name }} - {{ selectedExpense.Gasto.city_name }}</h1>
+              <h1 class="text-xl font-normal flex flex-row justify-between"> {{ selectedExpense.Gasto.itinerary_name }}
+                - {{ selectedExpense.Gasto.city_name }}</h1>
             </div>
           </div>
-            <div class="rounded-full mt-6 bg-[--primary-color] h-12 text-center text-white font-bold flex px-4 items-center">
+          <div
+            class="rounded-full mt-6 bg-[--primary-color] h-12 text-center text-white font-bold flex px-4 items-center">
             Tipo: {{ selectedExpense.Gasto.type_expense === 'Equalitarian' ? 'Equitativo' : 'Personalizado' }}
-            </div>
+          </div>
         </div>
         <div class="my-4 flex flex-row justify-between items-center">
           <h2 class="text-md">Costes totales:</h2>
@@ -110,12 +112,13 @@
         <!-- Cluster 4 -->
         <div class="mt-8">
           <h1 class="text-xl font-bold">Deuda</h1>
-            <hr class="w-[75%] border-black border-[1px] mt-2">
+          <hr class="w-[75%] border-black border-[1px] mt-2">
           <div *ngFor="let ue of selectedExpense.Gasto.user_expenses" class="mb-4">
             <ng-container *ngIf="ue.user_name !== selectedExpense.Gasto.paid_by_name">
               <div class="flex flex-row items-center justify-between">
                 <h2 class="text-md">{{ ue.user_name || 'Usuario' }}:</h2>
-                <div class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
+                <div
+                  class="h-10 bg-[--primary-color] text-white px-4 py-2 rounded-full flex items-center justify-center">
                   {{ ue.expected_share }}€
                 </div>
               </div>
@@ -154,7 +157,7 @@
           (click)="setEqualitarian()"
           [ngClass]="{'bg-[--primary-color] text-white': expenseForm.value.type_expense === 'Equalitarian', 'bg-gray-200 text-gray-800': expenseForm.value.type_expense !== 'Equalitarian'}">
           Equitativo</button>
-        <button type="button" 
+        <button type="button"
           class="h-12 w-full bg-[--primary-color] hover:bg-[--secondary-color] rounded-full text-white"
           (click)="setPersonalized()"
           [ngClass]="{'bg-[--primary-color] text-white': expenseForm.value.type_expense === 'Personalized', 'bg-gray-200 text-gray-800': expenseForm.value.type_expense !== 'Personalized'}">
@@ -164,26 +167,34 @@
     </div>
 
     <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="mt-6">
-        <div class="flex flex-row justify-between">
+      <div class="flex flex-row justify-between">
         <!-- Itinerary -->
         <div class="mb-4 w-[47%]">
           <label for="itinerary" class="block text-gray-700">Itinerario *</label>
           <select id="itinerary" formControlName="itinerary" (change)="onItineraryChange()"
-          class="w-full h-12 border p-2 rounded-full" required>
-          <option value="" disabled selected>Selecciona un itinerario</option>
-          <option *ngFor="let itin of itineraries" [value]="itin.itinerary_id">{{ itin.itinerary_name }}</option>
+            class="w-full h-12 border p-2 rounded-full" required>
+            <option value="" disabled selected>Selecciona un itinerario</option>
+            <option *ngFor="let itin of itineraries" [value]="itin.itinerary_id">{{ itin.itinerary_name }}</option>
           </select>
+          <div *ngIf="formSubmitted && expenseForm.errors && expenses.errors.itineraryRequired"
+            class="text-red-500 mb-4">
+            {{ validatorMessages['itineraryRequired'] }}
+          </div>
         </div>
         <!-- Destination -->
         <div class="mb-4 w-[47%]">
           <label for="destination" class="block text-gray-700">Destino *</label>
           <select id="destination" formControlName="destination" (change)="onDestinationsChange()"
-          class="w-full h-12 border p-2 rounded-full" required>
-          <option value="" disabled selected>Selecciona un destino</option>
-          <option *ngFor="let dest of destinations" [value]="dest.destination_id">{{ dest.city_name }}</option>
+            class="w-full h-12 border p-2 rounded-full" required>
+            <option value="" disabled selected>Selecciona un destino</option>
+            <option *ngFor="let dest of destinations" [value]="dest.destination_id">{{ dest.city_name }}</option>
           </select>
+          <div *ngIf="formSubmitted && expenseForm.errors && expenses.errors.destinationRequired"
+            class="text-red-500 mb-4">
+            {{ validatorMessages['destinationRequired'] }}
+          </div>
         </div>
-        </div>
+      </div>
 
       <label for="paidByUser" class="block text-gray-700">Pagado por el usuario *</label>
       <div class="flex flex-row w-full items-center justify-between">
@@ -197,9 +208,9 @@
         </div>
         <!-- Total Amount -->
         <div class="mb-4 w-[10%]">
-          <input id="totalAmount" formControlName="total_amount" type="number" placeholder="00.00€"
-          class="w-full h-12 border p-2 rounded-full bg-[--primary-color] text-white text-center placeholder-white appearance-none"
-          required>
+          <input id="totalAmount" formControlName="total_amount" type="number" min="0" placeholder="00.00€"
+            class="w-full h-12 border p-2 rounded-full bg-[--primary-color] text-white text-center placeholder-white appearance-none no-spinner"
+            required>
         </div>
       </div>
 
@@ -213,8 +224,10 @@
       <!-- Debtors -->
       <div formArrayName="debtors" class="mb-4 h-64 overflow-y-auto">
         <div class="flex flex-row items-center justify-between sticky top-0 bg-white z-10 p-2">
-          <label class="block text-gray-700">Deudores *</label> <!-- Parece que no funciona la primera condición value.payer-->
-          <button type="button" (click)="addDebtor()" [disabled]="!expenseForm.value.payer || possibleDebtors.length === 0 || debtorsControls.length >= possibleDebtors.length - 1"
+          <label class="block text-gray-700">Deudores *</label>
+          <!-- Parece que no funciona la primera condición value.payer-->
+          <button type="button" (click)="addDebtor()"
+            [disabled]="!expenseForm.value.payer || possibleDebtors.length === 0 || debtorsControls.length >= possibleDebtors.length - 1"
             class="bg-[--primary-color] hover:bg-[--secondary-color] text-white px-4 py-2 rounded-full">Añadir
             deudor</button>
         </div>
@@ -227,11 +240,12 @@
             </select>
             <div class="flex flex-row justify-between">
               <input *ngIf="expenseForm.get('type_expense')?.value !== 'Equalitarian'" formControlName="amount"
-                type="number" placeholder="00.00€"
-                class="w-20 h-12 border p-2 rounded-full bg-[--primary-color] text-white text-center placeholder-white" required>
+                type="number" min="0" placeholder="00.00€"
+                class="w-20 h-12 border p-2 rounded-full bg-[--primary-color] text-white text-center placeholder-white no-spinner"
+                required>
               <button type="button" (click)="removeDebtor(i)">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                  stroke="red" class="w-6 h-6">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="red"
+                  class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -239,6 +253,19 @@
           </div>
         </div>
       </div>
+      <!-- <div
+        *ngIf="formSubmitted && (expenseForm.errors && (expenseForm.errors['payerRequired'] || expenseForm.errors['payerAmountRequired'] || expenseForm.errors['debtorsExceedTotal']))"
+        class="text-red-500 text-center mb-4">
+        <div *ngIf="expenseForm.errors && expenseForm.errors['payerRequired']">
+          {{ validatorMessages['payerRequired'] }}
+        </div>
+        <div *ngIf="expenseForm.errors && expenseForm.errors['payerAmountRequired']">
+          {{ validatorMessages['payerAmountRequired'] }}
+        </div>
+        <div *ngIf="expenseForm.errors && expenseForm.errors['debtorsExceedTotal']">
+          {{ validatorMessages['debtorsExceedTotal'] }}
+        </div>
+      </div> -->
 
       <!-- Submit Button -->
       <div class="flex justify-center mt-6">
