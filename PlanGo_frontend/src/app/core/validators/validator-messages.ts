@@ -5,9 +5,11 @@
 export const ValidatorMessages: { [key: string]: string } = {
     itineraryRequired: 'Debe añadir el itinerario.',
     destinationRequired: 'Debe añadir el destino.',
-    payerRequired: 'Debe añadir el pagador para poder crear el gasto.',
-    payerAmountRequired: 'El importe del pagador debe ser mayor que 0.',
-    debtorsExceedTotal: 'La suma de los importes de los deudores no puede superar el total pagado.',
+    payerRequired: 'Debe añadir el pagador.',
+    payerAmountRequired: 'Debe añadir un valor mayor a 0',
+    debtorsExceedTotal: 'La suma del importe del deudor no puede superar el total pagado.',
+    debtorsAmountRequired: 'Debe añadir un valor mayor a 0',
+    debtorsSelectRequired: 'Este campo no puede estar vacío.'
 };
 
 
