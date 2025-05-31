@@ -57,19 +57,19 @@
     </button>
 
     <div class="w-full">
-      <h1 class="text-3xl font-bold text-gray-800">New itinerary</h1>
+      <h1 class="text-3xl font-bold text-gray-800">Nuevo itinerario</h1>
       <hr class="w-[60%] border-black border-[1px] mt-4">
     </div>
     <form [formGroup]="itineraryForm" (ngSubmit)="onSubmit()" class="mt-6">
-      <div class="mb-4 h-20">
+      <div class="mb-6 h-20">
         <label for="itineraryName" class="block text-gray-700">Nombre del itinerario</label>
-        <input id="itineraryName" formControlName="itineraryName" type="text" class="w-full h-12 border p-2 rounded-full" placeholder="Enter itinerary name" required>
+        <input id="itineraryName" formControlName="itineraryName" type="text" class="w-full h-12 border p-2 rounded-full" required>
         <p *ngIf="itineraryForm.get('itineraryName')?.invalid && itineraryForm.get('itineraryName')?.touched" class="text-red-500 text-sm">
-          Es obligatorio el nombre del itinerario.
+          Añade un nombre al itinerario
         </p>
       </div>
 
-      <div class="mb-4 h-20">
+      <div class="mb-6 h-20">
         <label for="countries" class="block text-gray-700">Países a visitar</label>
         <div class="relative">
           <ng-select 
@@ -82,25 +82,64 @@
           </ng-select>
         </div>
         <p *ngIf="itineraryForm.get('countries')?.invalid && itineraryForm.get('countries')?.touched" class="text-red-500 text-sm">
-          Por favor, selecciona al menos un país..
+          Selecciona al menos un país
         </p>
       </div>
 
-      <div class="flex justify-between items-center mb-4 h-20">
-        <div class="w-[45%]">
-          <input id="startDate" formControlName="startDate" type="date" class="w-full h-12 border p-2 rounded-full">
+      <div class="flex justify-between items-center gap-4">
+        <!-- Calendario de inicio -->
+        <div class="w-1/2 relative">
+          <p-calendar 
+            id="startDate"
+            formControlName="startDate"
+            dateFormat="dd-MM-yy"
+            [minDate]="currentDate"
+            class="w-full"
+            inputStyleClass="w-full h-12 border p-2 rounded-full pr-10"
+            panelClass="rounded-2xl shadow-lg"
+          ></p-calendar>
+          <span class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10m-9 8h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z" />
+            </svg>
+          </span>
         </div>
-        <div class="w-[10%] text-center">
+        
+        <!-- Icono central -->
+        <div class="w-[10%] text-center flex justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mx-auto">
             <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
           </svg>
         </div>
-        <div class="w-[45%]">
-          <input id="endDate" formControlName="endDate" type="date" class="w-full h-12 border p-2 rounded-full">
+        
+        <!-- Calendario de fin -->
+        <div class="w-1/2 relative">
+          <p-calendar 
+            id="endDate"
+            formControlName="endDate"
+            dateFormat="dd-MM-yy"
+            [minDate]="currentDate"
+            class="w-full"
+            inputStyleClass="w-full h-12 border p-2 rounded-full pr-10"
+            panelClass="rounded-2xl shadow-lg"
+          ></p-calendar>
+          <span class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black" class="w-6 h-6 text-black">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10m-9 8h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z" />
+            </svg>
+          </span>
         </div>
       </div>
+      <div class="h-2">
+        <p *ngIf="itineraryForm.errors?.['endDateBeforeStartDate'] && (itineraryForm.get('endDate')?.touched || formSubmitted)" class="text-red-500 text-sm">
+          {{ ValidatorMessages['itineraryendDateAfterstartDate'] }}
+        </p>
+        <p *ngIf="formSubmitted && (itineraryForm.get('startDate')?.invalid || itineraryForm.get('endDate')?.invalid)" class="text-red-500 text-sm">
+          {{ ValidatorMessages['itineraryDatesRequired'] }}
+        </p>
+      </div>
 
-      <div class="flex justify-center mt-6">
+      <div class="flex justify-center mt-8">
         <button type="submit" class="bg-[--primary-color] text-white w-[60%] h-14 px-4 py-2 rounded-full hover:bg-[--secondary-color]">
           Create itinerary
         </button>
