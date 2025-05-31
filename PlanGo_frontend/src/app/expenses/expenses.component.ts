@@ -46,18 +46,21 @@ export class ExpensesComponent implements OnInit {
 
   constructor(private expensesService: ExpensesService, private destinationService: DestinationService, private itinerariesService: ItinerariesService, private participantsService: ParticipantsService, private router: Router, private formBuilder: FormBuilder,   private cdr: ChangeDetectorRef) {
     this.expenseForm = this.formBuilder.group({
-      itinerary: [null],
-      destination: [null],
-      payer: [null],
+      itinerary: [''],
+      destination: [''],
+      payer: [''],
       total_amount: [''],
       description: [''],
-      date: [null],
+      date: [''],
       type_expense: ['Personalized', Validators.required],
       debtors: this.formBuilder.array([]),
     }, {
       validators: [
+        CustomValidators.itineraryAndDestinationRequired(),
         CustomValidators.payerAndAmountRequired(),
-        CustomValidators.debtorsNotExceedTotalAmount()
+        CustomValidators.debtorsNotExceedTotalAmount(),
+        CustomValidators.debtorsAmountRequiredPersonalized(),
+        CustomValidators.debtorsSelectRequired(),
       ]
     });
   }
@@ -78,6 +81,17 @@ export class ExpensesComponent implements OnInit {
         next: (data: any) => this.itineraries = data.itineraries,
         error: (err: any) => this.itineraries = []
       });
+
+    this.expenseForm.valueChanges.subscribe(() => {
+      const { itinerary, destination, payer} = this.expenseForm.value
+      if (itinerary && destination && payer) {
+          this.formSubmitted = false;
+      }
+      // Si quieres ocultar todos los mensajes cuando el campo es válido:
+      if (this.expenseForm.valid) {
+        this.formSubmitted = false;
+      }
+    });
   }
 
   toggleForm(): void {
@@ -131,6 +145,7 @@ export class ExpensesComponent implements OnInit {
         type_expense: formValue.type_expense,
         debtors
       };
+
       this.expensesService.createExpense(newExpense).subscribe({
         next: () => {
           this.expensesService.getExpensesByLoggedUser().subscribe({
@@ -225,6 +240,10 @@ export class ExpensesComponent implements OnInit {
     return this.participants.filter(p => (p.user || p.participant_id) !== payerId);
   }
 
+  get userExpenses() {
+    return this.expenseForm.get('userExpenses') as FormArray;
+  }
+
   setEqualitarian() {
     this.expenseForm.get('type_expense')?.setValue('Equalitarian');
     const debtorsArray = this.expenseForm.get('debtors') as FormArray;
@@ -249,6 +268,15 @@ export class ExpensesComponent implements OnInit {
   }
 
   addDebtor(): void {
+    //this.formSubmitted = true; // Marca como enviado para mostrar errores
+    this.expenseForm.updateValueAndValidity(); // Fuerza la validación de grupo
+
+    // Si existe el error, no añadas el deudor
+    if (!this.expenseForm.value.payer) {
+      this.formSubmitted = true;
+      return;
+    }
+
     const debtorsArray = this.expenseForm.get('debtors') as FormArray;
     const isEqualitarian = this.expenseForm.get('type_expense')?.value === 'Equalitarian';
     const group = this.formBuilder.group({
@@ -280,9 +308,6 @@ export class ExpensesComponent implements OnInit {
   }
 
 
-  get userExpenses() {
-    return this.expenseForm.get('userExpenses') as FormArray;
-  }
   
   addUserExpense(): void {
     this.userExpenses.push(

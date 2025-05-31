@@ -17,6 +17,9 @@
             class="h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300">
             Añadir gasto
           </button>
+          <div *ngIf="formSubmitted && expenseForm.errors?.['addDebtorRequiresPayer']" class="text-red-500 mb-2">
+            {{ validatorMessages['addDebtorRequiresPayer'] }}
+          </div>
         </div>
         <div class="flex flex-row items-center justify-between w-full mt-4">
           <h3 class="text-xl font-bold text-gray-800">Gastos Totales</h3>
@@ -167,50 +170,61 @@
     </div>
 
     <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="mt-6">
-      <div class="flex flex-row justify-between">
+      <div class="flex flex-row justify-between mb-10 mt-3 h-16">
         <!-- Itinerary -->
-        <div class="mb-4 w-[47%]">
+        <div class="w-[47%]">
           <label for="itinerary" class="block text-gray-700">Itinerario *</label>
           <select id="itinerary" formControlName="itinerary" (change)="onItineraryChange()"
             class="w-full h-12 border p-2 rounded-full" required>
             <option value="" disabled selected>Selecciona un itinerario</option>
             <option *ngFor="let itin of itineraries" [value]="itin.itinerary_id">{{ itin.itinerary_name }}</option>
           </select>
-          <div *ngIf="formSubmitted && expenseForm.errors && expenses.errors['itineraryRequired']"
-            class="text-red-500 mb-4">
+          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['itineraryRequired']"
+            class="text-red-500">
             {{ validatorMessages['itineraryRequired'] }}
           </div>
         </div>
         <!-- Destination -->
-        <div class="mb-4 w-[47%]">
+        <div class="w-[47%]">
           <label for="destination" class="block text-gray-700">Destino *</label>
           <select id="destination" formControlName="destination" (change)="onDestinationsChange()"
             class="w-full h-12 border p-2 rounded-full" required>
             <option value="" disabled selected>Selecciona un destino</option>
             <option *ngFor="let dest of destinations" [value]="dest.destination_id">{{ dest.city_name }}</option>
           </select>
-          <div *ngIf="formSubmitted && expenseForm.errors && expenses.errors['destinationRequired']"
-            class="text-red-500 mb-4">
+          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['destinationRequired']"
+            class="text-red-500">
             {{ validatorMessages['destinationRequired'] }}
           </div>
         </div>
       </div>
 
-      <label for="paidByUser" class="block text-gray-700">Pagado por el usuario *</label>
-      <div class="flex flex-row w-full items-center justify-between">
-        <!-- Paid By -->
-        <div class="mb-4 w-[85%]">
-          <select id="paidByUser" formControlName="payer" (change)="onPayerChange()"
-            class="w-full h-12 border p-2 rounded-full" required>
-            <option value="" disabled selected>Selecciona un pagador</option>
-            <option *ngFor="let p of participants" [value]="p.participant_id">{{ p.participant_name }}</option>
-          </select>
+      <div class="h-28">
+        <label for="paidByUser" class="block text-gray-700">Pagado por el usuario *</label>
+        <div class="flex flex-row w-full items-center justify-between">
+          <!-- Paid By -->
+          <div class="w-[85%]">
+            <select id="paidByUser" formControlName="payer" (change)="onPayerChange()"
+              class="w-full h-12 border p-2 rounded-full" required>
+              <option value="" disabled selected>Selecciona un pagador</option>
+              <option *ngFor="let p of participants" [value]="p.participant_id">{{ p.participant_name }}</option>
+            </select>
+          </div>
+          <!-- Total Amount -->
+          <div class="w-[10%]">
+            <input id="totalAmount" formControlName="total_amount" type="number" min="0" placeholder="00.00€"
+              class="w-full h-12 border p-2 rounded-full bg-[--primary-color] text-white text-center placeholder-white appearance-none no-spinner"
+              required>
+          </div>
         </div>
-        <!-- Total Amount -->
-        <div class="mb-4 w-[10%]">
-          <input id="totalAmount" formControlName="total_amount" type="number" min="0" placeholder="00.00€"
-            class="w-full h-12 border p-2 rounded-full bg-[--primary-color] text-white text-center placeholder-white appearance-none no-spinner"
-            required>
+        <div class="flex flex-row justify-between">
+          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['payerRequired']" class="text-red-500">
+            {{ validatorMessages['payerRequired'] }}
+          </div>
+          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['payerAmountRequired']"
+            class="text-red-500 ml-auto">
+            {{ validatorMessages['payerAmountRequired'] }}
+          </div>
         </div>
       </div>
 
@@ -228,10 +242,11 @@
           <!-- Parece que no funciona la primera condición value.payer-->
           <button type="button" (click)="addDebtor()"
             [disabled]="!expenseForm.value.payer || possibleDebtors.length === 0 || debtorsControls.length >= possibleDebtors.length - 1"
-            class="bg-[--primary-color] hover:bg-[--secondary-color] text-white px-4 py-2 rounded-full">Añadir
-            deudor</button>
+            class="bg-[--primary-color] hover:bg-[--secondary-color] text-white px-4 py-2 rounded-full">
+            Añadir deudor
+          </button>
         </div>
-        <div *ngFor="let debtor of debtorsControls; let i = index" [formGroupName]="i" class="mb-2">
+        <div *ngFor="let debtor of debtorsControls; let i = index" [formGroupName]="i" class="mb-3 mt-3 h-16">
           <div class="flex justify-between items-center">
             <select formControlName="id" class="w-[85%] h-12 border p-2 rounded-full" required>
               <option value="" disabled selected>Selecciona deudor</option>
@@ -251,21 +266,26 @@
               </button>
             </div>
           </div>
+          <div class="flex flex-row justify-between">
+            <div class="">
+              <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['debtorsSelectRequired']"
+                class="text-red-500">
+                {{ validatorMessages['debtorsSelectRequired'] }}
+              </div>
+            </div>
+            <div class="flex flex-row justify-between ">
+              <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors?.['debtorsAmountRequired']"
+                class="text-red-500 ml-auto">
+                {{ validatorMessages['debtorsAmountRequired'] }}
+              </div>
+              <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['debtorsExceedTotal']"
+                class="text-red-500 ml-auto">
+                {{ validatorMessages['debtorsExceedTotal'] }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <!-- <div
-        *ngIf="formSubmitted && (expenseForm.errors && (expenseForm.errors['payerRequired'] || expenseForm.errors['payerAmountRequired'] || expenseForm.errors['debtorsExceedTotal']))"
-        class="text-red-500 text-center mb-4">
-        <div *ngIf="expenseForm.errors && expenseForm.errors['payerRequired']">
-          {{ validatorMessages['payerRequired'] }}
-        </div>
-        <div *ngIf="expenseForm.errors && expenseForm.errors['payerAmountRequired']">
-          {{ validatorMessages['payerAmountRequired'] }}
-        </div>
-        <div *ngIf="expenseForm.errors && expenseForm.errors['debtorsExceedTotal']">
-          {{ validatorMessages['debtorsExceedTotal'] }}
-        </div>
-      </div> -->
 
       <!-- Submit Button -->
       <div class="flex justify-center mt-6">
