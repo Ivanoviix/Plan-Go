@@ -6,20 +6,15 @@ export class CustomValidators {
     
     static payerAndAmountRequired(): ValidatorFn {
         return (form: AbstractControl): ValidationErrors | null => {
-        const group = form as FormGroup;
-        const payer = group.get('payer')?.value;
-        const totalAmount = Number(group.get('total_amount')?.value);
+        let group = form as FormGroup;
+        let payer = group.get('payer')?.value;
+        let totalAmount = Number(group.get('total_amount')?.value);
 
-        const errors: ValidationErrors = {};
+        let errors: ValidationErrors = {};
 
-        if (!payer) {
-            errors['payerRequired'] = true;
-            
-        }
+        if (!payer) errors['payerRequired'] = true;
         // Solo muestra payerAmountRequired si hay pagador seleccionado
-        if (payer && (!totalAmount || totalAmount <= 0)) {
-            errors['payerAmountRequired'] = true;
-        }
+        if (payer && (!totalAmount || totalAmount <= 0)) errors['payerAmountRequired'] = true;
 
         return Object.keys(errors).length ? errors : null;
         }
@@ -27,10 +22,10 @@ export class CustomValidators {
 
     static debtorsNotExceedTotalAmount(): ValidatorFn {
         return (form: AbstractControl): ValidationErrors | null => {
-            const group = form as FormGroup;
-            const totalAmount = Number(group.get('total_amount')?.value);
-            const debtors = group.get('debtors')?.value || [];
-            const debtorsTotal = debtors.reduce(
+            let group = form as FormGroup;
+            let totalAmount = Number(group.get('total_amount')?.value);
+            let debtors = group.get('debtors')?.value || [];
+            let debtorsTotal = debtors.reduce(
             (sum: number, debtor: any) => sum + Number(debtor.amount || 0), 0
             );
             return debtorsTotal > totalAmount ? { debtorsExceedTotal: true } : null;
@@ -39,10 +34,10 @@ export class CustomValidators {
 
     static itineraryAndDestinationRequired(): ValidatorFn {
         return (form: AbstractControl): ValidationErrors | null => {
-            const group = form as FormGroup;
-            const itinerary = group.get('itinerary')?.value;
-            const destination = group.get('destination')?.value;
-            const errors: ValidationErrors = {};
+            let group = form as FormGroup;
+            let itinerary = group.get('itinerary')?.value;
+            let destination = group.get('destination')?.value;
+            let errors: ValidationErrors = {};
             if (!itinerary) {
                 errors['itineraryRequired'] = true;
             }
@@ -55,30 +50,36 @@ export class CustomValidators {
 
     static debtorsAmountRequiredPersonalized(): ValidatorFn {
         return (form: AbstractControl): ValidationErrors | null => {
-            const group = form as FormGroup;
-            const typeExpense = group.get('type_expense')?.value;
-            const debtors = group.get('debtors')?.value || [];
-            const hasDebtorAmount = debtors.some((debtor: any) => Number(debtor.amount) > 0);
-            const errors: ValidationErrors = {};
-            if (typeExpense === 'Personalized' && debtors.length > 0 && !hasDebtorAmount) {
-                errors['debtorsAmountRequired'] = true;
-            }
+            let group = form as FormGroup;
+            let typeExpense = group.get('type_expense')?.value;
+            let debtors = group.get('debtors')?.value || [];
+            let hasDebtorAmount = debtors.some((debtor: any) => Number(debtor.amount) > 0);
+            let errors: ValidationErrors = {};
+            if (typeExpense === 'Personalized' && debtors.length > 0 && !hasDebtorAmount) errors['debtorsAmountRequired'] = true;
             return Object.keys(errors).length ? errors : null;
         }
     }
 
     static debtorsSelectRequired(): ValidatorFn {
         return (form: AbstractControl): ValidationErrors | null => {
-            const group = form as FormGroup;
+            let group = form as FormGroup;
             console.log(group)
-            const debtors = group.get('debtors')?.value || [];
-            const noDebtorSelected = debtors.some((debtor: any) => !debtor.id);
-            const errors: ValidationErrors = {};
-            if (noDebtorSelected) {
-                errors['debtorsSelectRequired'] = true;
-            }
+            let debtors = group.get('debtors')?.value || [];
+            let noDebtorSelected = debtors.some((debtor: any) => !debtor.id);
+            let errors: ValidationErrors = {};
+            if (noDebtorSelected) errors['debtorsSelectRequired'] = true;
             return Object.keys(errors).length ? errors : null;
         }
+    }
+
+    static endDateAfterStartDate(): ValidatorFn {
+        return (group: AbstractControl): ValidationErrors | null => {
+            let form = group as FormGroup;
+            let start = form.get('startDate')?.value;
+            let end = form.get('endDate')?.value;
+            if (start && end && new Date(end) < new Date(start)) return { endDateBeforeStartDate: true };
+            return null;
+        };
     }
 }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ItinerariesService } from '../core/services/itineraries.service';
 import { Itinerary } from './interfaces/itinerary.interface';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,9 @@ import { switchMap } from 'rxjs';
 import { globals } from '../core/globals';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { ToastModule } from 'primeng/toast';
+import { CalendarModule } from 'primeng/calendar';
+import { CustomValidators } from '../core/validators/custom-validators';
+import { ValidatorMessages } from '../core/validators/validator-messages';
 
 @Component({
   standalone: true,
@@ -25,7 +28,8 @@ import { ToastModule } from 'primeng/toast';
     MapComponent, 
     ReactiveFormsModule, 
     NgSelectModule, 
-    ToastModule],
+    ToastModule,
+    CalendarModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ItinerariesComponent implements OnInit {
@@ -34,6 +38,9 @@ export class ItinerariesComponent implements OnInit {
   showForm: boolean = false;
   itineraryForm: FormGroup;
   countries: { code: string; name: string }[] = [];
+  currentDate: Date = new Date();
+  ValidatorMessages = ValidatorMessages;
+  formSubmitted = false;
 
   constructor(
     private itinerariesService: ItinerariesService,
@@ -42,10 +49,12 @@ export class ItinerariesComponent implements OnInit {
     private toast: BaseToastService
   ) {
     this.itineraryForm = this.fb.group({
-      itineraryName: [''],
-      countries: [[]],
-      startDate: [''],
-      endDate: [''],
+      itineraryName: ['', Validators.required],
+      countries: [[], Validators.required],
+      startDate: [this.currentDate.toISOString().split('T')[0], Validators.required],
+      endDate: ['', Validators.required],
+    }, {
+      validators: CustomValidators.endDateAfterStartDate()
     });
   }
 
@@ -60,16 +69,17 @@ export class ItinerariesComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.formSubmitted = true;
     if (this.itineraryForm.valid) {
       this.itinerariesService.getCsrfTokenFromServer().pipe(
         switchMap((csrfToken) => {
           this.itinerariesService.setCsrfToken(csrfToken);
-  
+
           return this.itinerariesService.getIdUser().pipe(
             switchMap((userId) => {
-              const countries = this.itineraryForm.get('countries')?.value.map((country: string) => country);
-  
-              const newItinerary: Itinerary = {
+              let countries = this.itineraryForm.get('countries')?.value.map((country: string) => country);
+
+              let newItinerary: Itinerary = {
                 itinerary_name: this.itineraryForm.get('itineraryName')?.value,
                 creator_user: userId,
                 creation_date: new Date().toISOString().split('T')[0],
@@ -92,8 +102,11 @@ export class ItinerariesComponent implements OnInit {
           console.error('Error al guardar el itinerario:', err);
         },
       });
+      this.formSubmitted = false;
     } else {
-      console.error('Formulario inválido');
+      this.itineraryForm.markAllAsTouched();
+    this.itineraryForm.updateValueAndValidity(); 
+    console.error('Formulario inválido');
     }
   }
   
@@ -163,11 +176,11 @@ export class ItinerariesComponent implements OnInit {
   } */
   
   /* async addAdvancedMarker(position: google.maps.LatLng | google.maps.LatLngLiteral): Promise<void> {
-    const { AdvancedMarkerElement } = await google.maps.importLibrary(
+    let { AdvancedMarkerElement } = await google.maps.importLibrary(
       'marker'
     ) as google.maps.MarkerLibrary;
   
-    const marker = new AdvancedMarkerElement({
+    let marker = new AdvancedMarkerElement({
       map: this.map,
       position: position,
       title: 'Nuevo marcador',
