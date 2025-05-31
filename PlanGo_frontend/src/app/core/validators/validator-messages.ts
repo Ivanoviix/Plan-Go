@@ -9,7 +9,9 @@ export const ValidatorMessages: { [key: string]: string } = {
     payerAmountRequired: 'Debe añadir un valor mayor a 0',
     debtorsExceedTotal: 'La suma del importe del deudor no puede superar el total pagado.',
     debtorsAmountRequired: 'Debe añadir un valor mayor a 0',
-    debtorsSelectRequired: 'Este campo no puede estar vacío.'
+    debtorsSelectRequired: 'Este campo no puede estar vacío.',
+    itineraryendDateAfterstartDate: 'La fecha de fin no puede ser anterior a la fecha de inicio.',
+    itineraryDatesRequired: 'Selecciona ambas fechas'
 };
 
 

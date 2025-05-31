@@ -13,6 +13,8 @@ import { globals } from '../core/globals';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { ToastModule } from 'primeng/toast';
 import { CalendarModule } from 'primeng/calendar';
+import { CustomValidators } from '../core/validators/custom-validators';
+import { ValidatorMessages } from '../core/validators/validator-messages';
 
 @Component({
   standalone: true,
@@ -37,6 +39,8 @@ export class ItinerariesComponent implements OnInit {
   itineraryForm: FormGroup;
   countries: { code: string; name: string }[] = [];
   currentDate: Date = new Date();
+  ValidatorMessages = ValidatorMessages;
+  formSubmitted = false;
 
   constructor(
     private itinerariesService: ItinerariesService,
@@ -49,6 +53,8 @@ export class ItinerariesComponent implements OnInit {
       countries: [[], Validators.required],
       startDate: [this.currentDate.toISOString().split('T')[0], Validators.required],
       endDate: ['', Validators.required],
+    }, {
+      validators: CustomValidators.endDateAfterStartDate()
     });
   }
 
@@ -63,6 +69,7 @@ export class ItinerariesComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.formSubmitted = true;
     if (this.itineraryForm.valid) {
       this.itinerariesService.getCsrfTokenFromServer().pipe(
         switchMap((csrfToken) => {
@@ -70,9 +77,9 @@ export class ItinerariesComponent implements OnInit {
 
           return this.itinerariesService.getIdUser().pipe(
             switchMap((userId) => {
-              const countries = this.itineraryForm.get('countries')?.value.map((country: string) => country);
+              let countries = this.itineraryForm.get('countries')?.value.map((country: string) => country);
 
-              const newItinerary: Itinerary = {
+              let newItinerary: Itinerary = {
                 itinerary_name: this.itineraryForm.get('itineraryName')?.value,
                 creator_user: userId,
                 creation_date: new Date().toISOString().split('T')[0],
@@ -95,9 +102,11 @@ export class ItinerariesComponent implements OnInit {
           console.error('Error al guardar el itinerario:', err);
         },
       });
+      this.formSubmitted = false;
     } else {
       this.itineraryForm.markAllAsTouched();
-      console.error('Formulario inválido');
+    this.itineraryForm.updateValueAndValidity(); 
+    console.error('Formulario inválido');
     }
   }
   
@@ -167,11 +176,11 @@ export class ItinerariesComponent implements OnInit {
   } */
   
   /* async addAdvancedMarker(position: google.maps.LatLng | google.maps.LatLngLiteral): Promise<void> {
-    const { AdvancedMarkerElement } = await google.maps.importLibrary(
+    let { AdvancedMarkerElement } = await google.maps.importLibrary(
       'marker'
     ) as google.maps.MarkerLibrary;
   
-    const marker = new AdvancedMarkerElement({
+    let marker = new AdvancedMarkerElement({
       map: this.map,
       position: position,
       title: 'Nuevo marcador',

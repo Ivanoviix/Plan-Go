@@ -52,7 +52,7 @@ constructor(
   async ngOnInit() { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
     await this.getCountries();
    /*  this.route.paramMap.subscribe(params => {
-      const itineraryId = Number(params.get('itineraryId'));
+      let itineraryId = Number(params.get('itineraryId'));
       if (itineraryId) {
         this.fetchDestinationsByItinerary(itineraryId);
         this.fetchCountriesByItinerary(itineraryId);
@@ -112,7 +112,6 @@ constructor(
   fetchDestinationsByItinerary(itineraryId: number): void {
     this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
       next: (data: any) => {
-
         this.destinations = data['User destinations'] || [];
         this.destinations.forEach(dest => {
           this.fetchDestinationSummary(dest.destination_id);
@@ -128,7 +127,7 @@ constructor(
   fetchCountriesByItinerary(itineraryId: number): void {
     this.destinationService.getCountriesByItinerary(itineraryId).subscribe({
       next: (data: any) => {
-          this.countries = data.countries;
+        this.countries = data.countries;
       },
       error: () => {
         this.countries = [];
@@ -139,7 +138,7 @@ constructor(
 
   getTotalExpenses(): number {
     return this.destinations.reduce((sum, dest) => {
-      const resumen = this.summary[dest.destination_id];
+      let resumen = this.summary[dest.destination_id];
       return sum + (resumen ? resumen.total_expenses || 0 : 0);
     }, 0);
   }
@@ -183,7 +182,6 @@ constructor(
     }
   }
 
-  
   getCountryCodesByNames(names: string[]): string[] {
     return this.allCountries
     .filter(c => names.some(n => n.trim().toLowerCase() === c.name.trim().toLowerCase()))
@@ -191,7 +189,7 @@ constructor(
   }
   
   getCitiesMultipleCountries(input: string, countryCodes: string[]): Observable<string[]> {
-    const calls = countryCodes.map(code => this.destinationService.getCitiesFromGoogle(input, code));
+    let calls = countryCodes.map(code => this.destinationService.getCitiesFromGoogle(input, code));
     return forkJoin(calls).pipe(
       map(results =>
         results.flatMap(r => r.predictions.map((p: any) => p.description))
@@ -200,10 +198,7 @@ constructor(
   }
   
   onCitySearch() {
-    const countryCodes = this.getCountryCodesByNames(this.countries);
-    console.log('Texto buscado:', this.searchText);
-    console.log('Países (names):', this.countries);
-    console.log('Códigos de país:', countryCodes);
+    let countryCodes = this.getCountryCodesByNames(this.countries);
     if (this.searchText && countryCodes.length > 0) {
       this.getCitiesMultipleCountries(this.searchText, countryCodes).subscribe({
         next: (results: string[]) => this.cities = results,
@@ -216,20 +211,17 @@ constructor(
   }
   
 formatCountries(): string {
-    if (!this.selectedItinerary?.countries) {
-      return '';
-    }
+    if (!this.selectedItinerary?.countries) return '';
   
-    const countriesArray = this.selectedItinerary.countries.split(',');
-    const length = countriesArray.length;
+    let countriesArray = this.selectedItinerary.countries.split(',');
+    let length = countriesArray.length;
   
     if (length === 2) {
       return countriesArray.join(' y ');
     } else if (length > 2) {
-      const lastCountry = countriesArray.pop();
+      let lastCountry = countriesArray.pop();
       return `${countriesArray.join(', ')} y ${lastCountry}`;
     }
-  
     return this.selectedItinerary.countries; // Return as is if there's only one country
   }
 

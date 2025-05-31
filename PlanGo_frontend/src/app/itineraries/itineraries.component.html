@@ -57,19 +57,19 @@
     </button>
 
     <div class="w-full">
-      <h1 class="text-3xl font-bold text-gray-800">New itinerary</h1>
+      <h1 class="text-3xl font-bold text-gray-800">Nuevo itinerario</h1>
       <hr class="w-[60%] border-black border-[1px] mt-4">
     </div>
     <form [formGroup]="itineraryForm" (ngSubmit)="onSubmit()" class="mt-6">
-      <div class="mb-4 h-20">
+      <div class="mb-6 h-20">
         <label for="itineraryName" class="block text-gray-700">Nombre del itinerario</label>
-        <input id="itineraryName" formControlName="itineraryName" type="text" class="w-full h-12 border p-2 rounded-full" placeholder="Enter itinerary name" required>
+        <input id="itineraryName" formControlName="itineraryName" type="text" class="w-full h-12 border p-2 rounded-full" required>
         <p *ngIf="itineraryForm.get('itineraryName')?.invalid && itineraryForm.get('itineraryName')?.touched" class="text-red-500 text-sm">
-          Es obligatorio el nombre del itinerario.
+          Añade un nombre al itinerario
         </p>
       </div>
 
-      <div class="mb-4 h-20">
+      <div class="mb-6 h-20">
         <label for="countries" class="block text-gray-700">Países a visitar</label>
         <div class="relative">
           <ng-select 
@@ -82,11 +82,11 @@
           </ng-select>
         </div>
         <p *ngIf="itineraryForm.get('countries')?.invalid && itineraryForm.get('countries')?.touched" class="text-red-500 text-sm">
-          Por favor, selecciona al menos un país..
+          Selecciona al menos un país
         </p>
       </div>
 
-      <div class="flex justify-between items-center mb-4 h-20 gap-4">
+      <div class="flex justify-between items-center gap-4">
         <!-- Calendario de inicio -->
         <div class="w-1/2 relative">
           <p-calendar 
@@ -130,8 +130,16 @@
           </span>
         </div>
       </div>
+      <div class="h-2">
+        <p *ngIf="itineraryForm.errors?.['endDateBeforeStartDate'] && (itineraryForm.get('endDate')?.touched || formSubmitted)" class="text-red-500 text-sm">
+          {{ ValidatorMessages['itineraryendDateAfterstartDate'] }}
+        </p>
+        <p *ngIf="formSubmitted && (itineraryForm.get('startDate')?.invalid || itineraryForm.get('endDate')?.invalid)" class="text-red-500 text-sm">
+          {{ ValidatorMessages['itineraryDatesRequired'] }}
+        </p>
+      </div>
 
-      <div class="flex justify-center mt-6">
+      <div class="flex justify-center mt-8">
         <button type="submit" class="bg-[--primary-color] text-white w-[60%] h-14 px-4 py-2 rounded-full hover:bg-[--secondary-color]">
           Create itinerary
         </button>
