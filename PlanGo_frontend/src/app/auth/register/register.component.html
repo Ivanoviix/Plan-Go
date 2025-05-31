@@ -14,31 +14,31 @@
       <form class="w-full" (ngSubmit)="register()">
         <div class=" mb-4 h-24">
           <label class="">Email</label>
-          <input class="mt-2 w-full h-12 border p-2 rounded-full" type="email" [(ngModel)]="email" name="email" required>
-          <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+          <input class="mt-2 w-full h-12 border p-2 rounded-full" type="email" [(ngModel)]="email" name="email" (ngModelChange)="clearError('email')" required>
+          <p *ngIf="errorMessageE" class="text-red-500 text-sm">{{ errorMessageE }}</p>
         </div>
         <div class="flex flex-row">
           <div class="mb-4 mr-2 w-[50%] h-24">
             <label class="my-2">Nombre</label>
-            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="text" [(ngModel)]="firstName" name="firstName" required>
-            <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="text" [(ngModel)]="firstName" name="firstName" (ngModelChange)="clearError('firstName')" required>
+            <p *ngIf="errorMessageN" class="text-red-500 text-sm">{{ errorMessageN }}</p>
           </div>
           <div class="mb-4 ml-2 w-[50%] h-24">
             <label class="my-2">Apellido</label>
-            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="text" [(ngModel)]="lastName" name="lastName" required>
-            <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="text" [(ngModel)]="lastName" name="lastName" (ngModelChange)="clearError('lastName')" required>
+            <p *ngIf="errorMessageLN" class="text-red-500 text-sm">{{ errorMessageLN }}</p>
           </div>
         </div>
         <div class="flex flex-row">
           <div class="mb-4 mr-2 w-[50%] h-24">
             <label class="my-2">Contraseña</label>
-            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="password" [(ngModel)]="password" name="password" required>
-            <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="password" [(ngModel)]="password" name="password" (ngModelChange)="clearError('password')" required>
+            <p *ngIf="errorMessageP" class="text-red-500 text-sm">{{ errorMessageP }}</p>
           </div>
           <div class="mb-4 ml-2 w-[50%] h-24">
             <label class="my-2">Repetir contraseña</label>
-            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="password" [(ngModel)]="repeatPassword" name="repeat-password" required>
-            <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+            <input class="mt-2 w-full h-12 border p-2 rounded-full" type="password" [(ngModel)]="repeatPassword" name="repeat-password" (ngModelChange)="clearError('repeat-password')" required>
+            <p *ngIf="errorMessageRP" class="text-red-500 text-sm">{{ errorMessageRP }}</p>
           </div>
         </div>
         <button class="border bg-[--primary-color] hover:bg-[--secondary-color] text-white py-2 px-4 rounded-full w-full">Registrarse</button>

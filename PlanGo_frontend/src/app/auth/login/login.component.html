@@ -12,7 +12,7 @@
       <form class="w-full">
         <div class="mb-4 h-24">
           <label>Email</label>
-          <input class="mt-2 w-full h-12 border p-2 rounded-full" type="email" [(ngModel)]="email" name="email" required
+          <input class="mt-2 w-full h-12 border p-2 rounded-full" type="email" [(ngModel)]="email" name="email" required 
             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
           <p *ngIf="errorMessageE" class="text-red-500 text-sm">{{ errorMessageE }}</p>
         </div>
