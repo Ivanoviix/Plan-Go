@@ -12,6 +12,7 @@ import { MapComponent } from '../map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CounterDatesComponent } from '../counter-dates/counter-dates.component';
 import { ItinerariesService } from '../core/services/itineraries.service';
+import { forkJoin, map, Observable } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -36,6 +37,10 @@ export class DestinationsComponent implements OnInit {
   errorMessage: string = '';
   selectedItineraryId: number | null = null;
   summary: { [key: number]: any } = {};
+  countries: any[] = [];
+  allCountries: { code: string, name: string }[] = [];
+  searchText: string = '';
+  cities: string[] = [];
 
 constructor(
   private destinationService: DestinationService, 
@@ -44,11 +49,13 @@ constructor(
   private itineraryService: ItinerariesService,
 ) {}
 
-  ngOnInit(): void { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
+  async ngOnInit() { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
+    await this.getCountries();
     this.route.paramMap.subscribe(params => {
       const itineraryId = Number(params.get('itineraryId'));
       if (itineraryId) {
         this.fetchDestinationsByItinerary(itineraryId);
+        this.fetchCountriesByItinerary(itineraryId);
         this.selectedItineraryId = itineraryId;
       }
     });
@@ -61,6 +68,7 @@ constructor(
     });
   }
 
+  // CUAL DE LAS 2 ES LA QUE SE UTILIZA?
   fetchItineraryDetails(itineraryId: number): void {
     console.log('Fetching itinerary with ID:', itineraryId); // Debugging
     this.itineraryService.getItineraryById(itineraryId).subscribe({
@@ -73,7 +81,28 @@ constructor(
         this.selectedItinerary = null;
       }
     });
+
+    this.route.paramMap.subscribe(params => {
+      const itineraryId = Number(params.get('itineraryId'));
+      if (itineraryId) {
+        this.fetchItineraryDetails(itineraryId); // Obtener el objeto completo del itinerario
+      }
+    });
   }
+
+  // fetchItineraryDetails(itineraryId: number): void {
+  //   console.log('Fetching itinerary with ID:', itineraryId); // Debugging
+  //   this.itineraryService.getItineraryById(itineraryId).subscribe({
+  //     next: (itinerary: any) => {
+  //       console.log('Itinerary data:', itinerary);
+  //       this.selectedItinerary = itinerary;
+  //     },
+  //     error: (err: any) => {
+  //       console.error('Error fetching itinerary:', err);
+  //       this.selectedItinerary = null;
+  //     }
+  //   });
+  // }
 
   guardarFechas(event: { idDestino: number; fechaInicio: string; fechaFin: string }): void {
     console.log('Fechas confirmadas:', event);
@@ -81,20 +110,33 @@ constructor(
   }
   
   fetchDestinationsByItinerary(itineraryId: number): void {
-  this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
-    next: (data: any) => {
+    this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
+      next: (data: any) => {
 
-      this.destinations = data['User destinations'] || [];
-      this.destinations.forEach(dest => {
-        this.fetchDestinationSummary(dest.destination_id);
-      });
-    },
-    error: (err: any) => {
-      this.errorMessage = 'No se pudieron cargar los destinos.';
-      console.error(err);
-    }
-  });
-}
+        this.destinations = data['User destinations'] || [];
+        this.destinations.forEach(dest => {
+          this.fetchDestinationSummary(dest.destination_id);
+        });
+      },
+      error: (err: any) => {
+        this.errorMessage = 'No se pudieron cargar los destinos.';
+        console.error(err);
+      }
+    });
+  }
+
+  fetchCountriesByItinerary(itineraryId: number): void {
+    this.destinationService.getCountriesByItinerary(itineraryId).subscribe({
+      next: (data: any) => {
+          this.countries = data.countries;
+      },
+      error: () => {
+        this.countries = [];
+        console.log("No hay países en su destino")
+      }
+    });
+  }
+
   getTotalExpenses(): number {
     return this.destinations.reduce((sum, dest) => {
       const resumen = this.summary[dest.destination_id];
@@ -114,11 +156,23 @@ constructor(
     });
   }
 
+  fetchCountriesByDestination(destinationId: number): void {
+    this.destinationService.getCountriesByDestination(destinationId).subscribe({
+      next: (data: any) => {
+        this.countries = data.countries;
+      error: () => {
+        this.countries = [];
+        console.log("No hay países en su destino")
+      }
+      }
+    })
+  }
+
   async getCountries(): Promise<void> {
     try {
-      let response = await fetch('https://restcountries.com/v3.1/all');
+      let response = await fetch('https://restcountries.com/v3.1/all')
       let data = await response.json();
-      this.destinations = data
+      this.allCountries = data
         .map((country: any) => ({
           code: country.cca2,
           name: country.name.common,
@@ -129,7 +183,39 @@ constructor(
     }
   }
 
-  formatCountries(): string {
+  
+  getCountryCodesByNames(names: string[]): string[] {
+    return this.allCountries
+    .filter(c => names.some(n => n.trim().toLowerCase() === c.name.trim().toLowerCase()))
+    .map(c => c.code)
+  }
+  
+  getCitiesMultipleCountries(input: string, countryCodes: string[]): Observable<string[]> {
+    const calls = countryCodes.map(code => this.destinationService.getCitiesFromGoogle(input, code));
+    return forkJoin(calls).pipe(
+      map(results =>
+        results.flatMap(r => r.predictions.map((p: any) => p.description))
+      )
+    );
+  }
+  
+  onCitySearch() {
+    const countryCodes = this.getCountryCodesByNames(this.countries);
+    console.log('Texto buscado:', this.searchText);
+    console.log('Países (names):', this.countries);
+    console.log('Códigos de país:', countryCodes);
+    if (this.searchText && countryCodes.length > 0) {
+      this.getCitiesMultipleCountries(this.searchText, countryCodes).subscribe({
+        next: (results: string[]) => this.cities = results,
+        error: () => this.cities = [],
+      });
+    } else {
+      this.cities = [];
+      console.log("No se ha escrito nada en el input")
+    }
+  }
+  
+formatCountries(): string {
     if (!this.selectedItinerary?.countries) {
       return '';
     }

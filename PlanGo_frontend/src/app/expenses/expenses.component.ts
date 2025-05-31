@@ -3,12 +3,14 @@ import { FormGroup, FormBuilder, Validators, FormArray, ReactiveFormsModule } fr
 import { DestinationService } from '../core/services/destinations.service';
 import { ItinerariesService } from '../core/services/itineraries.service';
 import { ParticipantsService } from '../core/services/participants.service';
+import { ValidatorMessages } from '../core/validators/validator-messages';
+import { CustomValidators } from '../core/validators/custom-validators';
 import { ExpensesService } from '../core/services/expenses.service';
-import { Expenses } from './interfaces/expenses.interface';
 import { UserExpenses } from './interfaces/userExpenses.interface';
-import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
+import { Expenses } from './interfaces/expenses.interface';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { ToastModule } from 'primeng/toast';
@@ -38,12 +40,14 @@ export class ExpensesComponent implements OnInit {
   participants: any[] = [];
   expenseForm: FormGroup;
   showForm: boolean = false;
+  formSubmitted: boolean = false;
   errorMessage: string = '';
+  validatorMessages = ValidatorMessages;
   center = { lat: 39.720007, lng: 2.910419 };
   zoom = 13;
   map!: google.maps.Map;
   selectedDestination: any = null;
-  mapOptions: google.maps.MapOptions = {
+  mapOptions: google.maps.MapOptions = {  
     mapId: 'DEMO_MAP_ID',
     disableDefaultUI: true,
   };
@@ -59,14 +63,22 @@ export class ExpensesComponent implements OnInit {
     private toast: BaseToastService
   ) {
     this.expenseForm = this.formBuilder.group({
-      itinerary: [null, Validators.required],
-      destination: [null, Validators.required],
-      payer: [null, Validators.required],
-      total_amount: ['', Validators.min(0.01)],
+      itinerary: [''],
+      destination: [''],
+      payer: [''],
+      total_amount: [''],
       description: [''],
-      date: [null],
+      date: [''],
       type_expense: ['Personalized', Validators.required],
       debtors: this.formBuilder.array([]),
+    }, {
+      validators: [
+        CustomValidators.itineraryAndDestinationRequired(),
+        CustomValidators.payerAndAmountRequired(),
+        CustomValidators.debtorsNotExceedTotalAmount(),
+        CustomValidators.debtorsAmountRequiredPersonalized(),
+        CustomValidators.debtorsSelectRequired(),
+      ]
     });
   }
 
@@ -86,11 +98,23 @@ export class ExpensesComponent implements OnInit {
         next: (data: any) => this.itineraries = data.itineraries,
         error: (err: any) => this.itineraries = []
       });
+
+    this.expenseForm.valueChanges.subscribe(() => {
+      const { itinerary, destination, payer} = this.expenseForm.value
+      if (itinerary && destination && payer) {
+          this.formSubmitted = false;
+      }
+      // Si quieres ocultar todos los mensajes cuando el campo es válido:
+      if (this.expenseForm.valid) {
+        this.formSubmitted = false;
+      }
+    });
   }
 
   toggleForm(): void {
     this.showForm = !this.showForm;
-  
+    this.formSubmitted = false; 
+    this.errorMessage = '';
     if (this.showForm) {
       this.expenseForm.reset({
         itinerary: '',
@@ -105,8 +129,10 @@ export class ExpensesComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.formSubmitted = true;
     if (this.expenseForm.valid) {
       const formValue = this.expenseForm.value;
+
       const payerId = Number(formValue.payer);
       const payer = this.participants.find(p => p.participant_id === payerId);
 
@@ -139,6 +165,9 @@ export class ExpensesComponent implements OnInit {
 
       this.expensesService.createExpense(newExpense).subscribe({
         next: () => {
+          this.expensesService.getExpensesByLoggedUser().subscribe({
+            next: (data) => this.expenses = data.expenses
+          });
           this.getTotalExpenses();
           this.showForm = false;
           this.toast.showSuccessToast('Se han añadido el gasto', false);
@@ -195,8 +224,8 @@ export class ExpensesComponent implements OnInit {
 
   onPayerChange(): void {
     const debtorsArray = this.expenseForm.get('debtors') as FormArray;
-    debugger
     debtorsArray.clear();
+    this.expenseForm.updateValueAndValidity();
   }
 
   
@@ -226,8 +255,11 @@ export class ExpensesComponent implements OnInit {
   
   get possibleDebtors() {
     const payerId = this.expenseForm?.value?.payer;
-    debugger
     return this.participants.filter(p => (p.user || p.participant_id) !== payerId);
+  }
+
+  get userExpenses() {
+    return this.expenseForm.get('userExpenses') as FormArray;
   }
 
   setEqualitarian() {
@@ -254,6 +286,15 @@ export class ExpensesComponent implements OnInit {
   }
 
   addDebtor(): void {
+    //this.formSubmitted = true; // Marca como enviado para mostrar errores
+    this.expenseForm.updateValueAndValidity(); // Fuerza la validación de grupo
+
+    // Si existe el error, no añadas el deudor
+    if (!this.expenseForm.value.payer) {
+      this.formSubmitted = true;
+      return;
+    }
+
     const debtorsArray = this.expenseForm.get('debtors') as FormArray;
     const isEqualitarian = this.expenseForm.get('type_expense')?.value === 'Equalitarian';
     const group = this.formBuilder.group({
@@ -285,9 +326,6 @@ export class ExpensesComponent implements OnInit {
   }
 
 
-  get userExpenses() {
-    return this.expenseForm.get('userExpenses') as FormArray;
-  }
   
   addUserExpense(): void {
     this.userExpenses.push(

@@ -5,4 +5,5 @@ export interface Destination {
     city_name: string;
     start_date: Date;
     end_date: Date;
+    countries: String;
 }
