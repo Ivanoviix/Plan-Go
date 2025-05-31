@@ -1,5 +1,6 @@
-<form (ngSubmit)="addParticipant()" class="flex flex-row items-center mt-2">
+<form (ngSubmit)="addParticipantWithDetails(participantName, destination ?? 0)" class="flex flex-row items-center mt-2">
   <input type="text" [(ngModel)]="participantName" name="participantName" placeholder="Nombre del participante" required class="border rounded p-1 mr-2">
   <button type="submit" class="bg-[--primary-color] text-white px-3 py-1 rounded-full hover:bg-[--secondary-color]">Añadir participante</button>
 </form>
 <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+<p-toast></p-toast>

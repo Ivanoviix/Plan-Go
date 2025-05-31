@@ -1,27 +1,46 @@
-import { Component } from '@angular/core';
+import { Component, Input, ViewChild, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MapComponent } from '../map/map.component';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ParticipantsComponent } from '../participants/participants.component';
+import { FormsModule } from '@angular/forms';
+import { DestinationService } from '../core/services/destinations.service';
+import { ActivatedRoute } from '@angular/router';
+import { Destination } from '../destinations/interfaces/destinations.interface';
+import { BaseToastService } from '../core/services/base-toast.service';
 
 @Component({
   selector: 'app-search-locations',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, MapComponent],
+  imports: [
+    CommonModule,
+    HeaderComponent,
+    MapComponent,
+    ParticipantsComponent,
+    FormsModule,
+  ],
   templateUrl: './search-locations.component.html',
-  styleUrl: './search-locations.component.css'
+  styleUrl: './search-locations.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SearchLocationsComponent {
+  @ViewChild('participants') participantsComponent!: ParticipantsComponent;
+  participantName: string = '';
+  @Input() destinations: Destination[] = [];
+  @Input() selectedDestinationId: number | null = null;
   sections = [
     { title: 'Accommodations', isOpen: false },
     { title: 'Eat & Drink', isOpen: false },
     { title: 'To do', isOpen: false },
   ];
-
   svgIcons: SafeHtml[] = [];
 
   constructor(
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private destinationService: DestinationService,
+    private route: ActivatedRoute,
+    private toast: BaseToastService
   ) {
     const rawIcons = [
       `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="h-8 w-8">
@@ -35,6 +54,49 @@ export class SearchLocationsComponent {
       </svg>`
     ];
     this.svgIcons = rawIcons.map(icon => this.sanitizer.bypassSecurityTrustHtml(icon));
+  }
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      const itineraryId = Number(params.get('itineraryId'));
+      this.route.queryParamMap.subscribe(queryParams => {
+        const destinationId = Number(queryParams.get('destinationId'));
+        this.selectedDestinationId = destinationId;
+  
+        console.log('Destino seleccionado (selectedDestinationId):', this.selectedDestinationId);
+  
+        if (itineraryId) {
+          this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
+            next: (data: any) => {
+              const allDestinations = data['User destinations'] || [];
+              this.destinations = allDestinations.filter((dest: Destination) => dest.destination_id === destinationId);
+            },
+            error: (err) => {
+              console.error('Error al obtener destinos:', err);
+            }
+          });
+        }
+      });
+    });
+  }
+
+  callAddParticipant(): void {
+    if (!this.selectedDestinationId) {
+      console.error('No se ha seleccionado un destino válido.');
+      return;
+    }
+  
+    if (this.participantsComponent) {
+      console.log('Llamando a addParticipantWithDetails con:', {
+        participantName: this.participantName,
+        destinationId: this.selectedDestinationId,
+      });
+      this.toast.showSuccessToast('Se han añadido el participante', true);
+      this.participantsComponent.addParticipantWithDetails(this.participantName, this.selectedDestinationId);
+      
+    } else {
+      console.error('ParticipantsComponent no está inicializado.');
+    }
   }
 
   toggleSection(index: number): void {
