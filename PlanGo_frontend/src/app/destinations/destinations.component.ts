@@ -49,6 +49,7 @@ constructor(
       const itineraryId = Number(params.get('itineraryId'));
       if (itineraryId) {
         this.fetchDestinationsByItinerary(itineraryId);
+        this.selectedItineraryId = itineraryId;
       }
     });
 
@@ -146,8 +147,9 @@ constructor(
     return this.selectedItinerary.countries; // Return as is if there's only one country
   }
 
-  goPlaces(){
-    this.router.navigate(['/search/places']);
+  goPlaces(destinationId: number): void {
+    this.router.navigate(['/search/places', this.selectedItineraryId], {
+      queryParams: { destinationId }
+    });
   }
-
 }
