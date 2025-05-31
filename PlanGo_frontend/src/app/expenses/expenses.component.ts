@@ -10,13 +10,21 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { Router } from '@angular/router';
+import { BaseToastService } from '../core/services/base-toast.service';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   standalone: true,
   selector: 'app-expenses',
   templateUrl: './expenses.component.html',
   styleUrl: './expenses.component.css',
-  imports: [CommonModule, HeaderComponent, GoogleMapsModule, ReactiveFormsModule], 
+  imports: [
+    CommonModule, 
+    HeaderComponent, 
+    GoogleMapsModule, 
+    ReactiveFormsModule,
+    ToastModule,
+  ], 
   schemas: [CUSTOM_ELEMENTS_SCHEMA], 
 })
 
@@ -40,7 +48,16 @@ export class ExpensesComponent implements OnInit {
     disableDefaultUI: true,
   };
 
-  constructor(private expensesService: ExpensesService, private destinationService: DestinationService, private itinerariesService: ItinerariesService, private participantsService: ParticipantsService, private router: Router, private formBuilder: FormBuilder,   private cdr: ChangeDetectorRef) {
+  constructor(
+    private expensesService: ExpensesService, 
+    private destinationService: DestinationService, 
+    private itinerariesService: ItinerariesService, 
+    private participantsService: ParticipantsService, 
+    private router: Router, 
+    private formBuilder: FormBuilder,   
+    private cdr: ChangeDetectorRef,
+    private toast: BaseToastService
+  ) {
     this.expenseForm = this.formBuilder.group({
       itinerary: [null, Validators.required],
       destination: [null, Validators.required],
@@ -124,6 +141,7 @@ export class ExpensesComponent implements OnInit {
         next: () => {
           this.getTotalExpenses();
           this.showForm = false;
+          this.toast.showSuccessToast('Se han añadido el gasto', false);
         },
         error: (err) => {
           console.error('Error al guardar el gasto:', err);
