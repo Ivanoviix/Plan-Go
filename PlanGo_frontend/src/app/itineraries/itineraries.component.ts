@@ -10,13 +10,22 @@ import { MapComponent } from '../map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { switchMap } from 'rxjs';
 import { globals } from '../core/globals';
+import { BaseToastService } from '../core/services/base-toast.service';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   standalone: true,
   selector: 'app-itineraries',
   templateUrl: './itineraries.component.html',
   styleUrls: ['./itineraries.component.css'],
-  imports: [CommonModule, HeaderComponent, GoogleMapsModule, MapComponent, ReactiveFormsModule, NgSelectModule],
+  imports: [
+    CommonModule, 
+    HeaderComponent, 
+    GoogleMapsModule, 
+    MapComponent, 
+    ReactiveFormsModule, 
+    NgSelectModule, 
+    ToastModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ItinerariesComponent implements OnInit {
@@ -29,7 +38,8 @@ export class ItinerariesComponent implements OnInit {
   constructor(
     private itinerariesService: ItinerariesService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toast: BaseToastService
   ) {
     this.itineraryForm = this.fb.group({
       itineraryName: [''],
@@ -67,7 +77,7 @@ export class ItinerariesComponent implements OnInit {
                 end_date: this.itineraryForm.get('endDate')?.value,
                 countries: countries, // Enviar como array
               };
-  
+              this.toast.showSuccessToast('Se han añadido el itinerario', false);
               return this.itinerariesService.createItinerary(newItinerary);
             })
           );

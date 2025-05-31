@@ -1,7 +1,7 @@
 <div class="flex h-screen">
     <!-- Sidebar -->
     <app-header class="w-16"></app-header>
-
+    
     <!-- Main Content -->
     <div class="flex flex-grow">
         <!-- Places Section -->
@@ -10,13 +10,16 @@
             <div class="sticky top-0 bg-white z-10 pb-3 h-28">
                 <div class="header w-full flex flex-row justify-between items-center">
                     <div class="flex flex-col">
-                        <h1 class="text-2xl font-bold">Düsseldorf</h1>
-                        <h2 class="text-xl">12-May-2025 - 15-May-2025</h2>
+                        <div *ngFor="let destination of destinations" class="destination-item">
+                            <h1 class="text-2xl font-bold">{{ destination.city_name }}</h1>
+                            <time class="text-xl" [attr.datetime]="destination.start_date">{{ destination.start_date |
+                                date:'dd-MMMM-yyyy' }}</time>
+                            -
+                            <time class="text-xl" [attr.datetime]="destination.end_date">{{ destination.end_date |
+                                date:'dd-MMMM-yyyy' }}</time>
+                        </div>
                     </div>
-                    <button
-                        class="h-12 rounded-full bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300 flex items-center text-white px-4">
-                        Añadir participante
-                    </button>
+                    <app-participants-form [destination]="selectedDestinationId ?? 0"></app-participants-form>
                 </div>
             </div>
 

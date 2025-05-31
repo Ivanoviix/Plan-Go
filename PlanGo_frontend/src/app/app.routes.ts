@@ -13,7 +13,7 @@ export const routes: Routes = [
   { path: 'itineraries', component: ItinerariesComponent },
   { path: 'participants', component: ParticipantsComponent },
   { path: 'destinations/:itineraryId', component: DestinationsComponent },
-  { path: 'search/places', component: SearchLocationsComponent },
+  { path: 'search/places/:itineraryId', component: SearchLocationsComponent },
   { path: 'expenses', component: ExpensesComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },

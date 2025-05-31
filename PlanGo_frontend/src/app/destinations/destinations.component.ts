@@ -56,6 +56,7 @@ constructor(
       if (itineraryId) {
         this.fetchDestinationsByItinerary(itineraryId);
         this.fetchCountriesByItinerary(itineraryId);
+        this.selectedItineraryId = itineraryId;
       }
     });
 
@@ -232,8 +233,9 @@ formatCountries(): string {
     return this.selectedItinerary.countries; // Return as is if there's only one country
   }
 
-  goPlaces(){
-    this.router.navigate(['/search/places']);
+  goPlaces(destinationId: number): void {
+    this.router.navigate(['/search/places', this.selectedItineraryId], {
+      queryParams: { destinationId }
+    });
   }
-
 }
