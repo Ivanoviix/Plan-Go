@@ -9,7 +9,10 @@ export const ValidatorMessages: { [key: string]: string } = {
     payerAmountRequired: 'Debe añadir un valor mayor a 0',
     debtorsExceedTotal: 'La suma del importe del deudor no puede superar el total pagado.',
     debtorsAmountRequired: 'Debe añadir un valor mayor a 0',
-    debtorsSelectRequired: 'Este campo no puede estar vacío.'
+    debtorsSelectRequired: 'Este campo no puede estar vacío.',
+    invalidEmail: 'El email no es válido.',
+    passwordRequired: 'La contraseña es obligatoria.',
+    wrongCredentials: 'El email o la contraseña no son correctos.',
 };
 
 
