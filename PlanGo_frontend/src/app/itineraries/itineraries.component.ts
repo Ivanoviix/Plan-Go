@@ -1,5 +1,5 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ItinerariesService } from '../core/services/itineraries.service';
 import { Itinerary } from './interfaces/itinerary.interface';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,7 @@ import { switchMap } from 'rxjs';
 import { globals } from '../core/globals';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { ToastModule } from 'primeng/toast';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   standalone: true,
@@ -25,7 +26,8 @@ import { ToastModule } from 'primeng/toast';
     MapComponent, 
     ReactiveFormsModule, 
     NgSelectModule, 
-    ToastModule],
+    ToastModule,
+    CalendarModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ItinerariesComponent implements OnInit {
@@ -34,6 +36,7 @@ export class ItinerariesComponent implements OnInit {
   showForm: boolean = false;
   itineraryForm: FormGroup;
   countries: { code: string; name: string }[] = [];
+  currentDate: Date = new Date();
 
   constructor(
     private itinerariesService: ItinerariesService,
@@ -42,10 +45,10 @@ export class ItinerariesComponent implements OnInit {
     private toast: BaseToastService
   ) {
     this.itineraryForm = this.fb.group({
-      itineraryName: [''],
-      countries: [[]],
-      startDate: [''],
-      endDate: [''],
+      itineraryName: ['', Validators.required],
+      countries: [[], Validators.required],
+      startDate: [this.currentDate.toISOString().split('T')[0], Validators.required],
+      endDate: ['', Validators.required],
     });
   }
 
@@ -64,11 +67,11 @@ export class ItinerariesComponent implements OnInit {
       this.itinerariesService.getCsrfTokenFromServer().pipe(
         switchMap((csrfToken) => {
           this.itinerariesService.setCsrfToken(csrfToken);
-  
+
           return this.itinerariesService.getIdUser().pipe(
             switchMap((userId) => {
               const countries = this.itineraryForm.get('countries')?.value.map((country: string) => country);
-  
+
               const newItinerary: Itinerary = {
                 itinerary_name: this.itineraryForm.get('itineraryName')?.value,
                 creator_user: userId,
@@ -93,6 +96,7 @@ export class ItinerariesComponent implements OnInit {
         },
       });
     } else {
+      this.itineraryForm.markAllAsTouched();
       console.error('Formulario inválido');
     }
   }
