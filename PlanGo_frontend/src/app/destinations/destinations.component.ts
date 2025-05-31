@@ -12,7 +12,7 @@ import { MapComponent } from '../map/map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CounterDatesComponent } from '../counter-dates/counter-dates.component';
 import { ItinerariesService } from '../core/services/itineraries.service';
-import { forkJoin, map, Observable } from 'rxjs';
+import { forkJoin, map, Observable, filter, distinctUntilChanged } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -51,26 +51,33 @@ constructor(
 
   async ngOnInit() { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
     await this.getCountries();
-    this.route.paramMap.subscribe(params => {
+   /*  this.route.paramMap.subscribe(params => {
       const itineraryId = Number(params.get('itineraryId'));
       if (itineraryId) {
         this.fetchDestinationsByItinerary(itineraryId);
         this.fetchCountriesByItinerary(itineraryId);
         this.selectedItineraryId = itineraryId;
       }
-    });
+    }); */
 
-    this.route.paramMap.subscribe(params => {
-      const itineraryId = Number(params.get('itineraryId'));
-      if (itineraryId) {
-        this.fetchItineraryDetails(itineraryId); // Obtener el objeto completo del itinerario
-      }
+    this.route.paramMap.pipe(
+      map((params): number => Number(params.get('itineraryId'))), 
+      filter((itineraryId: number) => !!itineraryId), 
+      distinctUntilChanged() 
+    ).subscribe((itineraryId: number) => {
+      console.log('Fetching itinerary with ID:', itineraryId);
+      this.fetchItineraryDetails(itineraryId);
+      this.fetchDestinationsByItinerary(itineraryId);
+      this.fetchCountriesByItinerary(itineraryId);
+      this.selectedItineraryId = itineraryId;
     });
   }
 
   // CUAL DE LAS 2 ES LA QUE SE UTILIZA?
   fetchItineraryDetails(itineraryId: number): void {
-    console.log('Fetching itinerary with ID:', itineraryId); // Debugging
+    if (this.selectedItineraryId === itineraryId) return;
+  
+    this.selectedItineraryId = itineraryId; // Actualiza el ID seleccionado
     this.itineraryService.getItineraryById(itineraryId).subscribe({
       next: (itinerary: any) => {
         console.log('Itinerary data:', itinerary);
@@ -79,13 +86,6 @@ constructor(
       error: (err: any) => {
         console.error('Error fetching itinerary:', err);
         this.selectedItinerary = null;
-      }
-    });
-
-    this.route.paramMap.subscribe(params => {
-      const itineraryId = Number(params.get('itineraryId'));
-      if (itineraryId) {
-        this.fetchItineraryDetails(itineraryId); // Obtener el objeto completo del itinerario
       }
     });
   }
@@ -160,12 +160,12 @@ constructor(
     this.destinationService.getCountriesByDestination(destinationId).subscribe({
       next: (data: any) => {
         this.countries = data.countries;
+      },
       error: () => {
         this.countries = [];
-        console.log("No hay países en su destino")
+        console.log("No hay países en su destino");
       }
-      }
-    })
+    });
   }
 
   async getCountries(): Promise<void> {
