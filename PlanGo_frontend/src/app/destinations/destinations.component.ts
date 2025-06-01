@@ -14,6 +14,9 @@ import { CounterDatesComponent } from '../counter-dates/counter-dates.component'
 import { ItinerariesService } from '../core/services/itineraries.service';
 import { forkJoin, map, Observable, filter, distinctUntilChanged } from 'rxjs';
 import { globals } from '../core/globals';
+import { ValidatorMessages } from '../core/validators/validator-messages';
+import { BaseToastService } from '../core/services/base-toast.service';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   standalone: true,
@@ -28,7 +31,9 @@ import { globals } from '../core/globals';
     GoogleMapsModule, 
     MapComponent, 
     NgSelectModule, 
-    CounterDatesComponent],
+    CounterDatesComponent,
+    ToastModule
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA], 
 
 })
@@ -41,16 +46,18 @@ export class DestinationsComponent implements OnInit {
   countries: any[] = [];
   allCountries: { code: string, name: string }[] = [];
   searchText: string = '';
-  cities: string[] = [];
+  cities: any[] = [];
   itineraryStartDate!: string; 
   itineraryEndDate!: string;   
   itineraryTotalDays!: number;
+  ValidatorMessages = ValidatorMessages;
 
 constructor(
   private destinationService: DestinationService, 
   private route: ActivatedRoute,
   private router: Router,
   private itineraryService: ItinerariesService,
+  private toast: BaseToastService,
 ) {}
 
   async ngOnInit() { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
@@ -90,8 +97,8 @@ constructor(
   }
 
   calculateTotalDays(start: string, end: string): number {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
+    let startDate = new Date(start);
+    let endDate = new Date(end);
     return Math.max(1, Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1);
   }
 
@@ -192,15 +199,13 @@ constructor(
     .map(c => c.code)
   }
   
-  getCitiesMultipleCountries(input: string, countryCodes: string[]): Observable<string[]> {
+  getCitiesMultipleCountries(input: string, countryCodes: string[]): Observable<any[]> {
     let calls = countryCodes.map(code => this.destinationService.getCitiesFromGoogle(input, code));
     return forkJoin(calls).pipe(
       map(results =>
         results.flatMap(r =>
           r.geonames
-            ? r.geonames.map((g: any) =>
-                (g.adminName1 ? g.adminName1 + ', ' : '') + g.name
-              )
+            ? r.geonames.map((g: any) => g) // Guarda el objeto completo
             : []
         )
       )
@@ -209,20 +214,16 @@ constructor(
   
   onCitySearch() {
     let countryCodes = this.getCountryCodesByNames(this.countries);
-    this.cities = []; // <-- Limpia la lista antes de buscar
-    console.log('Texto buscado:', this.searchText);
-    console.log('Países (names):', this.countries);
-    console.log('Códigos de país:', countryCodes);
+    this.cities = [];
     if (this.searchText && countryCodes.length > 0) {
       this.getCitiesMultipleCountries(this.searchText, countryCodes).subscribe({
-        next: (results: string[]) => {
-          this.cities = results; // Solo los nuevos resultados
+        next: (results: any[]) => {
+          this.cities = results; // results debe ser array de objetos con name, adminName1, etc.
         },
         error: () => this.cities = [],
       });
     } else {
       this.cities = [];
-      console.log("No se ha escrito nada en el input")
     }
   }
   
@@ -247,29 +248,38 @@ constructor(
     });
   }
 
-  onCitySelect(city: string): void {
-    debugger
+  onCitySelect(city: any): void {
     if (!this.selectedItineraryId || !this.countries.length) {
       this.errorMessage = 'Faltan datos para crear el destino';
       return;
     }
 
-    const country = this.countries[0];
+    const exists = this.destinations.some(
+      dest => dest.city_name.trim().toLowerCase() === city.name.trim().toLowerCase()
+    );
+    if (exists) {
+      this.errorMessage = ValidatorMessages['destinationDuplicate']
+      return;
+    }
 
-    const payload: Omit<Destination, 'destination_id'> = {
+    let country = this.countries[0];
+
+    let payload: Omit<Destination, 'destination_id'> = {
       itinerary: this.selectedItineraryId,
       country: country,
-      city_name: city.split(",")[0],
+      city_name: city.adminName1,
       start_date: this.itineraryStartDate as any,
       end_date: this.itineraryEndDate as any,
-      latitude: 0,
-      longitude: 0,
+      latitude: Number(city.lat),
+      longitude: Number(city.lng),
     };
 
     this.destinationService.createDestination(payload).subscribe({
       next: () => {
         this.fetchDestinationsByItinerary(this.selectedItineraryId!);
+        this.toast.showSuccessToast('Se ha añadido el destino', false);
         this.cities = [];
+        this.errorMessage = '';
       },
       error: (err) => {
         this.errorMessage = 'Error al crear el destino';

@@ -1,7 +1,7 @@
 <div class="flex h-screen">
   <!-- Sidebar -->
   <app-header class="w-16"></app-header>
-
+  <p-toast></p-toast>
   <!-- Main Content -->
   <div class="flex flex-grow">
     <!-- Destinations Section -->
@@ -46,7 +46,7 @@
           [(ngModel)]="searchText"
           (input)="onCitySearch()"
           placeholder="Buscar ciudad..."
-          class="w-[90%] h-12 mb-8 border rounded-full bg-white text-black border-gray-800 p-2" />
+          class="w-full h-12 mb-8 border rounded-full bg-white text-black border-gray-800 p-2" />
 
         <!-- Lista de resultados de ciudades -->
         <ul *ngIf="cities.length > 0" class="w-[90%] mt-2 border rounded bg-white text-black border-gray-800">
@@ -54,7 +54,7 @@
             *ngFor="let city of cities" 
             class="p-2 hover:bg-gray-100 cursor-pointer"
             (click)="onCitySelect(city)">
-            {{ city }}
+            {{ city.adminName1 ? city.adminName1 + ', ' : '' }}{{ city.name }}
           </li>
         </ul>
       <!-- Sticky Icons Section -->
@@ -123,7 +123,7 @@
             summary[destination.destination_id].total_expenses | currency:'EUR' }}</div>
         </div>
       </div>
-      <div *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="text-red-500 h-2 text-sm" *ngIf="errorMessage">{{ errorMessage }}</div>
     </section>
 
     <!-- Map Section -->
