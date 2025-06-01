@@ -160,7 +160,7 @@ constructor(
       this.allCountries = data
         .map((country: any) => ({
           code: country.cca2,
-          name: country.name.common,
+          name: country.translations?.spa?.common || country.name.common,
         }))
         .sort((a: any, b: any) => a.name.localeCompare(b.name));
     } catch (error) {

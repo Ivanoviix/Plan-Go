@@ -37,7 +37,7 @@ export class ItinerariesComponent implements OnInit {
   errorMessage: string = '';
   showForm: boolean = false;
   itineraryForm: FormGroup;
-  countries: { code: string; name: string }[] = [];
+  allCountries: { code: string; name: string }[] = [];
   currentDate: Date = new Date();
   ValidatorMessages = ValidatorMessages;
   formSubmitted = false;
@@ -128,7 +128,7 @@ export class ItinerariesComponent implements OnInit {
     try {
       let response = await fetch(globals.countriesRest);
       let data = await response.json();
-      this.countries = data
+      this.allCountries = data
         .map((country: any) => ({
           code: country.cca2,
           name: country.translations?.spa?.common || country.name.common, 
@@ -143,25 +143,6 @@ export class ItinerariesComponent implements OnInit {
     let selectedCountries = this.itineraryForm.get('destinations')?.value || [];
     console.log('Países seleccionados:', selectedCountries);
   }
-  /* onMapReady(map: google.maps.Map): void {
-    this.map = map;
-  
-    this.map.addListener('dblclick', async (event: google.maps.MapMouseEvent) => {
-      if (event.latLng) await this.addAdvancedMarker(event.latLng);
-    });
-  } */
-
-  /* async addAdvancedMarker(position: google.maps.LatLng | google.maps.LatLngLiteral): Promise<void> {
-    let { AdvancedMarkerElement } = await google.maps.importLibrary(
-      'marker'
-    ) as google.maps.MarkerLibrary;
-  
-    let marker = new AdvancedMarkerElement({
-      map: this.map,
-      position: position,
-      title: 'Nuevo marcador',
-    });
-  } */
 
   goToDestinations(itineraryId: number | undefined): void {
     this.router.navigate(['/destinations', itineraryId]);
