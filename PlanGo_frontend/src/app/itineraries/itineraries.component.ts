@@ -80,11 +80,12 @@ export class ItinerariesComponent implements OnInit {
               let countries = this.itineraryForm.get('countries')?.value.map((country: string) => country);
 
               let newItinerary: Itinerary = {
+                
                 itinerary_name: this.itineraryForm.get('itineraryName')?.value,
                 creator_user: userId,
                 creation_date: new Date().toISOString().split('T')[0],
-                start_date: this.itineraryForm.get('startDate')?.value,
-                end_date: this.itineraryForm.get('endDate')?.value,
+                start_date: (this.itineraryForm.get('startDate')?.value).toISOString().split('T')[0],
+                end_date: (this.itineraryForm.get('endDate')?.value).toISOString().split('T')[0],
                 countries: countries, // Enviar como array
               };
               this.toast.showSuccessToast('Se han añadido el itinerario', false);
@@ -122,7 +123,7 @@ export class ItinerariesComponent implements OnInit {
       }
     });
   }
-
+  
   async getCountries(): Promise<void> {
     try {
       let response = await fetch(globals.countriesRest);
@@ -133,11 +134,11 @@ export class ItinerariesComponent implements OnInit {
           name: country.translations?.spa?.common || country.name.common, 
         }))
         .sort((a: any, b: any) => a.name.localeCompare(b.name));
-    } catch (error) {
-      console.error('Error al obtener los países:', error);
+      } catch (error) {
+        console.error('Error al obtener los países:', error);
+      }
     }
-  }
-
+    
   onCountriesChange(): void {
     let selectedCountries = this.itineraryForm.get('destinations')?.value || [];
     console.log('Países seleccionados:', selectedCountries);
