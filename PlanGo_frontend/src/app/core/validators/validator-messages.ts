@@ -11,7 +11,9 @@ export const ValidatorMessages: { [key: string]: string } = {
     debtorsAmountRequired: 'Debe añadir un valor mayor a 0',
     debtorsSelectRequired: 'Este campo no puede estar vacío.',
     itineraryendDateAfterstartDate: 'La fecha de fin no puede ser anterior a la fecha de inicio.',
-    itineraryDatesRequired: 'Selecciona ambas fechas'
+    itineraryDatesRequired: 'Selecciona ambas fechas',
+    participantDuplicate: 'Ya existe un participante con ese nombre en este destino.',
+    participantAddError: 'Algo falló, no se han creado los participantes.',
 };
 
 
