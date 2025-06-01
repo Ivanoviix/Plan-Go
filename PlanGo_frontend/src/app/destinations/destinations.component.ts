@@ -13,6 +13,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { CounterDatesComponent } from '../counter-dates/counter-dates.component';
 import { ItinerariesService } from '../core/services/itineraries.service';
 import { forkJoin, map, Observable, filter, distinctUntilChanged } from 'rxjs';
+import { globals } from '../core/globals';
 
 @Component({
   standalone: true,
@@ -169,7 +170,7 @@ constructor(
 
   async getCountries(): Promise<void> {
     try {
-      let response = await fetch('https://restcountries.com/v3.1/all')
+      let response = await fetch(globals.countriesRest)
       let data = await response.json();
       this.allCountries = data
         .map((country: any) => ({
