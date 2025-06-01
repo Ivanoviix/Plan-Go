@@ -12,18 +12,19 @@
       <form class="w-full">
         <div class="mb-4 h-24">
           <label>Email</label>
-          <input class="mt-2 w-full h-12 border p-2 rounded-full" type="email" [(ngModel)]="email" name="email" required
+          <input class="mt-2 w-full h-12 border p-2 rounded-full" type="email" [(ngModel)]="email" name="email" required 
             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
-          <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+          <p *ngIf="errorMessageE" class="text-red-500 text-sm">{{ errorMessageE }}</p>
         </div>
         <div class="mb-4 h-24">
           <label class="my-2">Contraseña</label>
           <input class="mt-2 w-full h-12 border p-2 rounded-full" type="password" [(ngModel)]="password" name="password"
             required>
-          <p *ngIf="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</p>
+          <p *ngIf="errorMessageP" class="text-red-500 text-sm">{{ errorMessageP }}</p>
         </div>
-        <div class="mb-4 flex items-center justify-end">
-          <label for="rememberMe" class="mr-3">Recordarme</label>
+        <div class="mb-4 flex items-center justify-between">
+          <p *ngIf="errorMessageG" class="text-red-500 text-sm">{{ errorMessageG }}</p>
+          <label for="rememberMe" class="mr-3 ml-auto">Recordarme</label>
           <input type="checkbox" id="rememberMe" class="mr-2 h-4 w-4">
         </div>
         <div class="separator flex items-center my-4">

@@ -17,7 +17,8 @@
             class="h-12 bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300">
             Añadir gasto
           </button>
-          <div *ngIf="formSubmitted && expenseForm.errors?.['addDebtorRequiresPayer']" class="text-red-500 mb-2">
+          <div *ngIf="formSubmitted && expenseForm.errors?.['addDebtorRequiresPayer']"
+            class="text-red-500 text-sm mt-1">
             {{ validatorMessages['addDebtorRequiresPayer'] }}
           </div>
         </div>
@@ -180,7 +181,7 @@
             <option *ngFor="let itin of itineraries" [value]="itin.itinerary_id">{{ itin.itinerary_name }}</option>
           </select>
           <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['itineraryRequired']"
-            class="text-red-500">
+            class="text-red-500 text-sm mt-1">
             {{ validatorMessages['itineraryRequired'] }}
           </div>
         </div>
@@ -193,7 +194,7 @@
             <option *ngFor="let dest of destinations" [value]="dest.destination_id">{{ dest.city_name }}</option>
           </select>
           <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['destinationRequired']"
-            class="text-red-500">
+            class="text-red-500 text-sm mt-1">
             {{ validatorMessages['destinationRequired'] }}
           </div>
         </div>
@@ -218,11 +219,12 @@
           </div>
         </div>
         <div class="flex flex-row justify-between">
-          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['payerRequired']" class="text-red-500">
+          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['payerRequired']"
+            class="text-red-500 text-sm mt-1">
             {{ validatorMessages['payerRequired'] }}
           </div>
           <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['payerAmountRequired']"
-            class="text-red-500 ml-auto">
+            class="text-red-500 text-sm mt-1 ml-auto">
             {{ validatorMessages['payerAmountRequired'] }}
           </div>
         </div>
@@ -247,42 +249,42 @@
           </button>
         </div>
         <div *ngFor="let debtor of debtorsControls; let i = index" [formGroupName]="i" class="mb-3 mt-3 h-16">
-          <div class="flex justify-between items-center">
-            <select formControlName="id" class="w-[85%] h-12 border p-2 rounded-full" required>
-              <option value="" disabled selected>Selecciona deudor</option>
-              <option *ngFor="let p of getPossibleDebtors(i)" [value]="p.participant_id">{{ p.participant_name }}
-              </option>
-            </select>
-            <div class="flex flex-row justify-between">
+          <div class="flex flex-row items-start">
+            <div class="flex flex-col w-[85%]">
+              <select formControlName="id" class="h-12 border p-2 rounded-full" required>
+                <option value="" disabled selected>Selecciona deudor</option>
+                <option *ngFor="let p of getPossibleDebtors(i)" [value]="p.participant_id">{{ p.participant_name }}
+                </option>
+              </select>
+              <div class="flex flex-row justify-between">
+                <div *ngIf="formSubmitted && debtor.get('id')?.invalid" class="text-red-500 text-sm mt-1">
+                  {{ validatorMessages['debtorsSelectRequired'] }}
+                </div>
+                <div
+                  *ngIf="formSubmitted && debtor.get('amount')?.invalid && expenseForm.get('type_expense')?.value !== 'Equalitarian'"
+                  class="text-red-500 text-sm mt-1 ml-auto">
+                  {{ validatorMessages['debtorsAmountRequired'] }}
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col items-center ml-4">
               <input *ngIf="expenseForm.get('type_expense')?.value !== 'Equalitarian'" formControlName="amount"
                 type="number" min="0" placeholder="00.00€"
                 class="w-20 h-12 border p-2 rounded-full bg-[--primary-color] text-white text-center placeholder-white no-spinner"
                 required>
-              <button type="button" (click)="removeDebtor(i)">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="red"
-                  class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
             </div>
+            <button type="button" (click)="removeDebtor(i)" class="ml-2 mt-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="red"
+                class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-          <div class="flex flex-row justify-between">
-            <div class="">
-              <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['debtorsSelectRequired']"
-                class="text-red-500">
-                {{ validatorMessages['debtorsSelectRequired'] }}
-              </div>
-            </div>
-            <div class="flex flex-row justify-between ">
-              <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors?.['debtorsAmountRequired']"
-                class="text-red-500 ml-auto">
-                {{ validatorMessages['debtorsAmountRequired'] }}
-              </div>
-              <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['debtorsExceedTotal']"
-                class="text-red-500 ml-auto">
-                {{ validatorMessages['debtorsExceedTotal'] }}
-              </div>
-            </div>
+        </div>
+        <div class="flex flex-row w-full justify-end">
+          <div *ngIf="formSubmitted && expenseForm.errors && expenseForm.errors['debtorsExceedTotal']"
+            class="text-red-500 text-sm mt-1">
+            {{ validatorMessages['debtorsExceedTotal'] }}
           </div>
         </div>
       </div>

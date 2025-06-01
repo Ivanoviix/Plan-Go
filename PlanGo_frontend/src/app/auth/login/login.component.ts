@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { globals } from '../../core/globals';
 import { AnimatedBackgroundComponent } from '../../core/animated-background/animated-background.component';
+import { ValidatorMessages } from '../../core/validators/validator-messages';
 
 @Component({
   standalone: true,
@@ -16,14 +17,17 @@ import { AnimatedBackgroundComponent } from '../../core/animated-background/anim
 })
 export class LoginComponent {
   errorMessage = '';
+  errorMessageE = '';
+  errorMessageP = '';
+  errorMessageG = '';
   email = '';
   password = '';
 
   constructor(
     private auth: Auth,
-    private router: Router, 
+    private router: Router,
     private loginService: LoginService,
-  ) {}
+  ) { }
 
   async loginWithGoogle() {
     try {
@@ -51,14 +55,19 @@ export class LoginComponent {
   }
 
   async login() {
+    this.errorMessage = '';
+    this.errorMessageE = '';
+    this.errorMessageP = '';
+    this.errorMessageG = '';
+    
     try {
       const result = await signInWithEmailAndPassword(this.auth, this.email, this.password);
       const firebaseUser = result.user;
       const idToken = await firebaseUser.getIdToken();
-  
+
       // Guarda el token en localStorage
       localStorage.setItem(globals.keys.accessToken, idToken);
-  
+
       // Llama al servicio para autenticar con el backend
       this.loginService.loginWithEmail(idToken).subscribe({
         next: () => {
@@ -71,8 +80,18 @@ export class LoginComponent {
         },
       });
     } catch (error: any) {
+      if (error.code === 'auth/invalid-email') {
+        this.errorMessageE = ValidatorMessages['invalidEmail'];
+      } else if (error.code === 'auth/wrong-password' || error.code === 'auth/missing-password') {
+        this.errorMessageP = ValidatorMessages['passwordRequired'];
+      } else if (
+        error.code === 'auth/invalid-login-credentials' ||
+        error.code === 'auth/user-mismatch' ||
+        error.code === 'auth/invalid-credential'
+      ) {
+        this.errorMessageG = ValidatorMessages['wrongCredentials'];
+      }
       console.error('Error al iniciar sesión:', error);
-      this.errorMessage = error.message;
     }
   }
 
