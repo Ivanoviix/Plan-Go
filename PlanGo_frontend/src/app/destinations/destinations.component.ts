@@ -178,20 +178,28 @@ constructor(
     let calls = countryCodes.map(code => this.destinationService.getCitiesFromGoogle(input, code));
     return forkJoin(calls).pipe(
       map(results =>
-        results.flatMap(r => r.geonames ? r.geonames.map((g: any) => g.name) : []
-      )
+        results.flatMap(r =>
+          r.geonames
+            ? r.geonames.map((g: any) =>
+                (g.adminName1 ? g.adminName1 + ', ' : '') + g.name
+              )
+            : []
+        )
       )
     );
   }
   
   onCitySearch() {
     let countryCodes = this.getCountryCodesByNames(this.countries);
+    this.cities = []; // <-- Limpia la lista antes de buscar
     console.log('Texto buscado:', this.searchText);
     console.log('Países (names):', this.countries);
     console.log('Códigos de país:', countryCodes);
     if (this.searchText && countryCodes.length > 0) {
       this.getCitiesMultipleCountries(this.searchText, countryCodes).subscribe({
-        next: (results: string[]) => this.cities = results,
+        next: (results: string[]) => {
+          this.cities = results; // Solo los nuevos resultados
+        },
         error: () => this.cities = [],
       });
     } else {
@@ -200,7 +208,7 @@ constructor(
     }
   }
   
-formatCountries(): string {
+  formatCountries(): string {
     if (!this.selectedItinerary?.countries) return '';
   
     let countriesArray = this.selectedItinerary.countries.split(',');
