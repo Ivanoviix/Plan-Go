@@ -229,24 +229,25 @@ def country_name_to_code(name):
 def country_names_to_codes(names):
     return [country_name_to_code(name) for name in names if country_name_to_code(name)]
 
-
+# google_places_autocomplete
 @csrf_exempt
 @require_GET
-def google_places_autocomplete(request):
+def geocodenames_autocomplete(request):
     input_text = request.GET.get('input')
     country_code = request.GET.get('country')
-    api_key = 'AIzaSyCAPQZNdVcJsRe9gaeaUuNPhu-APgGuIdE'  # Reemplaza con tu API key válida
+    api_key = 'plango'  # Reemplaza con tu API key válida
 
     if not input_text or not country_code:
         return JsonResponse({'error': 'Missing input or country'}, status=400)
 
     # Endpoint actualizado para Places API (New)
     url = (
-        f'https://maps.googleapis.com/maps/api/place/autocomplete/json'
-        f'?input={input_text}&types=(cities)&components=country:{country_code}&key={api_key}'
+        f'http://api.geonames.org/searchJSON'
+        f'?name_startsWith={input_text}&country={country_code}&featureClass=P&minPopulation=5000&maxRows=1000&username={api_key}'
     )
+    print("URL! ", url)
     response = requests.get(url)
-
+    print("RESPONSEEE", response)
     if response.status_code != 200:
         return JsonResponse({'error': 'Failed to fetch data from Google Places API'}, status=response.status_code)
 

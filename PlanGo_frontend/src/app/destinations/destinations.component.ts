@@ -91,20 +91,6 @@ constructor(
     });
   }
 
-  // fetchItineraryDetails(itineraryId: number): void {
-  //   console.log('Fetching itinerary with ID:', itineraryId); // Debugging
-  //   this.itineraryService.getItineraryById(itineraryId).subscribe({
-  //     next: (itinerary: any) => {
-  //       console.log('Itinerary data:', itinerary);
-  //       this.selectedItinerary = itinerary;
-  //     },
-  //     error: (err: any) => {
-  //       console.error('Error fetching itinerary:', err);
-  //       this.selectedItinerary = null;
-  //     }
-  //   });
-  // }
-
   guardarFechas(event: { idDestino: number; fechaInicio: string; fechaFin: string }): void {
     console.log('Fechas confirmadas:', event);
   }
@@ -192,13 +178,17 @@ constructor(
     let calls = countryCodes.map(code => this.destinationService.getCitiesFromGoogle(input, code));
     return forkJoin(calls).pipe(
       map(results =>
-        results.flatMap(r => r.predictions.map((p: any) => p.description))
+        results.flatMap(r => r.geonames ? r.geonames.map((g: any) => g.name) : []
+      )
       )
     );
   }
   
   onCitySearch() {
     let countryCodes = this.getCountryCodesByNames(this.countries);
+    console.log('Texto buscado:', this.searchText);
+    console.log('Países (names):', this.countries);
+    console.log('Códigos de país:', countryCodes);
     if (this.searchText && countryCodes.length > 0) {
       this.getCitiesMultipleCountries(this.searchText, countryCodes).subscribe({
         next: (results: string[]) => this.cities = results,

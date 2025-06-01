@@ -44,7 +44,7 @@ export class DestinationService extends BaseHttpService {
 
   getCitiesFromGoogle(input: string, countryCode: string): Observable<any> {
     const headers = this.createHeaders();
-    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/google-places-autocomplete/?input=${input}&country=${countryCode}`, { headers });
+    return this.httpClient.get(`${globals.apiBaseUrl}/itineraries/geocodenames/?input=${input}&country=${countryCode}`, { headers });
   }
 
   getCountriesByItinerary(itineraryId: number): Observable<any> {
