@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.shortcuts import render
 from django.http import JsonResponse
 from apps.places.models.accommodation import Accommodation
+from .serializer import AcommodationSerializer, ActivitySerializer, RestaurantSerializer, SavedPlacesSerializer
 from apps.places.models.accommodation_image import AccommodationImage
 from apps.places.models.activity import Activity
 from apps.places.models.activity_image import ActivityImage
@@ -12,9 +13,15 @@ from apps.places.models.restaurant import Restaurant
 from apps.places.models.restaurant_image import RestaurantImage
 from apps.places.models.saved_place import SavedPlace
 from apps.places.models.saved_place_image import SavedPlaceImage
-from .serializer import AcommodationSerializer, ActivitySerializer, RestaurantSerializer, SavedPlacesSerializer
-
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.conf import settings
+import requests
+import json
+import os
 # Create your views here.
+PLACES_API_KEY = settings.API_KEY
 
 # ACCOMMODATION
 def get_accommodations_from_destination(request, destination_id):
@@ -132,3 +139,42 @@ def get_saved_activities(request, user_id):
             'images': images_data
         })
     return JsonResponse({'saved_activities': data}, safe=False)
+
+
+# API GOOGLE PLACES
+
+@csrf_exempt
+@require_POST
+def google_places_search_nearby(request):
+    api_key = PLACES_API_KEY
+    data = json.loads(request.body)
+
+    lat = data.get('latitude', 39.576003)
+    lng = data.get('longitude', 2.654179)
+    radius = data.get('radius', 20000)
+
+    payload = {
+        "includedTypes": [
+            "lodging",          
+            "hotel",
+            "motel",
+            "bed_and_breakfast",
+            "guest_house",
+            "hostel"
+        ],
+        "maxResultCount": 20,
+        "locationRestriction": {
+            "circle": {
+                "center": {
+                    "latitude": lat,
+                    "longitude": lng
+                },
+                "radius": radius
+            }
+        },
+        "rankPreference": "DISTANCE"
+    }
+
+    url = f"https://places.googleapis.com/v1/places:searchNearby?key={api_key}"
+    response = requests.post(url, json=payload)
+    return JsonResponse(response.json(), safe=False)

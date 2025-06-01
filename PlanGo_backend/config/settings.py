@@ -11,10 +11,17 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR.parent / '.env')
+
+API_KEY = os.getenv('PLAN_GO_API_PLACES_KEY', 'SOME_KEY1') 
+GEONAMES_API_KEY = os.getenv('PLANG_GO_GEOCODES_KEY', 'SOME_KEY2')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/

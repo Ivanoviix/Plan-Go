@@ -29,13 +29,14 @@ proto-plus==1.26.1
 protobuf==5.29.4
 pyasn1==0.6.1
 pyasn1_modules==0.4.2
+pycountry==24.6.1
 pycparser==2.22
 PyJWT==2.10.1
 pyparsing==3.2.3
+python-dotenv==1.1.0
 requests==2.32.3
 rsa==4.9.1
 sqlparse==0.5.3
 tzdata==2025.2
 uritemplate==4.1.1
 urllib3==2.4.0
-pycountry==24.6.1
