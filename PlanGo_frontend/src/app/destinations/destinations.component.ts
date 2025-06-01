@@ -13,6 +13,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { CounterDatesComponent } from '../counter-dates/counter-dates.component';
 import { ItinerariesService } from '../core/services/itineraries.service';
 import { forkJoin, map, Observable, filter, distinctUntilChanged } from 'rxjs';
+import { globals } from '../core/globals';
 
 @Component({
   standalone: true,
@@ -106,7 +107,6 @@ constructor(
 
   guardarFechas(event: { idDestino: number; fechaInicio: string; fechaFin: string }): void {
     console.log('Fechas confirmadas:', event);
-    // Handle the event here (e.g., save to the database or update the UI)
   }
   
   fetchDestinationsByItinerary(itineraryId: number): void {
@@ -169,7 +169,7 @@ constructor(
 
   async getCountries(): Promise<void> {
     try {
-      let response = await fetch('https://restcountries.com/v3.1/all')
+      let response = await fetch(globals.countriesRest)
       let data = await response.json();
       this.allCountries = data
         .map((country: any) => ({
@@ -222,7 +222,7 @@ formatCountries(): string {
       let lastCountry = countriesArray.pop();
       return `${countriesArray.join(', ')} y ${lastCountry}`;
     }
-    return this.selectedItinerary.countries; // Return as is if there's only one country
+    return this.selectedItinerary.countries; 
   }
 
   goPlaces(destinationId: number): void {
