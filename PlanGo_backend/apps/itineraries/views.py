@@ -8,24 +8,25 @@ from apps.places.models.activity import Activity
 from apps.places.models.restaurant import Restaurant
 from apps.expenses.models.expense import Expense
 from apps.users.models.user import User
-from django.views.decorators.csrf import csrf_exempt
-from django.middleware.csrf import get_token
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
-from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
 from django.utils.decorators import method_decorator
-from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from django.middleware.csrf import get_token
+from rest_framework.response import Response
+from django.conf import settings
 from django.http import JsonResponse
+from rest_framework import status
+from django.utils import timezone
+from django.views import View
 from django.db.models import Sum
 from django.db import models
-import json
 import pycountry
 import requests
+import json
 # Create your views here.
-        
+GEONAMES_API_KEY = settings.GEONAMES_API_KEY  
 # ITINERARIOS
 def get_itineraries(request):
     itineraries = Itinerary.objects.all()
@@ -233,7 +234,7 @@ def country_names_to_codes(names):
 def geocodenames_autocomplete(request):
     input_text = request.GET.get('input')
     country_code = request.GET.get('country')
-    api_key = 'plango'  # Reemplaza con tu API key válida
+    api_key = GEONAMES_API_KEY 
 
     if not input_text or not country_code:
         return JsonResponse({'error': 'Missing input or country'}, status=400)
@@ -245,6 +246,6 @@ def geocodenames_autocomplete(request):
     )
     response = requests.get(url)
     if response.status_code != 200:
-        return JsonResponse({'error': 'Failed to fetch data from Google Places API'}, status=response.status_code)
+        return JsonResponse({'error': 'Failed to serch in GeoNames API'}, status=response.status_code)
 
     return JsonResponse(response.json())
