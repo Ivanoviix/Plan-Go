@@ -125,12 +125,12 @@ export class ItinerariesComponent implements OnInit {
 
   async getCountries(): Promise<void> {
     try {
-      let response = await fetch('https://restcountries.com/v3.1/all');
+      let response = await fetch(globals.countriesRest);
       let data = await response.json();
       this.countries = data
         .map((country: any) => ({
           code: country.cca2,
-          name: country.translations?.spa?.common || country.name.common, // Nombre en español o común si no está disponible
+          name: country.translations?.spa?.common || country.name.common, 
         }))
         .sort((a: any, b: any) => a.name.localeCompare(b.name));
     } catch (error) {

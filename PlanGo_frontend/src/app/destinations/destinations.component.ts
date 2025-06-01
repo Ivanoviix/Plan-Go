@@ -107,7 +107,6 @@ constructor(
 
   guardarFechas(event: { idDestino: number; fechaInicio: string; fechaFin: string }): void {
     console.log('Fechas confirmadas:', event);
-    // Handle the event here (e.g., save to the database or update the UI)
   }
   
   fetchDestinationsByItinerary(itineraryId: number): void {
@@ -223,7 +222,7 @@ formatCountries(): string {
       let lastCountry = countriesArray.pop();
       return `${countriesArray.join(', ')} y ${lastCountry}`;
     }
-    return this.selectedItinerary.countries; // Return as is if there's only one country
+    return this.selectedItinerary.countries; 
   }
 
   goPlaces(destinationId: number): void {
