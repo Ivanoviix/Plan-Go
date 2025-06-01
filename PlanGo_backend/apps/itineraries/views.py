@@ -243,11 +243,9 @@ def geocodenames_autocomplete(request):
     # Endpoint actualizado para Places API (New)
     url = (
         f'http://api.geonames.org/searchJSON'
-        f'?name_startsWith={input_text}&country={country_code}&featureClass=P&minPopulation=5000&maxRows=1000&username={api_key}'
+        f'?name_startsWith={input_text}&country={country_code}&featureClass=P&minPopulation=5000&maxRows=1000&username={api_key}&lang=es'
     )
-    print("URL! ", url)
     response = requests.get(url)
-    print("RESPONSEEE", response)
     if response.status_code != 200:
         return JsonResponse({'error': 'Failed to fetch data from Google Places API'}, status=response.status_code)
 
