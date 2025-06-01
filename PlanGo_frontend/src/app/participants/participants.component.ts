@@ -39,6 +39,7 @@ export class ParticipantsComponent {
   errorMessage: string = '';
   showInput = false;
   ValidatorMessages = ValidatorMessages;
+  formSubmitted = false;
 
   constructor(
     private itinerariesService: ItinerariesService,
@@ -83,32 +84,27 @@ export class ParticipantsComponent {
   }
 
   addParticipantWithDetails(participantName: string, destinationId: number): void {
-    console.log('Valores recibidos en addParticipantWithDetails:', {
-      participantName,
-      destinationId,
-    });
+  this.formSubmitted = true;
 
-    if (!destinationId) {
-      console.error('El destinationId es inválido:', destinationId);
-      this.errorMessage = 'No se ha seleccionado un destino válido.';
-      return;
-    }
-
-    let normalizedName = participantName.trim().toLowerCase();
-    let exists = this.participants.some(
-      p => p.participant_name.trim().toLowerCase() === normalizedName
-    );
-    if (exists) {
-      this.errorMessage = ValidatorMessages['participantDuplicate'];
-      return;
-    }
-
-    this.errorMessage = '';
-    this.participantName = participantName;
-    this.destination = destinationId;
-
-    this.addParticipant();
+  if (!participantName || participantName.trim() === '') {
+    this.errorMessage = ValidatorMessages['participantEmpty'];
+    return;
   }
+
+  let normalizedName = participantName.trim().toLowerCase();
+  let exists = this.participants.some(
+    p => p.participant_name.trim().toLowerCase() === normalizedName
+  );
+  if (exists) {
+    this.errorMessage = ValidatorMessages['participantDuplicate'];
+    return;
+  }
+
+  this.errorMessage = '';
+  this.participantName = participantName;
+  this.destination = destinationId;
+  this.addParticipant();
+}
 
   participantExists(): boolean {
     let normalizedName = this.participantName.trim().toLowerCase();
