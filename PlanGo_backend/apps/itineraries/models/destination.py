@@ -7,6 +7,8 @@ class Destination(models.Model):
     city_name = models.CharField(max_length=150)
     start_date = models.DateField()
     end_date = models.DateField()
+    latitude = models.DecimalField(max_digits=30, decimal_places=20, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=30, decimal_places=20, null=True, blank=True)
     
     class Meta:
         verbose_name = 'Destination'
