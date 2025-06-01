@@ -245,6 +245,7 @@ def geocodenames_autocomplete(request):
         f'?name_startsWith={input_text}&country={country_code}&featureClass=P&minPopulation=5000&maxRows=1000&username={api_key}&lang=es'
     )
     response = requests.get(url)
+    print("aaaaaaaa", response.json())
     if response.status_code != 200:
         return JsonResponse({'error': 'Failed to serch in GeoNames API'}, status=response.status_code)
 
