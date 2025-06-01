@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { map, throwError } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { trigger, transition, style, animate, group, query } from '@angular/animations';
 import { ItinerariesService } from './core/services/itineraries.service';
+import { DestinationService } from './core/services/destinations.service';
 
 @Component({
   standalone: true,
@@ -56,13 +58,25 @@ import { ItinerariesService } from './core/services/itineraries.service';
 })
 
 export class AppComponent implements OnInit {
-  constructor(private itinerariesService: ItinerariesService) {}
+  constructor(
+    private itinerariesService: ItinerariesService,
+    private destinationService: DestinationService
+  ) {}
 
   ngOnInit(): void {
     this.itinerariesService.getCsrfTokenFromServer().subscribe({
       next: (csrfToken) => {
         console.log('CSRF Token obtenido:', csrfToken);
         this.itinerariesService.setCsrfToken(csrfToken);
+      },
+      error: (err) => {
+        console.error('Error al obtener el token CSRF:', err);
+      },
+    });
+
+    this.destinationService.getCsrfTokenFromServer().subscribe({
+      next: (csrfToken) => {
+        this.destinationService.setCsrfToken(csrfToken);
       },
       error: (err) => {
         console.error('Error al obtener el token CSRF:', err);

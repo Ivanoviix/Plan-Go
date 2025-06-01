@@ -68,6 +68,18 @@ export class ItinerariesComponent implements OnInit {
     this.showForm = !this.showForm;
   }
 
+  private formatDate(date: any): string {
+    if (!date) return '';
+    if (typeof date === 'string') {
+      // Si ya es string, intenta devolver solo la parte YYYY-MM-DD
+      return date.split('T')[0];
+    }
+    if (date instanceof Date) {
+      return date.toISOString().split('T')[0];
+    }
+    return '';
+  }
+
   onSubmit(): void {
     this.formSubmitted = true;
     if (this.itineraryForm.valid) {
@@ -78,6 +90,9 @@ export class ItinerariesComponent implements OnInit {
           return this.itinerariesService.getIdUser().pipe(
             switchMap((userId) => {
               let countries = this.itineraryForm.get('countries')?.value.map((country: string) => country);
+
+              let startDate = this.formatDate(this.itineraryForm.get('startDate')?.value);
+              let endDate = this.formatDate(this.itineraryForm.get('endDate')?.value);
 
               let newItinerary: Itinerary = {
                 
@@ -106,8 +121,8 @@ export class ItinerariesComponent implements OnInit {
       this.formSubmitted = false;
     } else {
       this.itineraryForm.markAllAsTouched();
-    this.itineraryForm.updateValueAndValidity(); 
-    console.error('Formulario inválido');
+      this.itineraryForm.updateValueAndValidity();
+      console.error('Formulario inválido');
     }
   }
   
@@ -145,8 +160,16 @@ export class ItinerariesComponent implements OnInit {
   }
 
   goToDestinations(itineraryId: number | undefined): void {
-    this.router.navigate(['/destinations', itineraryId]);
-  }
+  let itinerary = this.itineraries.find(it => it.itinerary_id === itineraryId);
+  console.log("itinerary:", itinerary)
+  if (!itinerary) return;
+  this.router.navigate(['/destinations', itineraryId], {
+    state: {
+      itineraryStartDate: itinerary.start_date,
+      itineraryEndDate: itinerary.end_date
+    }
+  });
+}
 }
   
   /* onMapReady(map: google.maps.Map): void {
