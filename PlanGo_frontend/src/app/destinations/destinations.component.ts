@@ -42,6 +42,9 @@ export class DestinationsComponent implements OnInit {
   allCountries: { code: string, name: string }[] = [];
   searchText: string = '';
   cities: string[] = [];
+  itineraryStartDate!: string; 
+  itineraryEndDate!: string;   
+  itineraryTotalDays!: number;
 
 constructor(
   private destinationService: DestinationService, 
@@ -52,14 +55,9 @@ constructor(
 
   async ngOnInit() { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
     await this.getCountries();
-   /*  this.route.paramMap.subscribe(params => {
-      let itineraryId = Number(params.get('itineraryId'));
-      if (itineraryId) {
-        this.fetchDestinationsByItinerary(itineraryId);
-        this.fetchCountriesByItinerary(itineraryId);
-        this.selectedItineraryId = itineraryId;
-      }
-    }); */
+    this.itineraryStartDate = history.state.itineraryStartDate;
+    this.itineraryEndDate = history.state.itineraryEndDate;
+    this.itineraryTotalDays = this.calculateTotalDays(this.itineraryStartDate, this.itineraryEndDate);
 
     this.route.paramMap.pipe(
       map((params): number => Number(params.get('itineraryId'))), 
@@ -90,6 +88,26 @@ constructor(
       }
     });
   }
+
+  calculateTotalDays(start: string, end: string): number {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    return Math.max(1, Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1);
+  }
+
+  // fetchItineraryDetails(itineraryId: number): void {
+  //   console.log('Fetching itinerary with ID:', itineraryId); // Debugging
+  //   this.itineraryService.getItineraryById(itineraryId).subscribe({
+  //     next: (itinerary: any) => {
+  //       console.log('Itinerary data:', itinerary);
+  //       this.selectedItinerary = itinerary;
+  //     },
+  //     error: (err: any) => {
+  //       console.error('Error fetching itinerary:', err);
+  //       this.selectedItinerary = null;
+  //     }
+  //   });
+  // }
 
   guardarFechas(event: { idDestino: number; fechaInicio: string; fechaFin: string }): void {
     console.log('Fechas confirmadas:', event);
@@ -226,6 +244,37 @@ constructor(
   goPlaces(destinationId: number): void {
     this.router.navigate(['/search/places', this.selectedItineraryId], {
       queryParams: { destinationId }
+    });
+  }
+
+  onCitySelect(city: string): void {
+    debugger
+    if (!this.selectedItineraryId || !this.countries.length) {
+      this.errorMessage = 'Faltan datos para crear el destino';
+      return;
+    }
+
+    const country = this.countries[0];
+
+    const payload: Omit<Destination, 'destination_id'> = {
+      itinerary: this.selectedItineraryId,
+      country: country,
+      city_name: city.split(",")[0],
+      start_date: this.itineraryStartDate as any,
+      end_date: this.itineraryEndDate as any,
+      latitude: 0,
+      longitude: 0,
+    };
+
+    this.destinationService.createDestination(payload).subscribe({
+      next: () => {
+        this.fetchDestinationsByItinerary(this.selectedItineraryId!);
+        this.cities = [];
+      },
+      error: (err) => {
+        this.errorMessage = 'Error al crear el destino';
+        console.error(err);
+      }
     });
   }
 }

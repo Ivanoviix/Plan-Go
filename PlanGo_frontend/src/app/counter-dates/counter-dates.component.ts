@@ -11,6 +11,8 @@ export class CounterDatesComponent {
   @Input() idDestino!: number;
   @Input() max: number = 5;
   @Input() startDateStr: string = '2025-06-01';
+  @Input() itineraryStartDate!: string; // <-- Añade esto
+  @Input() itineraryTotalDays!: number;
 
   @Output() fechasConfirmadas = new EventEmitter<{ idDestino: number; fechaInicio: string; fechaFin: string }>();
 
@@ -19,7 +21,7 @@ export class CounterDatesComponent {
   readonly circumference: number = 2 * Math.PI * this.radius; // Circunferencia del círculo
 
   get startDate(): Date {
-    return new Date(this.startDateStr);
+    return new Date(this.itineraryStartDate || this.startDateStr);
   }
 
   get endDate(): Date {
@@ -42,8 +44,10 @@ export class CounterDatesComponent {
   }
 
   increment(): void {
-    if (this.count < this.max) {
+    // No permitir más días que los del itinerario
+    if (this.count < this.itineraryTotalDays) {
       this.count++;
+      this.confirmarFechas();
     }
   }
 

@@ -93,7 +93,6 @@ def get_countries_by_itinerary(request, itinerary_id):
         return Response({'error': 'Itinerario no encontrado'}, status=404)
 
 # Un decorador que indica que una vista no requiere validación CSRF (Cross-Site Request Forgery).
-@csrf_exempt
 @require_POST
 def create_itinerary2(request):
     data = json.loads(request.body)
@@ -166,7 +165,6 @@ def get_destinations_by_itinerary(request, itinerary_id):
 
     ]
     return JsonResponse({'User destinations': data})
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

@@ -1,9 +1,10 @@
 export interface Destination {
-    destination_id: number
+    destination_id: number;
     itinerary: number;
-    country: string
+    country: string;
     city_name: string;
     start_date: Date;
     end_date: Date;
-    countries: String;
+    longitude: number;
+    latitude: number;
 }
