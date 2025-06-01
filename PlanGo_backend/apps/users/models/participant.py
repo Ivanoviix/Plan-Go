@@ -13,4 +13,4 @@ class Participant(models.Model):
         verbose_name_plural = 'Participant'
             
     def __str__(self):
-        return self.participant_name
+        return f"{self.participant_name}, {self.destination}"

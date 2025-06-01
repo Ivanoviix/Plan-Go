@@ -20,7 +20,8 @@ export const ValidatorMessages: { [key: string]: string } = {
     passwordRequired: 'La contraseña es obligatoria.',
     wrongRepPassword: 'Las contraseñas no coinciden.',
     wrongPassword: 'La contraseña debe tener al menos 6 carácteres.',
-
+    participantDuplicate: 'Ya existe un participante con ese nombre en este destino.',
+    participantAddError: 'Algo falló, no se han creado los participantes.',
 };
 
 
