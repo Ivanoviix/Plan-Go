@@ -267,7 +267,7 @@ constructor(
     let payload: Omit<Destination, 'destination_id'> = {
       itinerary: this.selectedItineraryId,
       country: country,
-      city_name: city.adminName1,
+      city_name: city.toponymName,
       start_date: this.itineraryStartDate as any,
       end_date: this.itineraryEndDate as any,
       latitude: Number(city.lat),
