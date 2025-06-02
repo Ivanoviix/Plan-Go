@@ -23,7 +23,8 @@ export const ValidatorMessages: { [key: string]: string } = {
     participantDuplicate: 'Ya existe un participante con ese nombre en este destino.',
     participantAddError: 'Algo falló, no se han creado los participantes.',
     participantEmpty: 'Debes introducir un participante',
-    destinationDuplicate: 'Ya existe un destino con ese nombre en este itinerario.'
+    destinationDuplicate: 'Ya existe un destino con ese nombre en este itinerario.',
+    destinationsNew: 'No hay destinos creados. ¡Añade el primero!',
 };
 
 
