@@ -29,10 +29,14 @@ export class SearchLocationsComponent {
   participantName: string = '';
   @Input() destinations: Destination[] = [];
   @Input() selectedDestinationId: number | null = null;
+  currentDestination!: Destination; 
+  selectedDestination: Destination[] = [];
+  mapLocation: google.maps.LatLngLiteral = {lat: 39.72596642771257, lng: 2.914616467674367};
+
   sections = [
-    { title: 'Accommodations', isOpen: false },
-    { title: 'Eat & Drink', isOpen: false },
-    { title: 'To do', isOpen: false },
+    { title: 'Alojamientos', isOpen: false, onEdit: () => this.editCategory('Accommodation', this.currentDestination) },
+    { title: 'Comer y beber', isOpen: false, onEdit: () => this.editCategory('Comer y beber', this.currentDestination) },
+    { title: 'Cosas que hacer', isOpen: false, onEdit: () => this.editCategory('Accommodation', this.currentDestination) },
   ];
   svgIcons: SafeHtml[] = [];
 
@@ -62,14 +66,24 @@ export class SearchLocationsComponent {
       this.route.queryParamMap.subscribe(queryParams => {
         const destinationId = Number(queryParams.get('destinationId'));
         this.selectedDestinationId = destinationId;
-  
-        console.log('Destino seleccionado (selectedDestinationId):', this.selectedDestinationId);
-  
+
+        console.log('Destino seleccionado:', this.selectedDestinationId);
+
+        debugger
         if (itineraryId) {
           this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
             next: (data: any) => {
               const allDestinations = data['User destinations'] || [];
               this.destinations = allDestinations.filter((dest: Destination) => dest.destination_id === destinationId);
+              if (this.destinations.length > 0) {
+                this.currentDestination = this.destinations[0];
+                console.log('Current Destination asignado:', this.currentDestination);
+                debugger
+                this.onDestinationSelect(this.currentDestination)
+                debugger
+              } else {
+                console.warn('No se encontró un destino con el id', destinationId);
+              }
             },
             error: (err) => {
               console.error('Error al obtener destinos:', err);
@@ -80,6 +94,41 @@ export class SearchLocationsComponent {
     });
   }
 
+  onDestinationSelect(destination: Destination): void {
+    this.selectedDestination = [destination];
+    this.mapLocation = {
+      lat: Number(destination.latitude),
+      lng: Number(destination.longitude),
+    }
+  }
+
+  editCategory(category: string, destination: Destination): void {
+    console.log('Editando categoría:', category, 'con destino:', destination);
+
+    if (category === 'Alojamientos') {
+      const payload = {
+        latitude: Number(destination.latitude),
+        longitude: Number(destination.longitude),
+        radius: 20000 // o el valor que quieras
+      };
+      this.destinationService.googlePlacesSearchNearby(payload).subscribe({
+        next: (result) => {
+          // Procesa los resultados de alojamientos
+          console.log('Alojamientos encontrados:', result);
+        },
+        error: (err) => {
+          console.error('Error buscando alojamientos:', err);
+        }
+      });
+    } else if (category === 'Comer y beber') {
+      // Aquí tu lógica para Eat & Drink
+      // this.destinationService.googlePlacesSearchEatDrink(payload)...
+    } else if (category === 'Cosas que hacer') {
+      // Aquí tu lógica para To Do
+      // this.destinationService.googlePlacesSearchToDo(payload)...
+    }
+  }
+  
   callAddParticipant(): void {
     if (!this.selectedDestinationId) {
       console.error('No se ha seleccionado un destino válido.');

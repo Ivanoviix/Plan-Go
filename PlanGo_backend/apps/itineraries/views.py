@@ -143,6 +143,8 @@ def get_destinations(request):
             'city_name': i.city_name,
             'start_date': i.start_date,
             'end_date': i.end_date,
+            'latitude': i.latitude,
+            'longitude': i.longitude,
         }
         for i in destination
     ]
@@ -161,6 +163,8 @@ def get_destinations_by_itinerary(request, itinerary_id):
             'city_name': i.city_name,
             'start_date': i.start_date,
             'end_date': i.end_date,
+            'latitude': i.latitude,
+            'longitude': i.longitude,
         }
         for i in destination
 
