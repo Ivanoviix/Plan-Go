@@ -192,7 +192,6 @@ export class ExpensesComponent implements OnInit {
 
   getSelectedDestination(destinationId: Expenses): void {
     this.selectedDestination = this.destinations.find(dest => dest.destination_id === destinationId);
-    console.log("DESTINO SELECCIONADO!: ",this.selectedDestination)
   }
 
   onItineraryChange(): void {
