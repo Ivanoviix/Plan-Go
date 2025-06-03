@@ -9,6 +9,7 @@ import { Destination } from "../destinations/interfaces/destinations.interface";
 import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import { DestinationService } from "../core/services/destinations.service";
 import { BaseToastService } from '../core/services/base-toast.service';
+import { SearchPlacesService } from '../core/services/search-places.service';
 
 @Component({
   selector: 'app-search-places',
@@ -27,10 +28,11 @@ import { BaseToastService } from '../core/services/base-toast.service';
 export class SearchPlacesComponent {
   categoriaSeleccionada: string | null = null;
   currentDestination?: Destination; 
-  mapLocation: google.maps.LatLngLiteral = { lat: 39.72596642771257, lng: 2.914616467674367 }; // Default map location
+  mapLocation: google.maps.LatLngLiteral = { lat: 39.72596642771257, lng: 2.914616467674367 }; 
   destinations: Destination[] = [];
-  svgIcons: SafeHtml[] = []; // Array for SVG icons
+  svgIcons: SafeHtml[] = []; 
   sectionOpen = false;
+  places: any[] = [];
 
   sections = [
     { title: 'Alojamientos', isOpen: false },
@@ -40,6 +42,7 @@ export class SearchPlacesComponent {
   constructor(  
               private sanitizer: DomSanitizer,     
               private destinationService: DestinationService,
+              private searchPlacesService: SearchPlacesService,
               private route: ActivatedRoute,
               private router: Router,
               private toast: BaseToastService,
@@ -61,6 +64,37 @@ export class SearchPlacesComponent {
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params: ParamMap) => {
       this.categoriaSeleccionada = params.get('category');
+      const destinationIdParam = params.get('destinationId');
+      const destinationId = destinationIdParam ? Number(destinationIdParam) : null;
+      this.currentDestination = undefined; // Limpia el destino anterior
+      if (destinationId) {
+        this.destinationService.getDestinations().subscribe({
+          next: (data: any) => {
+            const destinations: Destination[] = Array.isArray(data) ? data : data.destination || [];
+            this.currentDestination = destinations.find(dest => dest.destination_id === destinationId);
+            if (this.currentDestination && this.currentDestination.latitude && this.currentDestination.longitude) {
+              this.mapLocation = {
+                lat: Number(this.currentDestination.latitude),
+                lng: Number(this.currentDestination.longitude),
+              };
+              this.loadPlaces(this.mapLocation.lat, this.mapLocation.lng);
+            } else {
+              // Si no encuentra el destino, usa el valor por defecto
+              this.mapLocation = { lat: 39.72596642771257, lng: 2.914616467674367 };
+              this.places = [];
+            }
+          },
+          error: () => {
+            this.currentDestination = undefined;
+            this.mapLocation = { lat: 39.72596642771257, lng: 2.914616467674367 };
+            this.places = [];
+          }
+        });
+      } else {
+        // Si no hay destinationId, usa el valor por defecto
+        this.mapLocation = { lat: 39.72596642771257, lng: 2.914616467674367 };
+        this.loadPlaces(this.mapLocation.lat, this.mapLocation.lng);
+      }
     });
   }
 
@@ -68,5 +102,33 @@ export class SearchPlacesComponent {
     this.sections[index].isOpen = !this.sections[index].isOpen;
     this.sectionOpen = !this.sectionOpen;
 
+  }
+
+  loadPlaces(lat: number, lng: number): void {
+    const payload = {
+      latitude: lat,
+      longitude: lng,
+      radius: 5000,
+      category: this.categoriaSeleccionada // <-- Añade esto siempre
+    };
+    this.searchPlacesService.googlePlacesSearchNearby(payload).subscribe({
+      next: (data: any) => {
+        this.places = data.places || [];
+      },
+      error: (err: any) => {
+        this.places = [];
+        this.toast.showErrorToast(500, 'No se pudieron cargar los lugares', false);
+      }
+    });
+  }
+
+  getPhotoUrl(photo: any): string {
+    // Google Places API v1: la url suele estar en photo.name o photo.uri
+    // Si tienes un campo url directo, úsalo. Si tienes que construirla, hazlo así:
+    if (photo?.name) {
+      // Cambia esto según cómo recibas el objeto photo
+      return `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&key=TU_API_KEY`;
+    }
+    return 'assets/no-image.png'; // Imagen por defecto si no hay foto
   }
 }

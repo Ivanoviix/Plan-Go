@@ -64,7 +64,7 @@ export class SearchLocationsComponent {
 
   toggleSection(index: number): void {
     this.sections[index].isOpen = !this.sections[index].isOpen;
-    debugger
+    
     if (this.sections[index].isOpen) {
       this.selectedSection = this.sections[index].title;
     } else {
@@ -90,9 +90,7 @@ export class SearchLocationsComponent {
               if (this.destinations.length > 0) {
                 this.currentDestination = this.destinations[0];
                 console.log('Current Destination asignado:', this.currentDestination);
-                debugger
                 this.onDestinationSelect(this.currentDestination)
-                
               } else {
                 console.warn('No se encontró un destino con el id', destinationId);
               }
@@ -116,18 +114,20 @@ export class SearchLocationsComponent {
 
   editCategory(category: string, destination: Destination): void {
     console.log('Editando categoría:', category, 'con destino:', destination);
-
+    
     if (category === 'Alojamientos' || category === 'Comer y beber' || category === 'Cosas que hacer') {
       const payload = {
         latitude: Number(destination.latitude),
         longitude: Number(destination.longitude),
         radius: 20000, // Ajusta el radio según sea necesario
+        category: category,
       };
 
       this.destinationService.googlePlacesSearchNearby(payload).subscribe({
         next: (result) => {
           console.log('Resultados:', result);
-          this.router.navigate(['/search/places'], { queryParams: { category } });
+          this.router.navigate(['/search/places'], { queryParams: { category, destinationId: destination.destination_id } 
+          });
         },
         error: (err) => {
           console.error('Error buscando la categoría:', err);
