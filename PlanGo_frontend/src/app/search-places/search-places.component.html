@@ -52,6 +52,15 @@
                 </div>
             </div>
         </section>
+        <!-- Tabla 3xX de lugares -->
+        <div *ngIf="places && places.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
+            <div *ngFor="let place of places" class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+                <img *ngIf="place.photos?.length" [src]="getPhotoUrl(place.photos[0])"
+                    alt="{{ place.displayName?.text }}" class="w-32 h-32 object-cover rounded mb-2" />
+                <div class="font-bold text-lg text-center">{{ place.displayName?.text }}</div>
+                <div class="text-gray-600 text-center text-sm">{{ place.formattedAddress }}</div>
+            </div>
+        </div>  
 
         <!-- Map Section -->
         <section class="map w-[35%]">

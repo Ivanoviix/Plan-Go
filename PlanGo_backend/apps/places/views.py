@@ -148,22 +148,23 @@ def get_saved_activities(request, user_id):
 def google_places_search_nearby(request):
     api_key = PLACES_API_KEY
     data = json.loads(request.body)
-
+    
     lat = data.get('latitude', 39.576003)
     lng = data.get('longitude', 2.654179)
     radius = data.get('radius', 20000)
     category = data.get('category', 'Alojamientos')
+    category = category.strip().lower() 
 
     match category:     # Podemos añadir más categorías, tenemos que pegarle un vistazo a lo que tenemos apuntado.
-        case "Alojamientos":
+        case "alojamientos":
             included_types = [
                 "lodging", "hotel", "motel", "bed_and_breakfast", "guest_house", "hostel"
             ]
-        case "Comer y beber":
+        case "comer y beber":
             included_types = [
                 "restaurant", "bar", "cafe", "bakery", "pub", "fast_food_restaurant", "buffet_restaurant"
             ]
-        case "Cosas que hacer":
+        case "cosas que hacer":
             included_types = [
                 "tourist_attraction", "museum", "art_gallery", "zoo", "aquarium", "park", "amusement_park"
             ]
