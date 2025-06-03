@@ -77,6 +77,12 @@ export class DestinationService extends BaseHttpService {
     });
   }
 
+  googlePlacesSearchNearby(payload: { latitude: number, longitude: number, radius?: number }) {
+    const headers = this.createHeaders();
+      return this.httpClient.post(`${globals.apiBaseUrl}/places/google_places_search_nearby/`,payload, { headers }
+    );
+  }
+
   getCsrfTokenFromServer(): Observable<string> {
     if (!isPlatformBrowser(this.platformId)) return throwError(() => new Error('localStorage is not available in this environment'));
 
