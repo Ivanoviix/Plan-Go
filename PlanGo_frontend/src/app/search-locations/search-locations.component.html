@@ -48,9 +48,9 @@
                         [style.maxHeight]="section.isOpen ? 'calc(100vh - 7rem)' : '0px'">
                         <p>Contenido de {{ section.title }}</p>
                         <button
-                            class="bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300 mt-4"
-                            (click)="section.onEdit(); $event.stopPropagation()">
-                            Editar {{ section.title }}
+                        class="bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300 mt-4"
+                        (click)="editCategory(section.title, currentDestination); $event.stopPropagation()">
+                        Editar {{ section.title }}
                         </button>
                         <span class="transition-transform duration-300" [class.rotate-90]="section.isOpen">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

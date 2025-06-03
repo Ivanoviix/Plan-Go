@@ -152,16 +152,26 @@ def google_places_search_nearby(request):
     lat = data.get('latitude', 39.576003)
     lng = data.get('longitude', 2.654179)
     radius = data.get('radius', 20000)
+    category = data.get('category', 'Alojamientos')
+
+    match category:     # Podemos añadir más categorías, tenemos que pegarle un vistazo a lo que tenemos apuntado.
+        case "Alojamientos":
+            included_types = [
+                "lodging", "hotel", "motel", "bed_and_breakfast", "guest_house", "hostel"
+            ]
+        case "Comer y beber":
+            included_types = [
+                "restaurant", "bar", "cafe", "bakery", "pub", "fast_food_restaurant", "buffet_restaurant"
+            ]
+        case "Cosas que hacer":
+            included_types = [
+                "tourist_attraction", "museum", "art_gallery", "zoo", "aquarium", "park", "amusement_park"
+            ]
+        case _:
+            included_types = []
 
     payload = {
-        "includedTypes": [
-            "lodging",          
-            "hotel",
-            "motel",
-            "bed_and_breakfast",
-            "guest_house",
-            "hostel"
-        ],
+        "includedTypes": included_types,
         "maxResultCount": 20,
         "locationRestriction": {
             "circle": {
@@ -174,7 +184,10 @@ def google_places_search_nearby(request):
         },
         "rankPreference": "DISTANCE"
     }
+    headers = {
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.priceLevel,places.websiteUri,places.primaryType,places.types,places.regularOpeningHours,places.photos,places.nationalPhoneNumber"
+    }
 
     url = f"https://places.googleapis.com/v1/places:searchNearby?key={api_key}"
-    response = requests.post(url, json=payload)
+    response = requests.post(url, json=payload, headers=headers)
     return JsonResponse(response.json(), safe=False)
