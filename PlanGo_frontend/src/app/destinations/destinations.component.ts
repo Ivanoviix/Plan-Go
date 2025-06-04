@@ -129,7 +129,6 @@ constructor(
         });
       },
       error: (err: any) => {
-        this.errorMessage = 'No se pudieron cargar los destinos.';
         console.error(err);
       }
     });

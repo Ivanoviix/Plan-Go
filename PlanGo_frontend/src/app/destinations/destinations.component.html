@@ -126,7 +126,8 @@
             summary[destination.destination_id].total_expenses | currency:'EUR' }}</div>
         </div>
       </div>
-      <div class="text-red-500 h-2 text-sm" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class=" h-2 text-sm text-red-500" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class=" mt-8 h-auto text-xl" *ngIf="destinations.length === 0">{{ValidatorMessages['destinationsNew']}}</div>
     </section>
 
     <!-- Map Section -->
