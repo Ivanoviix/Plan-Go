@@ -10,16 +10,18 @@
             <div class="sticky top-0 bg-white z-10 pb-3 h-28">
                 <div class="header w-full h-20 flex flex-row justify-between items-center">
                     <div class="flex flex-col">
-                        <div *ngFor="let destination of destinations" class="destination-item">
-                            <h1 class="text-2xl font-bold">{{ destination.city_name }}</h1>
-                            <time class="text-xl" [attr.datetime]="destination.start_date">{{ destination.start_date |
-                                date:'dd-MMMM-yyyy' }}</time>
+                        <div *ngIf="currentDestination">
+                            <h1 class="text-2xl font-bold">{{ currentDestination.city_name }}</h1>
+                            <h2 class="text-xl font-semibold">{{ currentDestination.country }}</h2>
+                            <time class="text-xl" [attr.datetime]="currentDestination.start_date">
+                                {{ currentDestination.start_date | date:'dd-MMMM-yyyy' }}
+                            </time>
                             -
-                            <time class="text-xl" [attr.datetime]="destination.end_date">{{ destination.end_date |
-                                date:'dd-MMMM-yyyy' }}</time>
+                            <time class="text-xl" [attr.datetime]="currentDestination.end_date">
+                                {{ currentDestination.end_date | date:'dd-MMMM-yyyy' }}
+                            </time>
                         </div>
                     </div>
-                    <app-participants-form [destination]="selectedDestinationId ?? 0"></app-participants-form>
                 </div>
             </div>
 
@@ -41,24 +43,23 @@
                             </svg>
                         </span>
                     </button>
-
                     <!-- Contenido de la sección -->
                     <div class="accordion-content overflow-hidden transition-all duration-300 ease-in-out bg-white px-4"
                         [class.max-h-0]="!section.isOpen"
                         [style.maxHeight]="section.isOpen ? 'calc(100vh - 7rem)' : '0px'">
                         <p>Contenido de {{ section.title }}</p>
-                        <button
-                        class="bg-[--primary-color] text-white px-4 py-2 rounded-full hover:bg-[--secondary-color] transition duration-300 mt-4"
-                        (click)="editCategory(section.title, currentDestination); $event.stopPropagation()">
-                        Editar {{ section.title }}
-                        </button>
-                        <span class="transition-transform duration-300" [class.rotate-90]="section.isOpen">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="white" class="h-6 w-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                            </svg>
-                        </span>
+                        <!-- Aquí puedes añadir más contenido personalizado para cada sección -->
                     </div>
+                </div>
+            </div>
+
+            <!-- Tabla 3xX de lugares -->
+            <div *ngIf="places && places.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
+                <div *ngFor="let place of places" class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
+                    <img *ngIf="place.photos?.length" [src]="getPhotoUrl(place.photos[0])"
+                        alt="{{ place.displayName?.text }}" class="w-32 h-32 object-cover rounded mb-2" />
+                    <div class="font-bold text-lg text-center">{{ place.displayName?.text }}</div>
+                    <div class="text-gray-600 text-center text-sm">{{ place.formattedAddress }}</div>
                 </div>
             </div>
         </section>

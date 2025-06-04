@@ -148,20 +148,32 @@ def get_saved_activities(request, user_id):
 def google_places_search_nearby(request):
     api_key = PLACES_API_KEY
     data = json.loads(request.body)
-
+    
     lat = data.get('latitude', 39.576003)
     lng = data.get('longitude', 2.654179)
     radius = data.get('radius', 20000)
+    category = data.get('category', 'Alojamientos')
+    category = category.strip().lower() 
+
+    match category:     # Podemos añadir más categorías, tenemos que pegarle un vistazo a lo que tenemos apuntado.
+        case "alojamientos":
+            included_types = [
+                "lodging", "hotel", "motel", "bed_and_breakfast", "guest_house", "hostel"
+            ]
+        case "comer y beber":
+            included_types = [
+                "restaurant", "bar", "cafe", "bakery", "pub", "fast_food_restaurant", "buffet_restaurant", "food"
+            ]
+        case "cosas que hacer":
+            included_types = [
+                "tourist_attraction", "museum", "art_gallery", "zoo", "aquarium", "park", "amusement_park", "night_club", 
+                "point_of_interest", "church", "mosque", "place_of_worship"
+            ]
+        case _:
+            included_types = []
 
     payload = {
-        "includedTypes": [
-            "lodging",          
-            "hotel",
-            "motel",
-            "bed_and_breakfast",
-            "guest_house",
-            "hostel"
-        ],
+        "includedTypes": included_types,
         "maxResultCount": 20,
         "locationRestriction": {
             "circle": {
@@ -174,7 +186,10 @@ def google_places_search_nearby(request):
         },
         "rankPreference": "DISTANCE"
     }
+    headers = {
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating,places.priceLevel,places.websiteUri,places.primaryType,places.types,places.regularOpeningHours,places.photos,places.nationalPhoneNumber"
+    }
 
     url = f"https://places.googleapis.com/v1/places:searchNearby?key={api_key}"
-    response = requests.post(url, json=payload)
+    response = requests.post(url, json=payload, headers=headers)
     return JsonResponse(response.json(), safe=False)

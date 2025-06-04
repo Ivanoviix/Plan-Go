@@ -236,6 +236,7 @@ def country_names_to_codes(names):
 @csrf_exempt
 @require_GET
 def geocodenames_autocomplete(request):
+    print("ESTA ES LA REQUEST", request)
     input_text = request.GET.get('input')
     country_code = request.GET.get('country')
     api_key = GEONAMES_API_KEY 
