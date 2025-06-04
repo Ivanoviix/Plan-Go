@@ -1,8 +1,8 @@
-<header class="h-lvh w-16 bg-[--primary-color]">
-    <nav class=" h-lvh flex flex-col justify-between">
+<header [@expandHeader]="headerState" class="h-lvh bg-[--primary-color] overflow-hidden">
+    <nav class="h-lvh flex flex-col justify-between">
         <div class="flex flex-col items-center m-3">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="white"
-                class="size-8 m-2 mb-6">
+            <svg (click)="toggleHeaderWidth()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="white"
+                class="size-8 m-2 mb-6 cursor-pointer">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
             <button (click)="goToItineraries()" [@hoverAnimation]="buttonStates['itineraries']"
