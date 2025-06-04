@@ -1,0 +1,6 @@
+.accordion-content {
+  scrollbar-width: none; /* Firefox */
+}
+.accordion-content::-webkit-scrollbar {
+  display: none;
+}

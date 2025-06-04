@@ -6,13 +6,13 @@
     <div class="flex flex-grow">
         <!-- Places Section -->
         <section class="container w-[65%] p-8 pt-5 flex flex-col h-full">
+            <app-back-button></app-back-button>
             <!-- Sticky Header -->
             <div class="sticky top-0 bg-white z-10 pb-3 h-28">
                 <div class="header w-full h-20 flex flex-row justify-between items-center">
                     <div class="flex flex-col">
                         <div *ngIf="currentDestination">
-                            <h1 class="text-2xl font-bold">{{ currentDestination.city_name }}</h1>
-                            <h2 class="text-xl font-semibold">{{ currentDestination.country }}</h2>
+                            <h1 class="text-2xl font-bold">{{ currentDestination.city_name }}, {{ currentDestination.country }}</h1>
                             <time class="text-xl" [attr.datetime]="currentDestination.start_date">
                                 {{ currentDestination.start_date | date:'dd-MMMM-yyyy' }}
                             </time>
@@ -44,7 +44,7 @@
                             </span>
                         </button>
                         <!-- Contenido de la sección -->
-                        <div *ngIf="sections[getActiveSectionIndex()]?.isOpen" class="accordion-content bg-white px-4 max-h-[60vh] overflow-y-auto">
+                        <div *ngIf="sections[getActiveSectionIndex()]?.isOpen" @accordionContent class="accordion-content bg-white px-4 max-h-[60vh] overflow-y-auto">
                             <div *ngIf="places && places.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
                                 <div *ngFor="let place of places" class="bg-white rounded-xl shadow p-4 flex flex-col items-center">
                                     <img *ngIf="place.photos?.length" [src]="getPhotoUrl(place.photos[0])"

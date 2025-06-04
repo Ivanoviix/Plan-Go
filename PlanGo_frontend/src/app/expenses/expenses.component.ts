@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { ToastModule } from 'primeng/toast';
+import { BackButtonComponent } from '../core/back-button/back-button.component';
 
 @Component({
   standalone: true,
@@ -26,6 +27,7 @@ import { ToastModule } from 'primeng/toast';
     GoogleMapsModule, 
     ReactiveFormsModule,
     ToastModule,
+    BackButtonComponent
   ], 
   schemas: [CUSTOM_ELEMENTS_SCHEMA], 
 })
@@ -324,8 +326,6 @@ export class ExpensesComponent implements OnInit {
     });
   }
 
-
-  
   addUserExpense(): void {
     this.userExpenses.push(
       this.formBuilder.group({

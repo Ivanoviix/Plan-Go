@@ -9,6 +9,7 @@ import { DestinationService } from '../core/services/destinations.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Destination } from '../destinations/interfaces/destinations.interface';
 import { BaseToastService } from '../core/services/base-toast.service';
+import { BackButtonComponent } from '../core/back-button/back-button.component';
 
 @Component({
   selector: 'app-search-locations',
@@ -19,6 +20,7 @@ import { BaseToastService } from '../core/services/base-toast.service';
     MapComponent,
     ParticipantsComponent,
     FormsModule,
+    BackButtonComponent,
   ],
   templateUrl: './search-locations.component.html',
   styleUrl: './search-locations.component.css',

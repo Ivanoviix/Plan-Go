@@ -6,6 +6,7 @@
   <div class="flex flex-grow">
     <!-- Destinations Section -->
     <section class="container w-[65%] p-8 pt-5 flex flex-col">
+      <app-back-button></app-back-button>
       <!-- Sticky Header -->
       <div class="sticky top-0 bg-white z-10 pb-3">
         <div class="h-20 flex flex-row justify-between items-center">
@@ -110,8 +111,10 @@
             [max]="itineraryTotalDays"
             [startDateStr]="itineraryStartDate"
             [itineraryStartDate]="itineraryStartDate"
+            [itineraryEndDate]="destination.end_date ? (destination.end_date | date:'yyyy-MM-dd') : ''"
             [itineraryTotalDays]="itineraryTotalDays"
-            (fechasConfirmadas)="guardarFechas($event)">
+            (fechasConfirmadas)="guardarFechas($event)"
+            (reloadDestination)="reloadDestination($event)">
           </app-day-counter>
           <button (click)="goPlaces(destination.destination_id)">
             <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-6">{{ summary[destination.destination_id].accommodations_count }}</h1>

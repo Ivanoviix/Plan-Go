@@ -6,6 +6,7 @@
     <div class="flex flex-grow">
         <!-- Places Section -->
         <section class="container w-[65%] p-8 pt-5 flex flex-col h-full">
+            <app-back-button></app-back-button>
             <!-- Sticky Header -->
             <div class="sticky top-0 bg-white z-10 pb-3 h-28">
                 <div class="header w-full h-20 flex flex-row justify-between items-center">
@@ -34,7 +35,7 @@
                             <span class="mr-4" [innerHTML]="svgIcons[i]"></span>
                             <span class="text-lg text-white">{{ section.title }}</span>
                         </span>
-                        <div class="flex flex-row justify-end">
+                        <div class="flex flex-row justify-end items-center">
                             <button
                                 class=" text-white px-4 rounded-full transition duration-300"
                                 (click)="editCategory(section.title, currentDestination); $event.stopPropagation()">

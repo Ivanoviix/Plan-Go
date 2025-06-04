@@ -17,6 +17,7 @@ import { globals } from '../core/globals';
 import { ValidatorMessages } from '../core/validators/validator-messages';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { ToastModule } from 'primeng/toast';
+import { BackButtonComponent } from '../core/back-button/back-button.component';
 
 @Component({
   standalone: true,
@@ -32,7 +33,8 @@ import { ToastModule } from 'primeng/toast';
     MapComponent, 
     NgSelectModule, 
     CounterDatesComponent,
-    ToastModule
+    ToastModule,
+    BackButtonComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA], 
 
@@ -285,6 +287,10 @@ constructor(
         console.error(err);
       }
     });
+  }
+
+  reloadDestination(destinationId: number) {
+    this.fetchDestinationsByItinerary(this.selectedItineraryId!);
   }
 
 
