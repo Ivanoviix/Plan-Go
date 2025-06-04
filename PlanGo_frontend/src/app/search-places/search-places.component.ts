@@ -35,6 +35,7 @@ export class SearchPlacesComponent {
   sectionOpen = false;
   places: any[] = [];
   googlePlacesApiKey?: string;
+  activeSection: string | null = null;
   sections = [
     { title: 'Alojamientos', isOpen: false },
     { title: 'Comer y beber', isOpen: false },
@@ -49,7 +50,7 @@ export class SearchPlacesComponent {
               private toast: BaseToastService,
               private apiKeyService: ApiKeyService,
             ) {
-    const rawIcons = [
+    let rawIcons = [
       `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="h-8 w-8">
         <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
       </svg>`,
@@ -75,13 +76,15 @@ export class SearchPlacesComponent {
 
     this.route.queryParamMap.subscribe((params: ParamMap) => {
       this.categoriaSeleccionada = params.get('category');
-      const destinationIdParam = params.get('destinationId');
-      const destinationId = destinationIdParam ? Number(destinationIdParam) : null;
+      this.activeSection = params.get('category');
+      this.sections.forEach(section => section.isOpen = false);
+      let destinationIdParam = params.get('destinationId');
+      let destinationId = destinationIdParam ? Number(destinationIdParam) : null;
       this.currentDestination = undefined; // Limpia el destino anterior
       if (destinationId) {
         this.destinationService.getDestinations().subscribe({
           next: (data: any) => {
-            const destinations: Destination[] = Array.isArray(data) ? data : data.destination || [];
+            let destinations: Destination[] = Array.isArray(data) ? data : data.destination || [];
             this.currentDestination = destinations.find(dest => dest.destination_id === destinationId);
             if (this.currentDestination && this.currentDestination.latitude && this.currentDestination.longitude) {
               this.mapLocation = {
@@ -110,12 +113,17 @@ export class SearchPlacesComponent {
   }
 
   toggleSection(index: number): void {
-    this.sections[index].isOpen = !this.sections[index].isOpen;
-    this.sectionOpen = !this.sectionOpen;
+    this.sections.forEach((section, i) => {
+      if (i === index) {
+        section.isOpen = !section.isOpen;
+      } else {
+        section.isOpen = false;
+      }
+    });
   }
 
   loadPlaces(lat: number, lng: number): void {
-    const payload = {
+    let payload = {
       latitude: lat,
       longitude: lng,
       radius: 5000,
@@ -137,5 +145,9 @@ export class SearchPlacesComponent {
       return `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}`;
     }
     return 'assets/no-image.png';
+  }
+
+  getActiveSectionIndex(): number {
+    return this.sections.findIndex(s => s.title === this.activeSection);
   }
 }
