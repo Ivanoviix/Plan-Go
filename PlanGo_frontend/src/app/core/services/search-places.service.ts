@@ -39,6 +39,4 @@ export class SearchPlacesService {
     return this.httpClient.post(`${globals.apiBaseUrl}/places/google_places_search_nearby/`, payload, { headers });
   }
 
-
-
 }

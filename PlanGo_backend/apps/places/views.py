@@ -162,11 +162,12 @@ def google_places_search_nearby(request):
             ]
         case "comer y beber":
             included_types = [
-                "restaurant", "bar", "cafe", "bakery", "pub", "fast_food_restaurant", "buffet_restaurant"
+                "restaurant", "bar", "cafe", "bakery", "pub", "fast_food_restaurant", "buffet_restaurant", "food"
             ]
         case "cosas que hacer":
             included_types = [
-                "tourist_attraction", "museum", "art_gallery", "zoo", "aquarium", "park", "amusement_park"
+                "tourist_attraction", "museum", "art_gallery", "zoo", "aquarium", "park", "amusement_park", "night_club", 
+                "point_of_interest", "church", "mosque", "place_of_worship"
             ]
         case _:
             included_types = []

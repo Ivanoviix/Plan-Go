@@ -10,6 +10,7 @@ import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import { DestinationService } from "../core/services/destinations.service";
 import { BaseToastService } from '../core/services/base-toast.service';
 import { SearchPlacesService } from '../core/services/search-places.service';
+import { ApiKeyService } from "../core/services/api-key.service";
 
 @Component({
   selector: 'app-search-places',
@@ -33,7 +34,7 @@ export class SearchPlacesComponent {
   svgIcons: SafeHtml[] = []; 
   sectionOpen = false;
   places: any[] = [];
-
+  googlePlacesApiKey?: string;
   sections = [
     { title: 'Alojamientos', isOpen: false },
     { title: 'Comer y beber', isOpen: false },
@@ -46,6 +47,7 @@ export class SearchPlacesComponent {
               private route: ActivatedRoute,
               private router: Router,
               private toast: BaseToastService,
+              private apiKeyService: ApiKeyService,
             ) {
     const rawIcons = [
       `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="h-8 w-8">
@@ -62,6 +64,15 @@ export class SearchPlacesComponent {
   }
 
   ngOnInit(): void {
+    this.apiKeyService.getGooglePlacesApiKey().subscribe({
+      next: (data: any) => {
+        this.googlePlacesApiKey = data.googlePlacesApiKey;
+      },
+      error: (err: any) => {
+        console.log("No ha recibido la KEY de Google Places API.")
+      }
+    });
+
     this.route.queryParamMap.subscribe((params: ParamMap) => {
       this.categoriaSeleccionada = params.get('category');
       const destinationIdParam = params.get('destinationId');
@@ -101,7 +112,6 @@ export class SearchPlacesComponent {
   toggleSection(index: number): void {
     this.sections[index].isOpen = !this.sections[index].isOpen;
     this.sectionOpen = !this.sectionOpen;
-
   }
 
   loadPlaces(lat: number, lng: number): void {
@@ -123,12 +133,9 @@ export class SearchPlacesComponent {
   }
 
   getPhotoUrl(photo: any): string {
-    // Google Places API v1: la url suele estar en photo.name o photo.uri
-    // Si tienes un campo url directo, úsalo. Si tienes que construirla, hazlo así:
-    if (photo?.name) {
-      // Cambia esto según cómo recibas el objeto photo
-      return `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&key=TU_API_KEY`;
+    if (photo?.name && this.googlePlacesApiKey) {
+      return `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}`;
     }
-    return 'assets/no-image.png'; // Imagen por defecto si no hay foto
+    return 'assets/no-image.png';
   }
 }
