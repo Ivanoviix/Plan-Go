@@ -16,7 +16,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     ]),
     trigger('expandHeader', [
       state('collapsed', style({ width: '4rem' })), 
-      state('expanded', style({ width: '18rem' })), 
+      state('expanded', style({ width: '16rem' })), 
       transition('collapsed <=> expanded', animate('300ms cubic-bezier(0.4,0,0.2,1)')),
     ]),
   ],
