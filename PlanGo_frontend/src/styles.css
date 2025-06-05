@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700&display=swap');
 /* Ensure Tailwind CSS directives are correctly included */
 @tailwind base;
 @tailwind components;
@@ -6,4 +8,12 @@
 :root {
     --primary-color: #4c43ce;
     --secondary-color: #6c61ff;
+}
+
+h1, h3 {
+  font-family: 'Lato', ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
 }
