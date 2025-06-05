@@ -171,6 +171,12 @@ export class ExpensesComponent implements OnInit {
             next: (data) => this.expenses = data.expenses
           });
           this.getTotalExpenses();
+          const debtorsArray = this.expenseForm.get('debtors') as FormArray;
+
+          while (debtorsArray.length) {
+            debtorsArray.removeAt(0);
+          }
+          
           this.showForm = false;
           this.toast.showSuccessToast('Se han añadido el gasto', false);
         },
@@ -341,4 +347,12 @@ export class ExpensesComponent implements OnInit {
   removeUserExpense(index: number): void {
     this.userExpenses.removeAt(index);
   }
+
+  isAddDebtorDisabled(): boolean {
+  return (
+    !this.expenseForm.value.payer || this.possibleDebtors.length === 0 ||
+    this.debtorsControls.length >= this.possibleDebtors.length - 1 ||
+    this.debtorsControls.some(d => !d.value.id)
+  );
+}
 }
