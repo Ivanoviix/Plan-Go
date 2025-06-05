@@ -245,7 +245,7 @@
           <label class="block text-gray-700">Deudores *</label>
           <!-- Parece que no funciona la primera condición value.payer-->
           <button type="button" (click)="addDebtor()"
-            [disabled]="!expenseForm.value.payer || possibleDebtors.length === 0 || debtorsControls.length >= possibleDebtors.length - 1"
+            [disabled]="isAddDebtorDisabled()"
             class="bg-[--primary-color] hover:bg-[--secondary-color] text-white px-4 py-2 rounded-full">
             Añadir deudor
           </button>
