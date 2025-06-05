@@ -64,6 +64,15 @@ export class DestinationService extends BaseHttpService {
     );
   }
 
+  updateDateDestination(destinationId: any, data: any = {}): Observable<any> {
+  const headers = this.createHeaders();
+  return this.httpClient.patch(
+    `${globals.apiBaseUrl}/itineraries/destination/update/${destinationId}/`,
+    data,
+    { headers, withCredentials: true }
+  );
+}
+
   private createHeaders(): HttpHeaders {
     let token = '';
     if (isPlatformBrowser(this.platformId)) {
@@ -97,7 +106,7 @@ export class DestinationService extends BaseHttpService {
 
     return this.httpClient.get<{ csrftoken: string }>(`${globals.apiBaseUrl}/itineraries/csrf-token/`, {
       headers,
-      withCredentials: true, // <-- esto es clave
+      withCredentials: true, 
     }).pipe(
       map((response) => response.csrftoken)
     );

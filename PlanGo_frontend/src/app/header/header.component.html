@@ -1,15 +1,15 @@
-<header class="h-lvh w-16 bg-[--primary-color]">
-    <nav class=" h-lvh flex flex-col justify-between">
-        <div class="flex flex-col items-center m-3">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="white"
-                class="size-8 m-2 mb-6">
+<header [@expandHeader]="headerState" class="h-lvh bg-[--primary-color] overflow-hidden">
+    <nav class="h-lvh flex flex-col justify-between">
+        <div class="flex flex-col items-start justify-center m-3">
+            <svg (click)="toggleHeaderWidth()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1" stroke="white" class="size-8 my-2 ml-1 mb-6 cursor-pointer">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
             <button (click)="goToItineraries()" [@hoverAnimation]="buttonStates['itineraries']"
                 (mouseenter)="setHoverState('itineraries', 'hover')"
                 (mouseleave)="setHoverState('itineraries', 'default')">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="white"
-                    class="size-8 m-2">
+                    class="size-8 my-2 ml-1">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5" />
                 </svg>
@@ -17,18 +17,18 @@
             <button (click)="goToExpense()" [@hoverAnimation]="buttonStates['expenses']"
                 (mouseenter)="setHoverState('expenses', 'hover')" (mouseleave)="setHoverState('expenses', 'default')">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="white"
-                    class="size-8 m-2">
+                    class="size-8 my-2 ml-1">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
             </button>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="white"
-                class="size-8 m-2">
+                class="size-8 my-2 ml-1">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
             </svg>
         </div>
-        <div class="flex flex-col items-center m-4">
+        <div class="flex flex-col items-start m-4">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="white"
                 class="size-8">
                 <path stroke-linecap="round" stroke-linejoin="round"

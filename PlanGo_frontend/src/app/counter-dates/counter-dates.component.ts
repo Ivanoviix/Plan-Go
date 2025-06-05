@@ -1,4 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { DestinationService } from '../core/services/destinations.service';
+import { take, delay } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -11,15 +13,21 @@ export class CounterDatesComponent {
   @Input() idDestino!: number;
   @Input() max: number = 5;
   @Input() startDateStr: string = '2025-06-01';
-  @Input() itineraryStartDate!: string; // <-- Añade esto
+  @Input() itineraryStartDate!: string; 
   @Input() itineraryTotalDays!: number;
-
   @Output() fechasConfirmadas = new EventEmitter<{ idDestino: number; fechaInicio: string; fechaFin: string }>();
-
+  @Output() reloadDestination = new EventEmitter<number>();
   count: number = 1;
   readonly radius: number = 16; // Radio del círculo
   readonly circumference: number = 2 * Math.PI * this.radius; // Circunferencia del círculo
 
+  constructor(
+    private destinationService: DestinationService,
+  ) {}
+  
+  ngOnInit() {
+    
+  }
   get startDate(): Date {
     return new Date(this.itineraryStartDate || this.startDateStr);
   }
@@ -43,17 +51,36 @@ export class CounterDatesComponent {
     this.fechasConfirmadas.emit(datos);
   }
 
+  
   increment(): void {
-    // No permitir más días que los del itinerario
     if (this.count < this.itineraryTotalDays) {
       this.count++;
-      this.confirmarFechas();
+      const newEndDate = this.formatDate(this.endDate);
+      this.destinationService.updateDateDestination(this.idDestino, { end_date: newEndDate })
+        .pipe(take(1))
+        .subscribe({
+          next: () => {
+            this.confirmarFechas();
+            // this.reloadDestination.emit(this.idDestino); // Quita o comenta esta línea
+          },
+          error: (err) => console.error('Error actualizando end_date:', err)
+        });
     }
   }
 
   decrement(): void {
     if (this.count > 1) {
       this.count--;
+      const newEndDate = this.formatDate(this.endDate);
+      this.destinationService.updateDateDestination(this.idDestino, { end_date: newEndDate })
+        .pipe(take(1))
+        .subscribe({
+          next: () => {
+            this.confirmarFechas();
+            // this.reloadDestination.emit(this.idDestino); // Quita o comenta esta línea
+          },
+          error: (err) => console.error('Error actualizando end_date:', err)
+        });
     }
   }
 }

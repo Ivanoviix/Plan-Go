@@ -14,6 +14,11 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       state('hover', style({ transform: 'scale(1.2)' })),
       transition('default <=> hover', animate('300ms ease-in-out')),
     ]),
+    trigger('expandHeader', [
+      state('collapsed', style({ width: '4rem' })), 
+      state('expanded', style({ width: '16rem' })), 
+      transition('collapsed <=> expanded', animate('300ms cubic-bezier(0.4,0,0.2,1)')),
+    ]),
   ],
 })
 export class HeaderComponent {
@@ -23,8 +28,16 @@ export class HeaderComponent {
     savedPlaces: 'default',
     profile: 'default',
   };
+  headerState: 'collapsed' | 'expanded' = 'collapsed';
 
-  constructor( private router: Router){}
+
+  constructor( 
+    private router: Router,
+  ){}
+
+  toggleHeaderWidth() {
+    this.headerState = this.headerState === 'collapsed' ? 'expanded' : 'collapsed';
+  }
 
   setHoverState(button: string, state: string): void {
     this.buttonStates[button] = state;

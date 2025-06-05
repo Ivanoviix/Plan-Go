@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { HeaderComponent } from "../header/header.component";
 import { MapComponent } from "../map/map.component";
 import { ParticipantsComponent } from "../participants/participants.component";
@@ -11,6 +12,7 @@ import { DestinationService } from "../core/services/destinations.service";
 import { BaseToastService } from '../core/services/base-toast.service';
 import { SearchPlacesService } from '../core/services/search-places.service';
 import { ApiKeyService } from "../core/services/api-key.service";
+import { BackButtonComponent } from '../core/back-button/back-button.component';
 
 @Component({
   selector: 'app-search-places',
@@ -23,7 +25,20 @@ import { ApiKeyService } from "../core/services/api-key.service";
     MapComponent,
     ParticipantsComponent,
     FormsModule,
+    BackButtonComponent,
   ],
+  animations: [
+    trigger('accordionContent', [
+      transition(':enter', [
+        style({ height: 0, opacity: 0, overflow: 'hidden' }),
+        animate('300ms cubic-bezier(0.4,0,0.2,1)', style({ height: '*', opacity: 1, overflow: 'hidden' })),
+      ]),
+      transition(':leave', [
+        style({ height: '*', opacity: 1, overflow: 'hidden' }),
+        animate('300ms cubic-bezier(0.4,0,0.2,1)', style({ height: 0, opacity: 0, overflow: 'hidden' })),
+      ]),
+    ]),
+  ]
 })
 
 export class SearchPlacesComponent {
