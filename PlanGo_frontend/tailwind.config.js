@@ -4,7 +4,11 @@ export default {
     "./src/**/*.{html,ts}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Montserrat', 'Lato', 'system-ui', 'sans-serif'],
+      }
+    },
   },
   plugins: [],
 }
