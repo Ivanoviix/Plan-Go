@@ -2,7 +2,6 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { appConfig } from './app/app.config';
-import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
 
 bootstrapApplication(AppComponent, {
   providers: [
