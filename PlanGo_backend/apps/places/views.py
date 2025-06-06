@@ -151,7 +151,7 @@ def google_places_search_nearby(request):
     
     lat = data.get('latitude', 39.576003)
     lng = data.get('longitude', 2.654179)
-    radius = data.get('radius', 20000)
+    radius = data.get('radius', 50000)
     category = data.get('category', 'Alojamientos')
     category = category.strip().lower() 
 
@@ -174,7 +174,6 @@ def google_places_search_nearby(request):
 
     payload = {
         "includedTypes": included_types,
-        "maxResultCount": 20,
         "locationRestriction": {
             "circle": {
                 "center": {
