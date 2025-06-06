@@ -12,6 +12,9 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from apps.users.service import split_full_name
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 
 # USERS
 @method_decorator(csrf_exempt, name='dispatch')
@@ -202,4 +205,21 @@ def create_participant(request):
             except Exception as e:
                 return JsonResponse({'error': str(e)}, status=400)
     return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_by_id(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+        return JsonResponse({
+            'id': user.id,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'user_image': user.user_image,
+            # ...otros campos que quieras exponer
+        })
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
 
