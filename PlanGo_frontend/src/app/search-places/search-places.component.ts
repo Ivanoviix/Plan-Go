@@ -14,6 +14,7 @@ import { SearchPlacesService } from '../core/services/search-places.service';
 import { ApiKeyService } from "../core/services/api-key.service";
 import { BackButtonComponent } from '../core/back-button/back-button.component';
 
+
 @Component({
   selector: 'app-search-places',
   standalone: true,
@@ -141,19 +142,19 @@ export class SearchPlacesComponent {
     let payload = {
       latitude: lat,
       longitude: lng,
-      radius: 5000,
-      category: this.categoriaSeleccionada // <-- Añade esto siempre
+      radius: 50000,
+      category: this.categoriaSeleccionada
     };
     this.searchPlacesService.googlePlacesSearchNearby(payload).subscribe({
       next: (data: any) => {
-        this.places = data.places || [];
+        this.places = (data.places || []).filter((p: any) => p.photos && p.photos.length > 0);
       },
       error: (err: any) => {
         this.places = [];
         this.toast.showErrorToast(500, 'No se pudieron cargar los lugares', false);
       }
     });
-  }
+}
 
   getPhotoUrl(photo: any): string {
     if (photo?.name && this.googlePlacesApiKey) {
