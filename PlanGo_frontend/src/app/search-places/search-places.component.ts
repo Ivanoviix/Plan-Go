@@ -14,7 +14,6 @@ import { SearchPlacesService } from '../core/services/search-places.service';
 import { ApiKeyService } from "../core/services/api-key.service";
 import { BackButtonComponent } from '../core/back-button/back-button.component';
 
-
 @Component({
   selector: 'app-search-places',
   standalone: true,
@@ -43,7 +42,7 @@ import { BackButtonComponent } from '../core/back-button/back-button.component';
 })
 
 export class SearchPlacesComponent {
-  categoriaSeleccionada: string | null = null;
+  selectedCategory: string | null = null;
   currentDestination?: Destination; 
   mapLocation: google.maps.LatLngLiteral = { lat: 39.72596642771257, lng: 2.914616467674367 }; 
   destinations: Destination[] = [];
@@ -91,7 +90,7 @@ export class SearchPlacesComponent {
     });
 
     this.route.queryParamMap.subscribe((params: ParamMap) => {
-      this.categoriaSeleccionada = params.get('category');
+      this.selectedCategory = params.get('category');
       this.activeSection = params.get('category');
       this.sections.forEach(section => section.isOpen = false);
       let destinationIdParam = params.get('destinationId');
@@ -143,18 +142,18 @@ export class SearchPlacesComponent {
       latitude: lat,
       longitude: lng,
       radius: 50000,
-      category: this.categoriaSeleccionada
+      category: this.selectedCategory
     };
     this.searchPlacesService.googlePlacesSearchNearby(payload).subscribe({
       next: (data: any) => {
-        this.places = (data.places || []).filter((p: any) => p.photos && p.photos.length > 0);
+        this.places = data.places || [];
       },
       error: (err: any) => {
         this.places = [];
         this.toast.showErrorToast(500, 'No se pudieron cargar los lugares', false);
       }
     });
-}
+  }
 
   getPhotoUrl(photo: any): string {
     if (photo?.name && this.googlePlacesApiKey) {
