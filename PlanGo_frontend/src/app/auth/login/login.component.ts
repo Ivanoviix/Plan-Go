@@ -31,10 +31,10 @@ export class LoginComponent {
 
   async loginWithGoogle() {
     try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(this.auth, provider);
-      const firebaseUser = result.user;
-      const idToken = await firebaseUser.getIdToken();
+      let provider = new GoogleAuthProvider();
+      let result = await signInWithPopup(this.auth, provider);
+      let firebaseUser = result.user;
+      let idToken = await firebaseUser.getIdToken();
 
       localStorage.setItem('authToken', idToken);
 
@@ -61,9 +61,9 @@ export class LoginComponent {
     this.errorMessageG = '';
     
     try {
-      const result = await signInWithEmailAndPassword(this.auth, this.email, this.password);
-      const firebaseUser = result.user;
-      const idToken = await firebaseUser.getIdToken();
+      let result = await signInWithEmailAndPassword(this.auth, this.email, this.password);
+      let firebaseUser = result.user;
+      let idToken = await firebaseUser.getIdToken();
 
       // Guarda el token en localStorage
       localStorage.setItem(globals.keys.accessToken, idToken);

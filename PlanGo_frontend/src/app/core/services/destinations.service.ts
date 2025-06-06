@@ -113,6 +113,6 @@ export class DestinationService extends BaseHttpService {
   }
 
   setCsrfToken(token: string): void {
-    this.csrfToken = token;
+    this.csrfToken = token.replace(/^"|"$/g, '');
   }
 }
