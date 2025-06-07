@@ -46,6 +46,7 @@
           <input
             type="text"
             [(ngModel)]="searchText"
+            [disabled]="getOccupiedDays() >= itineraryTotalDays"
             (input)="onCitySearch()"
             placeholder="Buscar ciudad..."
             class="w-full h-12 border rounded-full bg-white text-black border-gray-800 p-2" />
@@ -113,6 +114,8 @@
             [itineraryStartDate]="itineraryStartDate"
             [itineraryEndDate]="destination.end_date ? (destination.end_date | date:'yyyy-MM-dd') : ''"
             [itineraryTotalDays]="itineraryTotalDays"
+            [days]="calculateDays(destination.start_date, destination.end_date)"
+            [otherOccupiedDays]="getOtherOccupiedDays(destination.destination_id)"
             (fechasConfirmadas)="guardarFechas($event)"
             (reloadDestination)="reloadDestination($event)">
           </app-day-counter>

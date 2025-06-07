@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { DestinationService } from '../core/services/destinations.service';
 import { ParticipantsComponent } from '../participants/participants.component';
-import { Destination } from './interfaces/destinations.interface'; 
+import { Destination } from './interfaces/destinations.interface';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -25,18 +25,18 @@ import { BackButtonComponent } from '../core/back-button/back-button.component';
   templateUrl: './destinations.component.html',
   styleUrl: './destinations.component.css',
   imports: [
-    CommonModule, 
-    FormsModule, 
-    HeaderComponent, 
-    ParticipantsComponent, 
-    GoogleMapsModule, 
-    MapComponent, 
-    NgSelectModule, 
+    CommonModule,
+    FormsModule,
+    HeaderComponent,
+    ParticipantsComponent,
+    GoogleMapsModule,
+    MapComponent,
+    NgSelectModule,
     CounterDatesComponent,
     ToastModule,
     BackButtonComponent,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA], 
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 
 })
 export class DestinationsComponent implements OnInit {
@@ -49,18 +49,18 @@ export class DestinationsComponent implements OnInit {
   allCountries: { code: string, name: string }[] = [];
   searchText: string = '';
   cities: any[] = [];
-  itineraryStartDate!: string; 
-  itineraryEndDate!: string;   
+  itineraryStartDate!: string;
+  itineraryEndDate!: string;
   itineraryTotalDays!: number;
   ValidatorMessages = ValidatorMessages;
 
-constructor(
-  private destinationService: DestinationService, 
-  private route: ActivatedRoute,
-  private router: Router,
-  private itineraryService: ItinerariesService,
-  private toast: BaseToastService,
-) {}
+  constructor(
+    private destinationService: DestinationService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private itineraryService: ItinerariesService,
+    private toast: BaseToastService,
+  ) { }
 
   async ngOnInit() { // La idea es que al pulsar un itinerario, recibe su id y muestra destino / destinos
     await this.getCountries();
@@ -69,9 +69,9 @@ constructor(
     this.itineraryTotalDays = this.calculateTotalDays(this.itineraryStartDate, this.itineraryEndDate);
 
     this.route.paramMap.pipe(
-      map((params): number => Number(params.get('itineraryId'))), 
-      filter((itineraryId: number) => !!itineraryId), 
-      distinctUntilChanged() 
+      map((params): number => Number(params.get('itineraryId'))),
+      filter((itineraryId: number) => !!itineraryId),
+      distinctUntilChanged()
     ).subscribe((itineraryId: number) => {
       console.log('Fetching itinerary with ID:', itineraryId);
       this.fetchItineraryDetails(itineraryId);
@@ -81,10 +81,9 @@ constructor(
     });
   }
 
-  // CUAL DE LAS 2 ES LA QUE SE UTILIZA?
   fetchItineraryDetails(itineraryId: number): void {
     if (this.selectedItineraryId === itineraryId) return;
-  
+
     this.selectedItineraryId = itineraryId; // Actualiza el ID seleccionado
     this.itineraryService.getItineraryById(itineraryId).subscribe({
       next: (itinerary: any) => {
@@ -104,24 +103,24 @@ constructor(
     return Math.max(1, Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1);
   }
 
-  // fetchItineraryDetails(itineraryId: number): void {
-  //   console.log('Fetching itinerary with ID:', itineraryId); // Debugging
-  //   this.itineraryService.getItineraryById(itineraryId).subscribe({
-  //     next: (itinerary: any) => {
-  //       console.log('Itinerary data:', itinerary);
-  //       this.selectedItinerary = itinerary;
-  //     },
-  //     error: (err: any) => {
-  //       console.error('Error fetching itinerary:', err);
-  //       this.selectedItinerary = null;
-  //     }
-  //   });
-  // }
 
   guardarFechas(event: { idDestino: number; fechaInicio: string; fechaFin: string }): void {
-    console.log('Fechas confirmadas:', event);
+    this.destinationService.updateDateDestination(event.idDestino, {
+      start_date: event.fechaInicio,
+      end_date: event.fechaFin
+    }).subscribe({
+      next: () => {
+        // Vuelve a cargar los destinos para actualizar los días ocupados
+        if (this.selectedItineraryId) {
+          this.fetchDestinationsByItinerary(this.selectedItineraryId);
+        }
+      },
+      error: (err) => {
+        this.toast.showErrorToast(500, 'Error al actualizar las fechas del destino', false);
+      }
+    });
   }
-  
+
   fetchDestinationsByItinerary(itineraryId: number): void {
     this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
       next: (data: any) => {
@@ -196,30 +195,30 @@ constructor(
 
   getCountryCodesByNames(names: string[]): string[] {
     return this.allCountries
-    .filter(c => names.some(n => n.trim().toLowerCase() === c.name.trim().toLowerCase()))
-    .map(c => c.code)
+      .filter(c => names.some(n => n.trim().toLowerCase() === c.name.trim().toLowerCase()))
+      .map(c => c.code)
   }
-  
+
   getCitiesMultipleCountries(input: string, countryCodes: string[]): Observable<any[]> {
     let calls = countryCodes.map(code => this.destinationService.getCitiesFromGoogle(input, code));
     return forkJoin(calls).pipe(
       map(results =>
         results.flatMap(r =>
           r.geonames
-            ? r.geonames.map((g: any) => g) 
+            ? r.geonames.map((g: any) => g)
             : []
         )
       )
     );
   }
-  
+
   onCitySearch() {
     let countryCodes = this.getCountryCodesByNames(this.countries);
     this.cities = [];
     if (this.searchText && countryCodes.length > 0) {
       this.getCitiesMultipleCountries(this.searchText, countryCodes).subscribe({
         next: (results: any[]) => {
-          this.cities = results; 
+          this.cities = results;
         },
         error: () => this.cities = [],
       });
@@ -227,20 +226,20 @@ constructor(
       this.cities = [];
     }
   }
-  
+
   formatCountries(): string {
     if (!this.selectedItinerary?.countries) return '';
-  
+
     let countriesArray = this.selectedItinerary.countries.split(',');
     let length = countriesArray.length;
-  
+
     if (length === 2) {
-      return countriesArray.join(' y ');
+      return countriesArray.join(' y '); 
     } else if (length > 2) {
       let lastCountry = countriesArray.pop();
       return `${countriesArray.join(', ')} y ${lastCountry}`;
     }
-    return this.selectedItinerary.countries; 
+    return this.selectedItinerary.countries;
   }
 
   goPlaces(destinationId: number): void {
@@ -292,6 +291,12 @@ constructor(
   reloadDestination(destinationId: number) {
     this.fetchDestinationsByItinerary(this.selectedItineraryId!);
   }
+  
+  calculateDays(start: string | Date, end: string | Date): number {
+    const startDate = typeof start === 'string' ? new Date(start) : start;
+    const endDate = typeof end === 'string' ? new Date(end) : end;
+    return Math.max(1, Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1);
+  }
 
   getOccupiedDays(): number {
     let total = 0;
@@ -305,4 +310,19 @@ constructor(
     }
     return total;
   }
+
+
+  getOtherOccupiedDays(currentDestinationId: number): number {
+  return this.destinations
+    .filter(dest => dest.destination_id !== currentDestinationId)
+    .reduce((total, dest) => {
+      if (dest.start_date && dest.end_date) {
+        const start = new Date(dest.start_date);
+        const end = new Date(dest.end_date);
+        total += Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      }
+      return total;
+    }, 0);
+}
+
 }
