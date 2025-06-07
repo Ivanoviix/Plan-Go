@@ -55,6 +55,7 @@ export class SearchPlacesComponent {
   googlePlacesApiKey?: string;
   activeSection: string | null = null;
   selectedPlace: any = null;
+  selectedPlaceImages: any[] = [];
   markers: { lat: number, lng: number, label?: string, place?: any }[] = [];
   sections = [
     { title: 'Alojamientos', isOpen: false },
@@ -172,7 +173,10 @@ export class SearchPlacesComponent {
   }
 
   onPlaceSelect(place: any) {
+    debugger
     this.selectedPlace = place;
+    // Guarda el array de imágenes (photos) del lugar seleccionado
+    this.selectedPlaceImages = place.photos || [];
     if (place.location && place.location.latitude && place.location.longitude) {
       const marker = {
         lat: Number(place.location.latitude),
