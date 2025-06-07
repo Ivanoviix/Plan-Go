@@ -4,13 +4,19 @@ import { CommonModule } from '@angular/common';
 import { ViewChild } from '@angular/core';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { ApiKeyService } from '../core/services/api-key.service';
+import { TooltipModule } from 'primeng/tooltip';
+import { SearchPlacesService } from '../core/services/search-places.service';
 
 @Component({
   standalone: true,
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
-  imports: [CommonModule, GoogleMapsModule],
+  imports: [
+    CommonModule, 
+    GoogleMapsModule, 
+    TooltipModule
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA], 
 })
 export class MapComponent implements OnInit {
@@ -72,7 +78,13 @@ export class MapComponent implements OnInit {
   }
 
   getPhotoUrl(photo: any): string {
-    // Igual que en SearchPlacesComponent, o pásalo como @Input
     return photo?.name ? `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}` : 'assets/no-image.png';
+  }
+
+  openGoogleMapsPlace(): void {
+    let placeId = this.activeMarker?.place?.id;
+    if (placeId) {
+      window.open(`https://www.google.com/maps/place/?q=place_id:${placeId}`, '_blank');
+    }
   }
 }

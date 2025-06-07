@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { trigger, style, transition, animate } from '@angular/animations';
+import { trigger, style, transition, animate, state } from '@angular/animations';
 import { HeaderComponent } from "../header/header.component";
 import { MapComponent } from "../map/map.component";
 import { ParticipantsComponent } from "../participants/participants.component";
@@ -14,6 +14,7 @@ import { SearchPlacesService } from '../core/services/search-places.service';
 import { ApiKeyService } from "../core/services/api-key.service";
 import { BackButtonComponent } from '../core/back-button/back-button.component';
 import { ViewChild } from '@angular/core';
+import { ToastModule } from "primeng/toast";
 
 
 @Component({
@@ -28,6 +29,7 @@ import { ViewChild } from '@angular/core';
     ParticipantsComponent,
     FormsModule,
     BackButtonComponent,
+    ToastModule,
   ],
   animations: [
     trigger('accordionContent', [
@@ -39,6 +41,11 @@ import { ViewChild } from '@angular/core';
         style({ height: '*', opacity: 1, overflow: 'hidden' }),
         animate('300ms cubic-bezier(0.4,0,0.2,1)', style({ height: 0, opacity: 0, overflow: 'hidden' })),
       ]),
+    ]),
+    trigger('hoverAnimation', [
+        state('default', style({ transform: 'scale(1)' })),
+        state('hover', style({ transform: 'scale(1.1)' })),
+        transition('default <=> hover', animate('300ms ease-in-out')),
     ]),
   ]
 })
@@ -62,6 +69,9 @@ export class SearchPlacesComponent {
     { title: 'Comer y beber', isOpen: false },
     { title: 'Cosas que hacer', isOpen: false },
   ];
+
+  buttonStates: { [key: string]: string } = {};
+
   constructor(  
               private sanitizer: DomSanitizer,     
               private destinationService: DestinationService,
@@ -116,7 +126,7 @@ export class SearchPlacesComponent {
             } else {
               // Si no encuentra el destino, usa el valor por defecto
               this.mapLocation = { lat: 39.72596642771257, lng: 2.914616467674367 };
-              this.places = [];
+              
             }
           },
           error: () => {
@@ -238,5 +248,9 @@ export class SearchPlacesComponent {
         this.toast.showErrorToast(500, 'Error al guardar el lugar', false);
       }
     });
+  }
+
+  setHoverState(key: string, state: string): void {
+    this.buttonStates[key] = state;
   }
 }
