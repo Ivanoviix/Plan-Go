@@ -46,7 +46,7 @@
           <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
             <span *ngFor="let photo of activeMarker.place.photos; let i = index"
                   class="w-2 h-2 rounded-full"
-                  [ngClass]="i === activePhotoIndex ? 'bg-blue-600' : 'bg-gray-300'"></span>
+                  [ngClass]="i === activePhotoIndex ? 'bg-[--primary-color]' : 'bg-gray-300'"></span>
           </div>
         </ng-container>
         <ng-template #noImage>
