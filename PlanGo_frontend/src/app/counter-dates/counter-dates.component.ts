@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { DestinationService } from '../core/services/destinations.service';
 import { take, delay } from 'rxjs';
 
@@ -12,9 +12,12 @@ export class CounterDatesComponent {
   @Input() city: string = 'Ciudad';
   @Input() idDestino!: number;
   @Input() max: number = 5;
-  @Input() startDateStr: string = '2025-06-01';
-  @Input() itineraryStartDate!: string; 
+  @Input() days: number = 1;
+  @Input() startDateStr: string = '';
+  @Input() itineraryStartDate!: string;
   @Input() itineraryTotalDays!: number;
+  @Input() otherOccupiedDays: number = 0;
+  @Input() destinationStartDate!: string;
   @Output() fechasConfirmadas = new EventEmitter<{ idDestino: number; fechaInicio: string; fechaFin: string }>();
   @Output() reloadDestination = new EventEmitter<number>();
   count: number = 1;
@@ -23,11 +26,19 @@ export class CounterDatesComponent {
 
   constructor(
     private destinationService: DestinationService,
-  ) {}
-  
+  ) { }
+
   ngOnInit() {
-    
+    this.count = this.days;
+    console.log('startDateStr recibido:', this.startDateStr);
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['days'] && !changes['days'].firstChange) {
+      this.count = changes['days'].currentValue;
+    }
+  }
+
   get startDate(): Date {
     return new Date(this.itineraryStartDate || this.startDateStr);
   }
@@ -48,21 +59,21 @@ export class CounterDatesComponent {
       fechaInicio: this.formatDate(this.startDate),
       fechaFin: this.formatDate(this.endDate),
     };
+    console.log('Fechas enviadas:', datos);
     this.fechasConfirmadas.emit(datos);
   }
 
-  
   increment(): void {
-    if (this.count < this.itineraryTotalDays) {
+    if (
+      this.count < this.itineraryTotalDays &&
+      (this.count + this.otherOccupiedDays) < this.itineraryTotalDays
+    ) {
       this.count++;
       const newEndDate = this.formatDate(this.endDate);
       this.destinationService.updateDateDestination(this.idDestino, { end_date: newEndDate })
         .pipe(take(1))
         .subscribe({
-          next: () => {
-            this.confirmarFechas();
-            // this.reloadDestination.emit(this.idDestino); // Quita o comenta esta línea
-          },
+          next: () => this.confirmarFechas(),
           error: (err) => console.error('Error actualizando end_date:', err)
         });
     }
@@ -83,4 +94,6 @@ export class CounterDatesComponent {
         });
     }
   }
+
+
 }
