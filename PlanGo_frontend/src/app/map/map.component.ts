@@ -24,7 +24,6 @@ export class MapComponent implements OnInit {
   @Input() markers: { lat: number, lng: number, label?: string, place?: any }[] = [];
   @Input() selectedPlace: any = null;
   activeMarker: any = null;
-  pixelOffset = new google.maps.Size(0, -140);
 
   constructor() {}
 

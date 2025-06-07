@@ -292,6 +292,4 @@ constructor(
   reloadDestination(destinationId: number) {
     this.fetchDestinationsByItinerary(this.selectedItineraryId!);
   }
-
-
 }
