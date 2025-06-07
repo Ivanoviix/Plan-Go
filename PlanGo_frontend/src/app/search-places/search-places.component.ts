@@ -15,6 +15,7 @@ import { ApiKeyService } from "../core/services/api-key.service";
 import { BackButtonComponent } from '../core/back-button/back-button.component';
 import { ViewChild } from '@angular/core';
 import { ToastModule } from "primeng/toast";
+import { ItinerariesService } from "../core/services/itineraries.service";
 
 
 @Component({
@@ -43,9 +44,9 @@ import { ToastModule } from "primeng/toast";
       ]),
     ]),
     trigger('hoverAnimation', [
-        state('default', style({ transform: 'scale(1)' })),
-        state('hover', style({ transform: 'scale(1.1)' })),
-        transition('default <=> hover', animate('300ms ease-in-out')),
+      state('default', style({ transform: 'scale(1)' })),
+      state('hover', style({ transform: 'scale(1.1)' })),
+      transition('default <=> hover', animate('300ms ease-in-out')),
     ]),
   ]
 })
@@ -53,16 +54,17 @@ import { ToastModule } from "primeng/toast";
 export class SearchPlacesComponent {
   @ViewChild('mapRef') mapComponent!: MapComponent;
   selectedCategory: string | null = null;
-  currentDestination?: Destination; 
-  mapLocation: google.maps.LatLngLiteral = { lat: 39.72596642771257, lng: 2.914616467674367 }; 
+  currentDestination?: Destination;
+  mapLocation: google.maps.LatLngLiteral = { lat: 39.72596642771257, lng: 2.914616467674367 };
   destinations: Destination[] = [];
-  svgIcons: SafeHtml[] = []; 
+  svgIcons: SafeHtml[] = [];
   sectionOpen = false;
   places: any[] = [];
   googlePlacesApiKey?: string;
   activeSection: string | null = null;
   selectedPlace: any = null;
   selectedPlaceImages: any[] = [];
+  savedPlaceIds: string[] = [];
   markers: { lat: number, lng: number, label?: string, place?: any }[] = [];
   sections = [
     { title: 'Alojamientos', isOpen: false },
@@ -72,15 +74,16 @@ export class SearchPlacesComponent {
 
   buttonStates: { [key: string]: string } = {};
 
-  constructor(  
-              private sanitizer: DomSanitizer,     
-              private destinationService: DestinationService,
-              private searchPlacesService: SearchPlacesService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private toast: BaseToastService,
-              private apiKeyService: ApiKeyService,
-            ) {
+  constructor(
+    private sanitizer: DomSanitizer,
+    private destinationService: DestinationService,
+    private searchPlacesService: SearchPlacesService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private toast: BaseToastService,
+    private apiKeyService: ApiKeyService,
+    private itinerariesService: ItinerariesService,
+  ) {
     let rawIcons = [
       `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="h-8 w-8">
         <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -126,7 +129,7 @@ export class SearchPlacesComponent {
             } else {
               // Si no encuentra el destino, usa el valor por defecto
               this.mapLocation = { lat: 39.72596642771257, lng: 2.914616467674367 };
-              
+
             }
           },
           error: () => {
@@ -154,19 +157,30 @@ export class SearchPlacesComponent {
   }
 
   loadPlaces(lat: number, lng: number): void {
-    let payload = {
-      latitude: lat,
-      longitude: lng,
-      radius: 50000,
-      category: this.selectedCategory
-    };
-    this.searchPlacesService.googlePlacesSearchNearby(payload).subscribe({
-      next: (data: any) => {
-        this.places = (data.places || []).filter((p: any) => p.photos && p.photos.length > 0);
+    this.itinerariesService.getIdUser().subscribe({
+      next: (userId: number) => {
+        debugger
+        let payload = {
+          latitude: lat,
+          longitude: lng,
+          radius: 50000,
+          category: this.selectedCategory,
+          user_id: userId
+        };
+        this.searchPlacesService.googlePlacesSearchNearby(payload).subscribe({
+          next: (data: any) => {
+            debugger
+            this.places = (data.places || [])
+              .filter((p: any) => p.photos && p.photos.length > 0);
+          },
+          error: (err: any) => {
+            this.places = [];
+            this.toast.showErrorToast(500, 'No se pudieron cargar los lugares', false);
+          }
+        });
       },
-      error: (err: any) => {
-        this.places = [];
-        this.toast.showErrorToast(500, 'No se pudieron cargar los lugares', false);
+      error: () => {
+        this.toast.showErrorToast(500, 'No se pudo obtener el usuario', false);
       }
     });
   }
@@ -211,7 +225,11 @@ export class SearchPlacesComponent {
   }
 
   savePlace(place: any) {
-    debugger
+    if (this.savedPlaceIds.includes(place.id)) {
+      this.toast.showErrorToast(400, 'Este lugar ya ha sido guardado', false);
+      return;
+    }
+
     let payload = {
       place_id: place.id,
       destination: this.currentDestination?.destination_id,
@@ -221,10 +239,11 @@ export class SearchPlacesComponent {
       formattedAddress: place.formattedAddress,
       latitude: place.location?.latitude,
       longitude: place.location?.longitude,
-      images: (place.photos || []).map((photo: any) => photo.name)
+      images: (place.photos || []).map((photo: any) => photo.name),
+      isSave: true
     };
     let saveObservable;
-    
+
     switch (this.selectedCategory) {
       case 'Alojamientos':
         saveObservable = this.searchPlacesService.saveAccommodationWithImages(payload);
@@ -242,10 +261,12 @@ export class SearchPlacesComponent {
 
     saveObservable.subscribe({
       next: (res) => {
+        this.savedPlaceIds.push(place.id);
+        place.isSave = true;
         this.toast.showSuccessToast('Lugar guardado correctamente', false);
       },
       error: (err) => {
-        this.toast.showErrorToast(500, 'Error al guardar el lugar', false);
+        this.toast.showErrorToast(500, 'Error al guardar el lugar, ya ha sido guardado previamente', false);
       }
     });
   }

@@ -78,7 +78,7 @@ export class MapComponent implements OnInit {
   }
 
   getPhotoUrl(photo: any): string {
-    return photo?.name ? `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}` : 'assets/no-image.png';
+    return photo?.name ? `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}` : 'https://www.creaodontologia.com/wp-content/uploads/2025/03/placeholder-2.png';
   }
 
   openGoogleMapsPlace(): void {

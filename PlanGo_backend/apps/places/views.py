@@ -53,6 +53,7 @@ def create_accommodation_with_images(request):
         latitude = data.get('latitude')
         longitude = data.get('longitude')
         images = data.get('images', [])
+        is_save = data.get('isSave', True)
 
         destination = Destination.objects.get(pk=destination_id)
 
@@ -64,7 +65,8 @@ def create_accommodation_with_images(request):
             rating=rating,
             address=formatted_address,
             latitude=latitude,
-            longitude=longitude
+            longitude=longitude,
+            isSave=is_save
         )
 
         for uri in images:
@@ -104,6 +106,7 @@ def create_activity_with_images(request):
         latitude = data.get('latitude')
         longitude = data.get('longitude')
         images = data.get('images', [])
+        is_save = data.get('isSave', True)
 
         destination = Destination.objects.get(pk=destination_id)
 
@@ -115,7 +118,8 @@ def create_activity_with_images(request):
             rating=rating,
             address=formatted_address,
             latitude=latitude,
-            longitude=longitude
+            longitude=longitude,
+            isSave=is_save
         )
 
         for uri in images:
@@ -156,6 +160,7 @@ def create_restaurant_with_images(request):
         latitude = data.get('latitude')
         longitude = data.get('longitude')
         images = data.get('images', [])
+        is_save = data.get('isSave', True)
 
         destination = Destination.objects.get(pk=destination_id)
 
@@ -167,7 +172,8 @@ def create_restaurant_with_images(request):
             rating=rating,
             address=formatted_address,
             latitude=latitude,
-            longitude=longitude
+            longitude=longitude,
+            isSave=is_save
         )
 
         for uri in images:
@@ -304,9 +310,10 @@ def google_places_search_nearby(request):
     lng = data.get('longitude', 2.654179)
     radius = data.get('radius', 50000)
     category = data.get('category', 'Alojamientos')
+    user_id = data.get('user_id')  # <-- Recibe el user_id del frontend
     category = category.strip().lower() 
 
-    match category:     # Podemos añadir más categorías, tenemos que pegarle un vistazo a lo que tenemos apuntado.
+    match category:
         case "alojamientos":
             included_types = [
                 "lodging", "hotel", "motel", "bed_and_breakfast", "guest_house", "hostel"
@@ -342,4 +349,15 @@ def google_places_search_nearby(request):
 
     url = f"https://places.googleapis.com/v1/places:searchNearby?key={api_key}"
     response = requests.post(url, json=payload, headers=headers)
-    return JsonResponse(response.json(), safe=False)
+    data = response.json()
+
+    # --- Añade isSave a cada lugar ---
+    from apps.places.models.saved_place import SavedPlace
+    saved_place_ids = set()
+    if user_id:
+        saved_place_ids = set(SavedPlace.objects.filter(user_id=user_id).values_list('place_id', flat=True))
+
+    for place in data.get('places', []):
+        place['isSave'] = place.get('id') in saved_place_ids
+
+    return JsonResponse(data, safe=False)
