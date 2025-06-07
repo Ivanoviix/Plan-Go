@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { trigger, style, transition, animate } from '@angular/animations';
 import { HeaderComponent } from "../header/header.component";
 import { MapComponent } from "../map/map.component";
 import { ParticipantsComponent } from "../participants/participants.component";
@@ -13,6 +13,8 @@ import { BaseToastService } from '../core/services/base-toast.service';
 import { SearchPlacesService } from '../core/services/search-places.service';
 import { ApiKeyService } from "../core/services/api-key.service";
 import { BackButtonComponent } from '../core/back-button/back-button.component';
+import { ViewChild } from '@angular/core';
+
 
 @Component({
   selector: 'app-search-places',
@@ -42,6 +44,7 @@ import { BackButtonComponent } from '../core/back-button/back-button.component';
 })
 
 export class SearchPlacesComponent {
+  @ViewChild('mapRef') mapComponent!: MapComponent;
   selectedCategory: string | null = null;
   currentDestination?: Destination; 
   mapLocation: google.maps.LatLngLiteral = { lat: 39.72596642771257, lng: 2.914616467674367 }; 
@@ -51,6 +54,8 @@ export class SearchPlacesComponent {
   places: any[] = [];
   googlePlacesApiKey?: string;
   activeSection: string | null = null;
+  selectedPlace: any = null;
+  markers: { lat: number, lng: number, label?: string, place?: any }[] = [];
   sections = [
     { title: 'Alojamientos', isOpen: false },
     { title: 'Comer y beber', isOpen: false },
@@ -164,5 +169,31 @@ export class SearchPlacesComponent {
 
   getActiveSectionIndex(): number {
     return this.sections.findIndex(s => s.title === this.activeSection);
+  }
+
+  onPlaceSelect(place: any) {
+    this.selectedPlace = place;
+    if (place.location && place.location.latitude && place.location.longitude) {
+      const marker = {
+        lat: Number(place.location.latitude),
+        lng: Number(place.location.longitude),
+        label: place.displayName?.text || '',
+        place: { ...place }
+      };
+      this.markers = [{
+        lat: Number(place.location.latitude),
+        lng: Number(place.location.longitude),
+        label: place.displayName?.text || '',
+        place: { ...place }
+      }];
+      this.mapLocation = {
+        lat: Number(place.location.latitude),
+        lng: Number(place.location.longitude)
+      };
+      setTimeout(() => {
+        let index = this.markers.findIndex(m => m.lat === marker.lat && m.lng === marker.lng);
+        this.mapComponent.openInfoWindow(index, marker);
+      });
+    }
   }
 }
