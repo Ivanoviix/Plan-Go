@@ -9,6 +9,7 @@ from .serializer import AcommodationSerializer, ActivitySerializer, RestaurantSe
 from apps.places.models.accommodation_image import AccommodationImage
 from apps.places.models.activity import Activity
 from apps.places.models.activity_image import ActivityImage
+from apps.itineraries.models.destination import Destination
 from apps.places.models.restaurant import Restaurant
 from apps.places.models.restaurant_image import RestaurantImage
 from apps.places.models.saved_place import SavedPlace
@@ -33,10 +34,47 @@ def get_accommodations_from_destination(request, destination_id):
         accommodation_data = {
             'accommodation': AcommodationSerializer(accommodation).data,
             'images': images_data
-        } #    "accommodation": { ...info... },
-          #    "images": ["url1", "url2", ...]
+        } 
+          
         data.append(accommodation_data)
     return JsonResponse({'accommodations': data}, safe=False)
+
+@csrf_exempt
+def create_accommodation_with_images(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        place_id = data.get('place_id')
+        destination_id = data.get('destination')
+        name = data.get('name')
+        primary_type = data.get('primary_type')
+        rating = data.get('rating')
+        formatted_address = data.get('formattedAddress')
+        latitude = data.get('latitude')
+        longitude = data.get('longitude')
+        images = data.get('images', [])
+
+        destination = Destination.objects.get(pk=destination_id)
+
+        accommodation = Accommodation.objects.create(
+            place_id=place_id,
+            destination=destination,
+            name=name,
+            primary_type=primary_type,
+            rating=rating,
+            address=formatted_address,
+            latitude=latitude,
+            longitude=longitude
+        )
+
+        for uri in images:
+            AccommodationImage.objects.create(
+                accommodation=accommodation,
+                uri=uri
+            )
+
+        return JsonResponse({'status': 'ok', 'id accommodation': accommodation.place_id})
+    return JsonResponse({'error': 'Método no permitido :('}, status=405)
+
 
 # ACTIVITY
 def get_activities_from_destination(request, destination_id):
@@ -52,6 +90,43 @@ def get_activities_from_destination(request, destination_id):
         data.append(activity_data)
     return JsonResponse({'activities': data}, safe=False)
 
+@csrf_exempt
+def create_activity_with_images(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        place_id = data.get('place_id')
+        destination_id = data.get('destination')
+        name = data.get('name')
+        primary_type = data.get('primary_type')
+        rating = data.get('rating')
+        formatted_address = data.get('formattedAddress')
+        latitude = data.get('latitude')
+        longitude = data.get('longitude')
+        images = data.get('images', [])
+
+        destination = Destination.objects.get(pk=destination_id)
+
+        activity = Activity.objects.create(
+            place_id=place_id,
+            destination=destination,
+            name=name,
+            primary_type=primary_type,
+            rating=rating,
+            address=formatted_address,
+            latitude=latitude,
+            longitude=longitude
+        )
+
+        for uri in images:
+            ActivityImage.objects.create(
+                activity=activity,
+                uri=uri
+            )
+
+        return JsonResponse({'status': 'ok', 'id activity': activity.place_id})
+    return JsonResponse({'error': 'Método no permitido :('}, status=405)
+
+
 # RESTAURANT
 def get_restaurants_from_destination(request, destination_id):
     restaurants = Restaurant.objects.filter(destination_id=destination_id)
@@ -65,6 +140,42 @@ def get_restaurants_from_destination(request, destination_id):
         }
         data.append(restaurant_data)
     return JsonResponse({'restaurants': data}, safe=False)
+
+@csrf_exempt
+def create_restaurant_with_images(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        place_id = data.get('place_id')
+        destination_id = data.get('destination')
+        name = data.get('name')
+        primary_type = data.get('primary_type')
+        rating = data.get('rating')
+        formatted_address = data.get('formattedAddress')
+        latitude = data.get('latitude')
+        longitude = data.get('longitude')
+        images = data.get('images', [])
+
+        destination = Destination.objects.get(pk=destination_id)
+
+        restaurant = Restaurant.objects.create(
+            place_id=place_id,
+            destination=destination,
+            name=name,
+            primary_type=primary_type,
+            rating=rating,
+            address=formatted_address,
+            latitude=latitude,
+            longitude=longitude
+        )
+
+        for uri in images:
+            RestaurantImage.objects.create(
+                restaurant=restaurant,
+                uri=uri
+            )
+
+        return JsonResponse({'status': 'ok', 'id restaurante': restaurant.place_id})
+    return JsonResponse({'error': 'Método no permitido :('}, status=405)
 
 # SAVED PLACES
 # SAVED PLACES - Alojamientos
@@ -142,7 +253,6 @@ def get_saved_activities(request, user_id):
 
 
 # API GOOGLE PLACES
-
 @csrf_exempt
 @require_POST
 def google_places_search_nearby(request):
