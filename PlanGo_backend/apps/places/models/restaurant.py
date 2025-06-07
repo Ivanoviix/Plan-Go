@@ -76,6 +76,7 @@ class Restaurant(models.Model):
     restaurant_type = models.CharField(max_length=50, choices=RESTAURANT_TYPES)
     latitude = models.DecimalField(max_digits=30, decimal_places=20)
     longitude = models.DecimalField(max_digits=30, decimal_places=20)
+    isSave = models.BooleanField(default=False)
     
     class Meta:
         verbose_name = 'Restaurant'
