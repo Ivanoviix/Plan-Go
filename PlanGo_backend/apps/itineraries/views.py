@@ -25,6 +25,8 @@ from django.db import models
 import pycountry
 import requests
 import json
+from datetime import timedelta
+
 # Create your views here.
 GEONAMES_API_KEY = settings.GEONAMES_API_KEY  
 # ITINERARIOS
@@ -171,16 +173,56 @@ def get_destinations_by_itinerary(request, itinerary_id):
     ]
     return JsonResponse({'User destinations': data})
 
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def create_destination(request):
+#     serializer = DestinationSerializer(data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_destination(request):
-    serializer = DestinationSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'POST':
+        data = request.data
+        print("RESPUESTAAA", data)
+        itinerary_id = data.get('itinerary')
+        country = data.get('country')
+        print("itinerary_id recibido:", itinerary_id)
+        city_name = data.get('city_name')
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
+        latitude = data.get('latitude')
+        longitude = data.get('longitude')
 
+        try:
+            itinerary = Itinerary.objects.get(pk=itinerary_id)
+        except Itinerary.DoesNotExist:
+            return JsonResponse({'error': f'Itinerario con id {itinerary_id} no existe.'}, status=404)        
+        destinos = Destination.objects.filter(itinerary=itinerary).order_by('-end_date')
 
+        if destinos.exists():
+            last_end_date = destinos.first().end_date
+            start_date = last_end_date + timedelta(days=1)
+        else:
+            start_date = itinerary.start_date
+
+        end_date = start_date 
+
+        destination = Destination.objects.create(
+            itinerary=itinerary,
+            country =country,
+            city_name=city_name,
+            start_date=start_date,
+            end_date=end_date,
+            latitude = latitude,
+            longitude = longitude,
+        )
+
+        return JsonResponse({'status': 'ok', 'destination_id': destination.pk})
+    
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def update_destination(request, destination_id):
