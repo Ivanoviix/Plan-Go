@@ -263,7 +263,7 @@ constructor(
       return;
     }
 
-    let country = this.countries[0];
+    let country = city.countryName || city.country || this.countries[0];
 
     let payload: Omit<Destination, 'destination_id'> = {
       itinerary: this.selectedItineraryId,
