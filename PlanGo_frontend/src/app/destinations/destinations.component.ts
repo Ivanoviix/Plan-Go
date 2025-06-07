@@ -305,6 +305,4 @@ constructor(
     }
     return total;
   }
-
-
 }
