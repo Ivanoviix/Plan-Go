@@ -57,11 +57,7 @@ export class DestinationService extends BaseHttpService {
 
   createDestination(destination: any): Observable<any> {
     const headers = this.createHeaders();
-    return this.httpClient.post(
-      `${globals.apiBaseUrl}/itineraries/destination/create/`,
-      destination,
-      { headers, withCredentials: true }
-    );
+    return this.httpClient.post(`${globals.apiBaseUrl}/itineraries/destination/create/`, destination, { headers, withCredentials: true });
   }
 
   updateDateDestination(destinationId: any, data: any = {}): Observable<any> {
