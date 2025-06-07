@@ -12,7 +12,7 @@ urlpatterns = [
     path('saved_activities/<int:user_id>/', get_saved_activities, name='get_saved_activities'),
     
     # CREATE ACCOMMODATION
-    path('create_accommodaton/', create_accommodation_with_images, name="create_accommodation_with_images"),
+    path('create_accommodation/', create_accommodation_with_images, name="create_accommodation_with_images"),
     
     # CREATE RESTAURANT
     path('create_restaurant/', create_restaurant_with_images, name="create_restaurant_with_images"),

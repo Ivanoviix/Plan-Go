@@ -35,8 +35,23 @@ export class SearchPlacesService {
   }
 
   googlePlacesSearchNearby(payload: { latitude: number, longitude: number, radius?: number }): Observable<any> {
-    const headers = this.createHeaders();
+    let headers = this.createHeaders();
     return this.httpClient.post(`${globals.apiBaseUrl}/places/google_places_search_nearby/`, payload, { headers });
+  }
+
+  saveAccommodationWithImages(payload: any): Observable<any> {
+    let headers = this.createHeaders();
+    return this.httpClient.post(`${globals.apiBaseUrl}/places/create_accommodation/`, payload, { headers });
+  }
+
+  saveRestaurantWithImages(payload: any): Observable<any> {
+    let headers = this.createHeaders();
+    return this.httpClient.post(`${globals.apiBaseUrl}/places/create_restaurant/`, payload, { headers });
+  }
+
+  saveActivityWithImages(payload: any): Observable<any> {
+    let headers = this.createHeaders();
+    return this.httpClient.post(`${globals.apiBaseUrl}/places/create_activity/`, payload, { headers });
   }
 
 }

@@ -60,7 +60,7 @@ def create_accommodation_with_images(request):
             place_id=place_id,
             destination=destination,
             name=name,
-            primary_type=primary_type,
+            accomodation_type=primary_type,
             rating=rating,
             address=formatted_address,
             latitude=latitude,
@@ -111,7 +111,7 @@ def create_activity_with_images(request):
             place_id=place_id,
             destination=destination,
             name=name,
-            primary_type=primary_type,
+            activity_type=primary_type,
             rating=rating,
             address=formatted_address,
             latitude=latitude,
@@ -146,6 +146,7 @@ def get_restaurants_from_destination(request, destination_id):
 def create_restaurant_with_images(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        print("json", data)
         place_id = data.get('place_id')
         destination_id = data.get('destination')
         name = data.get('name')
@@ -162,7 +163,7 @@ def create_restaurant_with_images(request):
             place_id=place_id,
             destination=destination,
             name=name,
-            primary_type=primary_type,
+            restaurant_type=primary_type,
             rating=rating,
             address=formatted_address,
             latitude=latitude,

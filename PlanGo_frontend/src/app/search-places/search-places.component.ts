@@ -152,7 +152,7 @@ export class SearchPlacesComponent {
     };
     this.searchPlacesService.googlePlacesSearchNearby(payload).subscribe({
       next: (data: any) => {
-        this.places = data.places || [];
+        this.places = (data.places || []).filter((p: any) => p.photos && p.photos.length > 0);
       },
       error: (err: any) => {
         this.places = [];
@@ -173,7 +173,6 @@ export class SearchPlacesComponent {
   }
 
   onPlaceSelect(place: any) {
-    debugger
     this.selectedPlace = place;
     // Guarda el array de imágenes (photos) del lugar seleccionado
     this.selectedPlaceImages = place.photos || [];
@@ -199,5 +198,45 @@ export class SearchPlacesComponent {
         this.mapComponent.openInfoWindow(index, marker);
       });
     }
+  }
+
+  savePlace(place: any) {
+    debugger
+    let payload = {
+      place_id: place.id,
+      destination: this.currentDestination?.destination_id,
+      name: place.displayName?.text,
+      primary_type: place.primaryType,
+      rating: place.rating,
+      formattedAddress: place.formattedAddress,
+      latitude: place.location?.latitude,
+      longitude: place.location?.longitude,
+      images: (place.photos || []).map((photo: any) => photo.name)
+    };
+    let saveObservable;
+    
+    switch (this.selectedCategory) {
+      case 'Alojamientos':
+        saveObservable = this.searchPlacesService.saveAccommodationWithImages(payload);
+        break;
+      case 'Comer y beber':
+        saveObservable = this.searchPlacesService.saveRestaurantWithImages(payload);
+        break;
+      case 'Cosas que hacer':
+        saveObservable = this.searchPlacesService.saveActivityWithImages(payload);
+        break;
+      default:
+        this.toast.showErrorToast(400, 'Tipo de lugar no soportado', false);
+        return;
+    }
+
+    saveObservable.subscribe({
+      next: (res) => {
+        this.toast.showSuccessToast('Lugar guardado correctamente', false);
+      },
+      error: (err) => {
+        this.toast.showErrorToast(500, 'Error al guardar el lugar', false);
+      }
+    });
   }
 }

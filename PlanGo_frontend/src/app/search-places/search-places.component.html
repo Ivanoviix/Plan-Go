@@ -52,7 +52,7 @@
                             <div *ngIf="places && places.length > 0" class="grid gap-2 w-full min-w-0"
                                 style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
                                 <div *ngFor="let place of places"
-                                    class="bg-white rounded-xl shadow-xl p-4 flex flex-col items-center min-w-0"
+                                    class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0"
                                     (click)="onPlaceSelect(place)">
                                     <img *ngIf="place.photos?.length" [src]="getPhotoUrl(place.photos[0])"
                                         alt="{{ place.displayName?.text }}"
@@ -62,6 +62,18 @@
                                     </div>
                                     <div class="text-gray-600 text-center text-sm break-words w-full">
                                         {{ place.formattedAddress }}
+                                    </div>
+                                    <div class="flex flex-row justify-end w-full mt-auto pt-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+                                        </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="size-6" (click)="savePlace(place)">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                        </svg>
                                     </div>
                                 </div>
                             </div>
