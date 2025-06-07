@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.shortcuts import render
 from django.http import JsonResponse
 from apps.places.models.accommodation import Accommodation
+from apps.users.models.user import User
 from .serializer import AcommodationSerializer, ActivitySerializer, RestaurantSerializer, SavedPlacesSerializer
 from apps.places.models.accommodation_image import AccommodationImage
 from apps.places.models.activity import Activity
@@ -178,6 +179,45 @@ def create_restaurant_with_images(request):
     return JsonResponse({'error': 'Método no permitido :('}, status=405)
 
 # SAVED PLACES
+
+@csrf_exempt
+def create_saved_place_with_images(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_id = data.get('user_id')
+        place_id = data.get('place_id')
+        name = data.get('name')
+        primary_type = data.get('primary_type')
+        rating = data.get('rating')
+        formatted_address = data.get('formattedAddress')
+        latitude = data.get('latitude')
+        longitude = data.get('longitude')
+        images = data.get('images', [])
+
+        try:
+            user = User.object.get(pk=user_id)
+        except:
+            return JsonResponse({'error' : 'Usuario no encontrado'}, status=404)
+        saved_place = SavedPlace.objects.create(
+            user=user,
+            place_id=place_id,
+            name=name,
+            rating=rating,
+            address=formatted_address,
+            place_type=primary_type,
+            latitude=latitude,
+            longitude=longitude
+        )
+
+        for uri in images:
+            SavedPlace.objects.create(
+                saved_place=saved_place,
+                uri=uri
+            )
+
+        return JsonResponse({'status': 'ok', 'id accommodation': saved_place.savedPlaces_id})
+    return JsonResponse({'error': 'Método no permitido :('}, status=405)
+
 # SAVED PLACES - Alojamientos
 def get_saved_accommodations(request, user_id):
     accommodation_types = [
