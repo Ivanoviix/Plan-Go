@@ -204,7 +204,7 @@ def create_destination(request):
         destinos = Destination.objects.filter(itinerary=itinerary).order_by('-end_date')
 
         if destinos.exists():
-            last_end_date = destinos.first().end_date
+            last_end_date = destinos.last().end_date
             start_date = last_end_date + timedelta(days=1)
         else:
             start_date = itinerary.start_date
