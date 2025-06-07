@@ -206,7 +206,7 @@ constructor(
       map(results =>
         results.flatMap(r =>
           r.geonames
-            ? r.geonames.map((g: any) => g) // Guarda el objeto completo
+            ? r.geonames.map((g: any) => g) 
             : []
         )
       )
@@ -219,7 +219,7 @@ constructor(
     if (this.searchText && countryCodes.length > 0) {
       this.getCitiesMultipleCountries(this.searchText, countryCodes).subscribe({
         next: (results: any[]) => {
-          this.cities = results; // results debe ser array de objetos con name, adminName1, etc.
+          this.cities = results; 
         },
         error: () => this.cities = [],
       });
@@ -291,5 +291,18 @@ constructor(
 
   reloadDestination(destinationId: number) {
     this.fetchDestinationsByItinerary(this.selectedItineraryId!);
+  }
+
+  getOccupiedDays(): number {
+    let total = 0;
+    for (const dest of this.destinations) {
+      if (dest.start_date && dest.end_date) {
+        const start = new Date(dest.start_date);
+        const end = new Date(dest.end_date);
+        // Sumamos +1 para incluir ambos días
+        total += Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      }
+    }
+    return total;
   }
 }

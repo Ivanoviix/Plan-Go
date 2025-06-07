@@ -9,7 +9,7 @@
       </picture>
       <h1 class="my-6 text-l font-bold text-center">Tu puerta al mundo. Planifica, descubre y vive tu próximo destino.
       </h1>
-      <form class="w-full">
+      <form class="w-full" (ngSubmit)="login()">
         <div class="mb-4 h-24">
           <label>Email</label>
           <input class="mt-2 w-full h-12 border p-2 rounded-full" type="email" [(ngModel)]="email" name="email" required 
@@ -33,7 +33,7 @@
           <hr class="flex-grow border-black">
         </div>
         <div class="login-buttons flex items-center justify-center">
-          <button class=" login-google w-20 h-12 border bg-[--primary-color] hover:bg-[--secondary-color] rounded-full flex items-center justify-center m-4"
+          <button type="button" class=" login-google w-20 h-12 border bg-[--primary-color] hover:bg-[--secondary-color] rounded-full flex items-center justify-center m-4"
             (click)="loginWithGoogle()">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512" class="w-6 h-6">
               <path fill="#FFFFFF"
@@ -48,7 +48,7 @@
             </svg>
           </button>
         </div>
-        <button class="border bg-[--primary-color] hover:bg-[--secondary-color] text-white py-2 px-4 rounded-full w-full" (click)="login()">Iniciar sesión</button>
+        <button class="border bg-[--primary-color] hover:bg-[--secondary-color] text-white py-2 px-4 rounded-full w-full">Iniciar sesión</button>
       </form>
       <p class="my-2">No tienes cuenta? 
         <strong>
