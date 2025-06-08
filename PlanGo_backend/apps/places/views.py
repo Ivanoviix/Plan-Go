@@ -272,6 +272,7 @@ def create_saved_place_with_images(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_saved_places_by_category(request, user_id):
+
     
     saved_places = SavedPlace.objects.filter(user_id=user_id)
     accommodations = []
