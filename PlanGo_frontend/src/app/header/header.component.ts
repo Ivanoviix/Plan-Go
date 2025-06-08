@@ -25,8 +25,8 @@ import { ToastModule } from 'primeng/toast';
       transition('default <=> hover', animate('300ms ease-in-out')),
     ]),
     trigger('expandHeader', [
-      state('collapsed', style({ width: '4rem' })), 
-      state('expanded', style({ width: '18rem' })), 
+      state('collapsed', style({ width: '4rem' })),
+      state('expanded', style({ width: '18rem' })),
       transition('collapsed <=> expanded', animate('300ms cubic-bezier(0.4,0,0.2,1)')),
     ]),
   ],
@@ -42,25 +42,34 @@ export class HeaderComponent {
   userName: string = '';
   userEmail: string = '';
   userPhoto: string = '';
+  itinerariesCount: number = 0;
 
-  constructor( 
+  constructor(
     private router: Router,
     private userService: UserService,
     private itinerariesService: ItinerariesService,
     public authService: AuthService,
     public toast: BaseToastService,
-  ){}
+  ) { }
 
   ngOnInit() {
-    this.itinerariesService.getIdUser()
-      .subscribe((idUser: number) => { 
+    this.itinerariesService.getItineraries().subscribe({
+      next: (data: any) => {
+        this.itinerariesCount = data.itineraries?.length || 0;
+      },
+      error: () => {
+        this.itinerariesCount = 0;
+      }
+    });
+
+    this.itinerariesService.getIdUser().subscribe((idUser: number) => {
         this.userService.getUserById(idUser)
-          .subscribe(userData => { 
+          .subscribe(userData => {
             this.userName = `${userData.first_name} ${userData.last_name}`;
             this.userEmail = userData.email;
             this.userPhoto = userData.user_image;
-          }); 
-      });    
+          });
+      });
   }
 
   onResetPassword() {
@@ -80,7 +89,7 @@ export class HeaderComponent {
     this.buttonStates[button] = state;
   }
 
-  goToExpense(){
+  goToExpense() {
     this.router.navigate(["/expenses"]);
   }
 
