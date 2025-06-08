@@ -25,6 +25,7 @@ export const ValidatorMessages: { [key: string]: string } = {
     participantEmpty: 'Debes introducir un participante',
     destinationDuplicate: 'Ya existe un destino con ese nombre en este itinerario.',
     destinationsNew: 'No hay destinos creados. ¡Añade el primero!',
+    maxDestinations: 'Se ha alcanzado el máximo de destinos por días de itinerario',
 };
 
 

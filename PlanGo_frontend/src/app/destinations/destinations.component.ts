@@ -42,7 +42,9 @@ import { BackButtonComponent } from '../core/back-button/back-button.component';
 export class DestinationsComponent implements OnInit {
   destinations: Destination[] = [];
   selectedItinerary: any = null;
+  errorMaxDaysId: number | null = null;
   errorMessage: string = '';
+  errorMessageMaxD: string = '';
   selectedItineraryId: number | null = null;
   summary: { [key: number]: any } = {};
   countries: any[] = [];
@@ -52,7 +54,9 @@ export class DestinationsComponent implements OnInit {
   itineraryStartDate!: string;
   itineraryEndDate!: string;
   itineraryTotalDays!: number;
+  showMaxDaysError = false;
   ValidatorMessages = ValidatorMessages;
+  private maxDaysErrorTimeout: any = null;
 
   constructor(
     private destinationService: DestinationService,
@@ -234,7 +238,7 @@ export class DestinationsComponent implements OnInit {
     let length = countriesArray.length;
 
     if (length === 2) {
-      return countriesArray.join(' y '); 
+      return countriesArray.join(' y ');
     } else if (length > 2) {
       let lastCountry = countriesArray.pop();
       return `${countriesArray.join(', ')} y ${lastCountry}`;
@@ -291,7 +295,7 @@ export class DestinationsComponent implements OnInit {
   reloadDestination(destinationId: number) {
     this.fetchDestinationsByItinerary(this.selectedItineraryId!);
   }
-  
+
   calculateDays(start: string | Date, end: string | Date): number {
     const startDate = typeof start === 'string' ? new Date(start) : start;
     const endDate = typeof end === 'string' ? new Date(end) : end;
@@ -311,18 +315,35 @@ export class DestinationsComponent implements OnInit {
     return total;
   }
 
-
   getOtherOccupiedDays(currentDestinationId: number): number {
-  return this.destinations
-    .filter(dest => dest.destination_id !== currentDestinationId)
-    .reduce((total, dest) => {
-      if (dest.start_date && dest.end_date) {
-        const start = new Date(dest.start_date);
-        const end = new Date(dest.end_date);
-        total += Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
-      }
-      return total;
-    }, 0);
-}
+    return this.destinations
+      .filter(dest => dest.destination_id !== currentDestinationId)
+      .reduce((total, dest) => {
+        if (dest.start_date && dest.end_date) {
+          const start = new Date(dest.start_date);
+          const end = new Date(dest.end_date);
+          total += Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+        }
+        return total;
+      }, 0);
+  }
 
+  onMaxDaysReached(destinationId: number) {
+    this.showMaxDaysError = true;
+    if (this.maxDaysErrorTimeout) clearTimeout(this.maxDaysErrorTimeout);
+    this.maxDaysErrorTimeout = setTimeout(() => {
+      this.showMaxDaysError = false;
+    }, 2500);
+  }
+
+  onInputClick() {
+    debugger
+    if (this.getOccupiedDays() >= this.itineraryTotalDays) {
+      this.showMaxDaysError = true;
+      if (this.maxDaysErrorTimeout) clearTimeout(this.maxDaysErrorTimeout);
+      this.maxDaysErrorTimeout = setTimeout(() => {
+        this.showMaxDaysError = false;
+      }, 3000);
+    }
+  }
 }
