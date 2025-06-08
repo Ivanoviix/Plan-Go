@@ -159,7 +159,6 @@ export class SearchPlacesComponent {
   loadPlaces(lat: number, lng: number): void {
     this.itinerariesService.getIdUser().subscribe({
       next: (userId: number) => {
-        debugger
         let payload = {
           latitude: lat,
           longitude: lng,
@@ -169,7 +168,6 @@ export class SearchPlacesComponent {
         };
         this.searchPlacesService.googlePlacesSearchNearby(payload).subscribe({
           next: (data: any) => {
-            debugger
             this.places = (data.places || [])
               .filter((p: any) => p.photos && p.photos.length > 0);
           },

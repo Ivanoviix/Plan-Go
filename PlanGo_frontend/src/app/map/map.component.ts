@@ -13,11 +13,11 @@ import { SearchPlacesService } from '../core/services/search-places.service';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
   imports: [
-    CommonModule, 
-    GoogleMapsModule, 
+    CommonModule,
+    GoogleMapsModule,
     TooltipModule
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA], 
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class MapComponent implements OnInit {
   @ViewChild(MapInfoWindow) infoWindow!: MapInfoWindow;
@@ -37,10 +37,10 @@ export class MapComponent implements OnInit {
 
   constructor(
     public apiKeyService: ApiKeyService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-     this.apiKeyService.getGooglePlacesApiKey().subscribe({
+    this.apiKeyService.getGooglePlacesApiKey().subscribe({
       next: (data: any) => {
         this.googlePlacesApiKey = data.googlePlacesApiKey;
       },
@@ -52,8 +52,8 @@ export class MapComponent implements OnInit {
 
   openInfoWindow(index: number, markerData: any) {
     this.activeMarker = markerData;
-    this.activePhotoIndex = 0; // Reset al abrir
-    this.selectedPlaceImages = markerData?.place?.photos || [];
+    this.activePhotoIndex = 0;
+    this.selectedPlaceImages = markerData?.place?.photos || markerData?.place?.images || [];
     const marker = this.markerRefs.get(index);
     if (marker) {
       this.infoWindow.open(marker);
@@ -62,23 +62,34 @@ export class MapComponent implements OnInit {
 
   prevPhoto(event: Event) {
     event.stopPropagation();
-    if (this.activeMarker?.place?.photos?.length) {
-      this.activePhotoIndex =
-        (this.activePhotoIndex - 1 + this.activeMarker.place.photos.length) %
-        this.activeMarker.place.photos.length;
+    const images = this.selectedPlaceImages;
+    if (images.length) {
+      this.activePhotoIndex = (this.activePhotoIndex - 1 + images.length) % images.length;
     }
   }
 
   nextPhoto(event: Event) {
     event.stopPropagation();
-    if (this.activeMarker?.place?.photos?.length) {
-      this.activePhotoIndex =
-        (this.activePhotoIndex + 1) % this.activeMarker.place.photos.length;
+    const images = this.selectedPlaceImages;
+    if (images.length) {
+      this.activePhotoIndex = (this.activePhotoIndex + 1) % images.length;
     }
   }
 
   getPhotoUrl(photo: any): string {
-    return photo?.name ? `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}` : 'https://www.creaodontologia.com/wp-content/uploads/2025/03/placeholder-2.png';
+    // Si es Google Place Photo (objeto con .name)
+    if (photo?.name && this.googlePlacesApiKey) {
+      return `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}`;
+    }
+    // Si es string y parece una ruta de Google Places
+    if (typeof photo === 'string') {
+      if (photo.startsWith('places/') && this.googlePlacesApiKey) {
+        return `https://places.googleapis.com/v1/${photo}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}`;
+      }
+      // Si es una URL absoluta o relativa a tu servidor
+      return photo;
+    }
+    return 'assets/no-image.png';
   }
 
   openGoogleMapsPlace(): void {

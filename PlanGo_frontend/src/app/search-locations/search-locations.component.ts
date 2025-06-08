@@ -30,9 +30,9 @@ import { ApiKeyService } from '../core/services/api-key.service';
 })
 export class SearchLocationsComponent {
   @ViewChild('participants') participantsComponent!: ParticipantsComponent;
+  @ViewChild('mapRef') mapComponent!: MapComponent;
   @Input() destinations: Destination[] = [];
   @Input() selectedDestinationId: number | null = null;
-  mapLocation: google.maps.LatLngLiteral = { lat: 39.72596642771257, lng: 2.914616467674367 };
   participantName: string = '';
   selectedSection: string = '';
   currentDestination!: Destination;
@@ -46,6 +46,10 @@ export class SearchLocationsComponent {
   activePhotoIndex: number = 0;
   selectedPlaceImages: any[] = [];
   googlePlacesApiKey?: string;
+  markers: { lat: number, lng: number, label?: string, place?: any }[] = [];
+  selectedPlace: any = null;
+  mapLocation: any = { lat: 39.720007, lng: 2.910419 }; // o el centro por defecto
+
   sections = [
     { title: 'Alojamientos', isOpen: false, onEdit: () => this.editCategory('Accommodation', this.currentDestination) },
     { title: 'Comer y beber', isOpen: false, onEdit: () => this.editCategory('Comer y beber', this.currentDestination) },
@@ -153,7 +157,7 @@ export class SearchLocationsComponent {
       const payload = {
         latitude: Number(destination.latitude),
         longitude: Number(destination.longitude),
-        radius: 20000, // Ajusta el radio según sea necesario
+        radius: 20000, 
         category: category,
       };
 
@@ -191,25 +195,30 @@ export class SearchLocationsComponent {
       console.error('ParticipantsComponent no está inicializado.');
     }
   }
-  prevPhoto(event: Event) {
-    event.stopPropagation();
-    if (this.activeMarker?.place?.photos?.length) {
-      this.activePhotoIndex =
-        (this.activePhotoIndex - 1 + this.activeMarker.place.photos.length) %
-        this.activeMarker.place.photos.length;
-    }
-  }
 
-  nextPhoto(event: Event) {
-    event.stopPropagation();
-    if (this.activeMarker?.place?.photos?.length) {
-      this.activePhotoIndex =
-        (this.activePhotoIndex + 1) % this.activeMarker.place.photos.length;
+  onPlaceSelect(place: any) {
+    this.selectedPlace = place;
+    this.selectedPlaceImages = place.images || place.photos || [];
+    if (place.latitude && place.longitude) {
+      const marker = {
+        lat: Number(place.latitude),
+        lng: Number(place.longitude),
+        label: place.accommodation || place.restaurant || place.activity || place.displayName?.text || '',
+        place: { ...place }
+      };
+      this.markers = [marker];
+      this.mapLocation = { lat: marker.lat, lng: marker.lng };
+      setTimeout(() => {
+        const index = this.markers.findIndex(m => m.lat === marker.lat && m.lng === marker.lng);
+        if (this.mapComponent && this.mapComponent.openInfoWindow) {
+          this.mapComponent.openInfoWindow(index, marker);
+        }
+      });
     }
   }
 
   getPhotoUrl(photo: any): string {
-    const cleanPhoto = photo.replace(/^"+|"+$/g, '');
+    let cleanPhoto = photo.replace(/^"+|"+$/g, '');
     return `https://places.googleapis.com/v1/${cleanPhoto}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}`;
   }
 }
