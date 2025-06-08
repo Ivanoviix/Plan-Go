@@ -26,6 +26,43 @@ import os
 # Create your views here.
 PLACES_API_KEY = settings.API_KEY
 
+# GENERAL DATA
+
+accommodation_types = [
+    'lodging', 'hotel', 'motel', 'resort_hotel', 'hostel', 'bed_and_breakfast',
+    'guest_house', 'campground', 'mobile_home_park', 'cottage', 'extended_stay_hotel',
+    'farmstay', 'budget_japanese_inn', 'japanese_inn', 'inn', 'private_guest_room', 'rv_park'
+]
+
+restaurant_types = [
+    'restaurant', 'bar', 'cafe', 'bakery', 'bagel_shop', 'bar_and_grill', 'barbecue_restaurant',
+    'buffet_restaurant', 'brunch_restaurant', 'breakfast_restaurant', 'hamburger_restaurant',
+    'pub', 'fine_dining_restaurant', 'fast_food_restaurant', 'food_court', 'meal_takeaway',
+    'meal_delivery', 'deli', 'confectionery', 'candy_store', 'chocolate_shop', 'chocolate_factory',
+    'ice_cream_shop', 'dessert_shop', 'dessert_restaurant', 'donut_shop', 'cafeteria', 'coffee_shop',
+    'juice_shop', 'wine_bar', 'sushi_restaurant', 'pizza_restaurant', 'mexican_restaurant',
+    'italian_restaurant', 'indian_restaurant', 'chinese_restaurant', 'japanese_restaurant',
+    'korean_restaurant', 'thai_restaurant', 'greek_restaurant', 'french_restaurant',
+    'spanish_restaurant', 'american_restaurant', 'asian_restaurant', 'african_restaurant',
+    'brazilian_restaurant', 'lebanese_restaurant', 'middle_eastern_restaurant',
+    'mediterranean_restaurant', 'vegan_restaurant', 'vegetarian_restaurant', 'afghani_restaurant',
+    'acai_shop', 'cat_cafe', 'dog_cafe', 'shopping_mail',
+]
+
+activity_types = [
+    'tourist_attraction', 'point_of_interest', 'museum', 'art_gallery', 'zoo', 'aquarium', 'park',
+    'farm', 'national_park', 'state_park', 'botanical_garden', 'water_park', 'wildlife_park',
+    'wildlife_refuge', 'amusement_park', 'amusement_center', 'roller_coaster', 'ferris_wheel',
+    'hiking_area', 'camping_cabin', 'playground', 'bowling_alley', 'casino', 'movie_theater',
+    'concert_hall', 'theater', 'opera_house', 'philharmonic_hall', 'planetarium', 'marina',
+    'picnic_ground', 'off_roading_area', 'adventure_sports_center', 'childrens_camp',
+    'community_center', 'visitor_center', 'event_venue', 'wedding_venue', 'monument',
+    'historical_place', 'historical_landmark', 'cultural_center', 'cultural_landmark',
+    'religious_site', 'church', 'synagogue', 'mosque', 'hindu_temple', 'library', 'art_studio',
+    'dance_hall', 'comedy_club', 'karaoke', 'video_arcade', 'internet_cafe', 'banquet_hall',
+    'auditorium'
+]
+
 # ACCOMMODATION
 def get_accommodations_from_destination(request, destination_id):
     accommodations = Accommodation.objects.filter(destination_id=destination_id)
@@ -236,41 +273,6 @@ def create_saved_place_with_images(request):
 @permission_classes([IsAuthenticated])
 def get_saved_places_by_category(request, user_id):
     
-    accommodation_types = [
-        'lodging', 'hotel', 'motel', 'resort_hotel', 'hostel', 'bed_and_breakfast',
-        'guest_house', 'campground', 'mobile_home_park', 'cottage', 'extended_stay_hotel',
-        'farmstay', 'budget_japanese_inn', 'japanese_inn', 'inn', 'private_guest_room', 'rv_park'
-    ]
-
-    restaurant_types = [
-        'restaurant', 'bar', 'cafe', 'bakery', 'bagel_shop', 'bar_and_grill', 'barbecue_restaurant',
-        'buffet_restaurant', 'brunch_restaurant', 'breakfast_restaurant', 'hamburger_restaurant',
-        'pub', 'fine_dining_restaurant', 'fast_food_restaurant', 'food_court', 'meal_takeaway',
-        'meal_delivery', 'deli', 'confectionery', 'candy_store', 'chocolate_shop', 'chocolate_factory',
-        'ice_cream_shop', 'dessert_shop', 'dessert_restaurant', 'donut_shop', 'cafeteria', 'coffee_shop',
-        'juice_shop', 'wine_bar', 'sushi_restaurant', 'pizza_restaurant', 'mexican_restaurant',
-        'italian_restaurant', 'indian_restaurant', 'chinese_restaurant', 'japanese_restaurant',
-        'korean_restaurant', 'thai_restaurant', 'greek_restaurant', 'french_restaurant',
-        'spanish_restaurant', 'american_restaurant', 'asian_restaurant', 'african_restaurant',
-        'brazilian_restaurant', 'lebanese_restaurant', 'middle_eastern_restaurant',
-        'mediterranean_restaurant', 'vegan_restaurant', 'vegetarian_restaurant', 'afghani_restaurant',
-        'acai_shop', 'cat_cafe', 'dog_cafe'
-    ]
-
-    activity_types = [
-        'tourist_attraction', 'point_of_interest', 'museum', 'art_gallery', 'zoo', 'aquarium', 'park',
-        'farm', 'national_park', 'state_park', 'botanical_garden', 'water_park', 'wildlife_park',
-        'wildlife_refuge', 'amusement_park', 'amusement_center', 'roller_coaster', 'ferris_wheel',
-        'hiking_area', 'camping_cabin', 'playground', 'bowling_alley', 'casino', 'movie_theater',
-        'concert_hall', 'theater', 'opera_house', 'philharmonic_hall', 'planetarium', 'marina',
-        'picnic_ground', 'off_roading_area', 'adventure_sports_center', 'childrens_camp',
-        'community_center', 'visitor_center', 'event_venue', 'wedding_venue', 'monument',
-        'historical_place', 'historical_landmark', 'cultural_center', 'cultural_landmark',
-        'religious_site', 'church', 'synagogue', 'mosque', 'hindu_temple', 'library', 'art_studio',
-        'dance_hall', 'comedy_club', 'karaoke', 'video_arcade', 'internet_cafe', 'banquet_hall',
-        'auditorium'
-    ]
-    
     saved_places = SavedPlace.objects.filter(user_id=user_id)
     accommodations = []
     restaurants = []
@@ -298,11 +300,7 @@ def get_saved_places_by_category(request, user_id):
     
 # SAVED PLACES - Alojamientos
 def get_saved_accommodations(request, user_id):
-    accommodation_types = [
-        'lodging', 'hotel', 'motel', 'resort_hotel', 'hostel', 'bed_and_breakfast',
-        'guest_house', 'campground', 'mobile_home_park', 'cottage', 'extended_stay_hotel',
-        'farmstay', 'budget_japanese_inn', 'japanese_inn', 'inn', 'private_guest_room', 'rv_park'
-    ]
+
     saved_places = SavedPlace.objects.filter(user_id=user_id, place_type__in=accommodation_types)
     data = []
     for place in saved_places:
@@ -317,20 +315,7 @@ def get_saved_accommodations(request, user_id):
 
 # SAVED PLACES - Restauración / Gastronomía
 def get_saved_restaurants(request, user_id):
-    restaurant_types = [
-        'restaurant', 'bar', 'cafe', 'bakery', 'bagel_shop', 'bar_and_grill', 'barbecue_restaurant',
-        'buffet_restaurant', 'brunch_restaurant', 'breakfast_restaurant', 'burger_restaurant',
-        'hamburger_restaurant', 'pub', 'fine_dining_restaurant', 'fast_food_restaurant', 'food_court',
-        'meal_takeaway', 'meal_delivery', 'deli', 'confectionery', 'candy_store', 'chocolate_shop',
-        'chocolate_factory', 'ice_cream_shop', 'dessert_shop', 'dessert_restaurant', 'donut_shop',
-        'cafeteria', 'coffee_shop', 'juice_shop', 'wine_bar', 'sushi_restaurant', 'pizza_restaurant',
-        'mexican_restaurant', 'italian_restaurant', 'indian_restaurant', 'chinese_restaurant',
-        'japanese_restaurant', 'korean_restaurant', 'thai_restaurant', 'greek_restaurant',
-        'french_restaurant', 'spanish_restaurant', 'american_restaurant', 'asian_restaurant',
-        'african_restaurant', 'brazilian_restaurant', 'lebanese_restaurant', 'middle_eastern_restaurant',
-        'mediterranean_restaurant', 'vegan_restaurant', 'vegetarian_restaurant', 'afghani_restaurant',
-        'acai_shop', 'cat_cafe', 'dog_cafe'
-    ]
+
     saved_places = SavedPlace.objects.filter(user_id=user_id, place_type__in=restaurant_types)
     data = []
     for place in saved_places:
@@ -345,19 +330,7 @@ def get_saved_restaurants(request, user_id):
 
 # SAVED PLACES - Actividades / Turismo
 def get_saved_activities(request, user_id):
-    activity_types = [
-        'tourist_attraction', 'point_of_interest', 'museum', 'art_gallery', 'zoo', 'aquarium', 'park',
-        'farm', 'national_park', 'state_park', 'botanical_garden', 'water_park', 'wildlife_park',
-        'wildlife_refuge', 'amusement_park', 'amusement_center', 'roller_coaster', 'ferris_wheel',
-        'hiking_area', 'camping_cabin', 'playground', 'bowling_alley', 'casino', 'movie_theater',
-        'concert_hall', 'theater', 'opera_house', 'philharmonic_hall', 'planetarium', 'marina',
-        'picnic_ground', 'off_roading_area', 'adventure_sports_center', 'childrens_camp',
-        'community_center', 'visitor_center', 'event_venue', 'wedding_venue', 'monument',
-        'historical_place', 'historical_landmark', 'cultural_center', 'cultural_landmark',
-        'religious_site', 'church', 'synagogue', 'mosque', 'hindu_temple', 'library', 'art_studio',
-        'dance_hall', 'comedy_club', 'karaoke', 'video_arcade', 'internet_cafe', 'banquet_hall',
-        'auditorium'
-    ]
+    
     saved_places = SavedPlace.objects.filter(user_id=user_id, place_type__in=activity_types)
     data = []
     for place in saved_places:
@@ -368,8 +341,6 @@ def get_saved_activities(request, user_id):
             'images': images_data
         })
     return JsonResponse({'saved_activities': data}, safe=False)
-
-
 
 
 # API GOOGLE PLACES
