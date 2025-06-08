@@ -6,26 +6,16 @@
     <div class="flex flex-grow">
         <!-- Places Section -->
         <section class="flex-grow p-8 pt-5 flex flex-col">
-            <app-back-button></app-back-button>
             <!-- Sticky Header -->
-            <div class="sticky top-0 bg-white z-10 pb-3 h-28">
-                <div class="header w-full h-20 flex flex-row justify-between items-center">
-                    <div class="flex flex-col">
-                        <div *ngFor="let destination of destinations" class="destination-item">
-                            <h1 class="text-2xl font-bold">{{ destination.city_name }}</h1>
-                            <time class="text-xl" [attr.datetime]="destination.start_date">{{ destination.start_date |
-                                date:'dd-MMMM-yyyy' }}</time>
-                            -
-                            <time class="text-xl" [attr.datetime]="destination.end_date">{{ destination.end_date |
-                                date:'dd-MMMM-yyyy' }}</time>
-                        </div>
-                    </div>
-                    <app-participants-form [destination]="selectedDestinationId ?? 0"></app-participants-form>
+            <div class="itineraries-header w-auto h-20 flex flex-row justify-between items-center">
+                <div class="w-[50%]">
+                    <h1 class="text-4xl font-bold text-gray-800">Lugares guardados</h1>
+                    <hr class="flex-grow border-black border-[1px] mt-4">
                 </div>
             </div>
 
             <!-- Accordion Sections -->
-            <div class="accordion rounded-3xl border-gray-600 flex-grow">
+            <div class="accordion rounded-3xl border-gray-600 flex-grow mt-8">
                 <div *ngFor="let section of sections; let i = index" class="accordion-item">
                     <!-- Botón para abrir/cerrar la sección -->
                     <button
