@@ -88,12 +88,7 @@ export class HeaderComponent {
     this.router.navigate(["/itineraries"])
   }
 
-  /* goToSavedPlaces() {
-    
+  goToSavedPlaces() {
+    this.router.navigate(['/saved/places']);
   }
-
-  goToprofile() {
-
-  } */
-
 }

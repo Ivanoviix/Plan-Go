@@ -7,6 +7,7 @@ import { ExpensesComponent } from './expenses/expenses.component';
 import { ParticipantsComponent } from './participants/participants.component';
 import { SearchLocationsComponent } from './search-locations/search-locations.component';
 import { SearchPlacesComponent } from './search-places/search-places.component';
+import { SavedPlacesComponent } from './saved-places/saved-places.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, data: { animation: 'LoginPage' } },
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'destinations/:itineraryId', component: DestinationsComponent },
   { path: 'search/places/:itineraryId', component: SearchLocationsComponent },
   { path: 'search/places', component: SearchPlacesComponent },
+  { path: 'saved/places', component: SavedPlacesComponent },
   { path: 'expenses', component: ExpensesComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' },
