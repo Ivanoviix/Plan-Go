@@ -18,6 +18,7 @@ export class CounterDatesComponent {
   @Input() itineraryTotalDays!: number;
   @Input() otherOccupiedDays: number = 0;
   @Input() destinationStartDate!: string;
+  @Output() maxDaysReached = new EventEmitter<void>();
   @Output() fechasConfirmadas = new EventEmitter<{ idDestino: number; fechaInicio: string; fechaFin: string }>();
   @Output() reloadDestination = new EventEmitter<number>();
   count: number = 1;
@@ -76,6 +77,8 @@ export class CounterDatesComponent {
           next: () => this.confirmarFechas(),
           error: (err) => console.error('Error actualizando end_date:', err)
         });
+    } else {
+      this.maxDaysReached.emit();
     }
   }
 
@@ -88,12 +91,10 @@ export class CounterDatesComponent {
         .subscribe({
           next: () => {
             this.confirmarFechas();
-            // this.reloadDestination.emit(this.idDestino); // Quita o comenta esta línea
           },
           error: (err) => console.error('Error actualizando end_date:', err)
         });
-    }
+    } 
   }
-
 
 }

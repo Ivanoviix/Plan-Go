@@ -12,7 +12,8 @@
         <div class="h-20 flex flex-row justify-between items-center">
           <div class="flex flex-col">
             <h1 class="text-2xl font-bold">{{ selectedItinerary?.itinerary_name }}</h1>
-            <time class="text-xl">{{ selectedItinerary?.start_date | date:'dd-MMMM-yyyy' }} - {{ selectedItinerary?.end_date | date:'dd-MMMM-yyyy' }}</time>
+            <time class="text-xl">{{ selectedItinerary?.start_date | date:'dd-MMMM-yyyy' }} - {{
+              selectedItinerary?.end_date | date:'dd-MMMM-yyyy' }}</time>
           </div>
           <div class="flex flex-row items-center">
             <div class="h-10 w-px bg-gray-700 mx-4"></div>
@@ -41,29 +42,29 @@
           <h1 class="text-4xl font-bold">{{ formatCountries() }}</h1>
         </div>
       </div>
-        <!-- Input de ciudades -->
-        <div class="relative w-full">
-          <input
-            type="text"
-            [(ngModel)]="searchText"
-            [disabled]="getOccupiedDays() >= itineraryTotalDays"
-            (input)="onCitySearch()"
-            placeholder="Buscar ciudad..."
-            class="w-full h-12 border rounded-full bg-white text-black border-gray-800 p-2" />
-
-          <!-- Dropdown de ciudades -->
-          <ul *ngIf="cities.length > 0"
-              class="absolute left-0 top-[4rem] w-full max-h-[25rem] h-auto mt-0 border rounded bg-white text-black border-gray-800 overflow-y-auto z-50 shadow-lg">
-            <li
-              *ngFor="let city of cities"
-              class="p-2 hover:bg-gray-100 cursor-pointer"
-              (click)="onCitySelect(city)">
-              {{ city.adminName1 ? city.adminName1 + ', ' : '' }}{{ city.name }}
-            </li>
-          </ul>
+      <!-- Input de ciudades -->
+      <div class="relative w-full h-16">
+        <input type="text" [(ngModel)]="searchText" [disabled]="getOccupiedDays() >= itineraryTotalDays"
+          (input)="onCitySearch()" (click)="onInputClick()" placeholder="Buscar ciudad..."
+          class="w-full h-12 border rounded-full bg-white text-black border-gray-800 p-2" />
+        <!-- Overlay para capturar el click cuando el input está deshabilitado -->
+        <div *ngIf="getOccupiedDays() >= itineraryTotalDays" (click)="onInputClick()"
+          class="absolute top-0 left-0 w-full h-12 cursor-not-allowed z-20" style="background: transparent;">
         </div>
+        <!-- Dropdown de ciudades -->
+        <ul *ngIf="cities.length > 0"
+          class="absolute left-0 top-[4rem] w-full max-h-[25rem] h-auto mt-0 border rounded bg-white text-black border-gray-800 overflow-y-auto z-50 shadow-lg">
+          <li *ngFor="let city of cities" class="p-2 hover:bg-gray-100 cursor-pointer" (click)="onCitySelect(city)">
+            {{ city.adminName1 ? city.adminName1 + ', ' : '' }}{{ city.name }}
+          </li>
+        </ul>
+        <div *ngIf="showMaxDaysError" class="absolute left-0 bottom-0 w-full mt-2 text-red-500 text-xs">
+          {{ ValidatorMessages['maxDestinations'] }}
+        </div>
+      </div>
       <!-- Sticky Icons Section -->
-      <div class="sticky top-[6rem] mt-6 bg-white z-10 border-y-2 border-gray-700 w-full flex justify-center items-center">
+      <div
+        class="sticky top-[6rem] mt-2 bg-white z-10 border-y-2 border-gray-700 w-full flex justify-center items-center">
         <div class="flex flex-row justify-between w-[90%] items-center">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="h-8 w-8">
@@ -101,32 +102,30 @@
 
       <!-- Destinations List -->
       <div *ngIf="destinations.length > 0" class="container-destinations flex-grow overflow-y-auto">
-        <div
-          *ngFor="let destination of destinations"
+        <div *ngFor="let destination of destinations"
           class="flex flex-row mt-4 items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300"
           style="cursor:pointer;">
           <h3 class="text-lg text-white w-[93px]">{{ destination.city_name }}</h3>
-          <app-day-counter
-            [idDestino]="destination.destination_id"
-            [city]="destination.city_name"
-            [max]="itineraryTotalDays"
-            [startDateStr]="itineraryStartDate"
-            [itineraryStartDate]="itineraryStartDate"
+          <app-day-counter [idDestino]="destination.destination_id" [city]="destination.city_name"
+            [max]="itineraryTotalDays" [startDateStr]="itineraryStartDate" [itineraryStartDate]="itineraryStartDate"
             [itineraryEndDate]="destination.end_date ? (destination.end_date | date:'yyyy-MM-dd') : ''"
             [itineraryTotalDays]="itineraryTotalDays"
             [days]="calculateDays(destination.start_date, destination.end_date)"
             [otherOccupiedDays]="getOtherOccupiedDays(destination.destination_id)"
-            (fechasConfirmadas)="guardarFechas($event)"
+            (maxDaysReached)="onMaxDaysReached(destination.destination_id)" (fechasConfirmadas)="guardarFechas($event)"
             (reloadDestination)="reloadDestination($event)">
           </app-day-counter>
           <button (click)="goPlaces(destination.destination_id)">
-            <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-6">{{ summary[destination.destination_id].accommodations_count }}</h1>
+            <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-6">{{
+              summary[destination.destination_id].accommodations_count }}</h1>
           </button>
           <button (click)="goPlaces(destination.destination_id)">
-            <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">{{ summary[destination.destination_id].restaurants_count }}</h1>
+            <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">{{
+              summary[destination.destination_id].restaurants_count }}</h1>
           </button>
           <button (click)="goPlaces(destination.destination_id)">
-            <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">{{ summary[destination.destination_id].activities_count }}</h1>
+            <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">{{
+              summary[destination.destination_id].activities_count }}</h1>
           </button>
           <div class="rounded-full w-20 h-12 bg-white text-center flex flex-row justify-center items-center">{{
             summary[destination.destination_id].total_expenses }}€</div>
