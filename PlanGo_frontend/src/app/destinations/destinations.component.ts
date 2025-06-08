@@ -120,7 +120,7 @@ export class DestinationsComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.toast.showErrorToast(500, 'Error al actualizar las fechas del destino', false);
+        this.toast.showErrorToast('Error al actualizar las fechas del destino', false);
       }
     });
   }

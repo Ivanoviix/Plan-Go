@@ -64,16 +64,25 @@
                                         {{ place.formattedAddress }}
                                     </div>
                                     <div class="flex flex-row justify-end w-full mt-auto pt-4">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        <svg *ngIf="!place.isSaveByPlaces"
+                                            (click)="savePlaces(place)"
                                             stroke-width="1.5" stroke="currentColor"
-                                            class="size-6 hover:stroke-[--primary-color]"
                                             [@hoverAnimation]="buttonStates[place.id + '-addPlaces'] || 'default'"
+                                            (mouseleave)="setHoverState(place.id + '-addPlaces', 'default')"
                                             (mouseenter)="setHoverState(place.id + '-addPlaces', 'hover')"
-                                            (mouseleave)="setHoverState(place.id + '-addPlaces', 'default')">
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            class="size-6 hover:stroke-[--primary-color]">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                                         </svg>
-                                        <svg *ngIf="!place.isSave" (click)="savePlace(place)"
+                                        <svg *ngIf="place.isSaveByPlaces" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                            class="size-6 ml-2 text-green-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+                                        </svg>
+                                        <svg *ngIf="!place.isSaveByPlace" 
+                                            (click)="savePlace(place)"
                                             [@hoverAnimation]="buttonStates[place.id + '-savePlaces'] || 'default'"
                                             (mouseenter)="setHoverState(place.id + '-savePlaces', 'hover')"
                                             (mouseleave)="setHoverState(place.id + '-savePlaces', 'default')"
@@ -83,11 +92,11 @@
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                         </svg>
-                                        <svg *ngIf="place.isSave" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                            class="size-6 ml-2 text-green-600">
+                                        <svg *ngIf="place.isSaveByPlace" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                            class="size-6 ml-2 text-green-500">
                                             <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M4.5 12.75l6 6 9-13.5" />
+                                                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                         </svg>
                                     </div>
                                 </div>

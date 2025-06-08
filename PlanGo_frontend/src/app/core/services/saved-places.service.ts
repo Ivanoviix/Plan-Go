@@ -5,7 +5,7 @@ import { map, Observable, throwError } from 'rxjs';
 import { globals } from '../globals';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class SavedPlacesService {
     private csrfToken: string = '';
@@ -13,26 +13,36 @@ export class SavedPlacesService {
     constructor(
         private httpClient: HttpClient,
         @Inject(PLATFORM_ID) private platformId: Object
-    ) {}
+    ) { }
 
-  getSavedPlacesByCategory(userId: number): Observable<any> {
-    let token = '';
-    let headers = this.createHeaders();
-    if (isPlatformBrowser(this.platformId)) {
-      token = localStorage.getItem(globals.keys.accessToken) || '';
-    }
-    return this.httpClient.get(`${globals.apiBaseUrl}/places/get_saved_places_by_category/${userId}/`, { headers });
-  }
-
-  private createHeaders(): HttpHeaders {
+    getSavedPlacesByCategory(userId: number): Observable<any> {
         let token = '';
+        let headers = this.createHeaders();
         if (isPlatformBrowser(this.platformId)) {
             token = localStorage.getItem(globals.keys.accessToken) || '';
+        }
+        return this.httpClient.get(`${globals.apiBaseUrl}/places/get_saved_places_by_category/${userId}/`, { headers });
+    }
+
+    saveSavedPlaces(payload: any): Observable<any> {
+        let headers = this.createHeaders();
+        return this.httpClient.post(`${globals.apiBaseUrl}/places/create_saved_place/`, payload, { headers, withCredentials: true });
+    }
+
+
+    private createHeaders(): HttpHeaders {
+        let token = '';
+        let csrfToken = '';
+        if (isPlatformBrowser(this.platformId)) {
+            token = localStorage.getItem(globals.keys.accessToken) || '';
+            // Lee la cookie csrftoken directamente
+            const match = document.cookie.match(/csrftoken=([^;]+)/);
+            csrfToken = match ? match[1] : '';
         }
 
         return new HttpHeaders({
             Authorization: `Bearer ${token}`,
-            'X-CSRFToken': this.csrfToken,
+            'X-CSRFToken': csrfToken,
             'Content-Type': 'application/json',
         });
     }
