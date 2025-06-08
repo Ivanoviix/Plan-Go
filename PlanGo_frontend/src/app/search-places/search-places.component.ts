@@ -16,7 +16,7 @@ import { BackButtonComponent } from '../core/back-button/back-button.component';
 import { ViewChild } from '@angular/core';
 import { ToastModule } from "primeng/toast";
 import { ItinerariesService } from "../core/services/itineraries.service";
-
+import { SavedPlacesService } from "../core/services/saved-places.service";
 
 @Component({
   selector: 'app-search-places',
@@ -58,6 +58,8 @@ export class SearchPlacesComponent {
   mapLocation: google.maps.LatLngLiteral = { lat: 39.72596642771257, lng: 2.914616467674367 };
   destinations: Destination[] = [];
   svgIcons: SafeHtml[] = [];
+  savedPlaceIdsByPlace: string[] = [];
+  savedPlaceIdsByPlaces: string[] = [];
   sectionOpen = false;
   places: any[] = [];
   googlePlacesApiKey?: string;
@@ -65,6 +67,7 @@ export class SearchPlacesComponent {
   selectedPlace: any = null;
   selectedPlaceImages: any[] = [];
   savedPlaceIds: string[] = [];
+  savedPlaceIds2: string[] = [];
   markers: { lat: number, lng: number, label?: string, place?: any }[] = [];
   sections = [
     { title: 'Alojamientos', isOpen: false },
@@ -83,6 +86,7 @@ export class SearchPlacesComponent {
     private toast: BaseToastService,
     private apiKeyService: ApiKeyService,
     private itinerariesService: ItinerariesService,
+    private savedPlacesService: SavedPlacesService,
   ) {
     let rawIcons = [
       `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="h-8 w-8">
@@ -168,17 +172,23 @@ export class SearchPlacesComponent {
         };
         this.searchPlacesService.googlePlacesSearchNearby(payload).subscribe({
           next: (data: any) => {
+            // Suponiendo que tienes un array this.savedPlaceIds con los IDs guardados
             this.places = (data.places || [])
-              .filter((p: any) => p.photos && p.photos.length > 0);
+              .filter((p: any) => p.photos && p.photos.length > 0)
+              .map((place: any) => ({
+                ...place,
+                isSaveByPlace: this.savedPlaceIdsByPlace.includes(place.id),
+                isSaveByPlaces: this.savedPlaceIdsByPlaces.includes(place.id)
+              }));
           },
           error: (err: any) => {
             this.places = [];
-            this.toast.showErrorToast(500, 'No se pudieron cargar los lugares', false);
+            this.toast.showErrorToast('No se pudieron cargar los lugares', false);
           }
         });
       },
       error: () => {
-        this.toast.showErrorToast(500, 'No se pudo obtener el usuario', false);
+        this.toast.showErrorToast('No se pudo obtener el usuario', false);
       }
     });
   }
@@ -224,47 +234,95 @@ export class SearchPlacesComponent {
 
   savePlace(place: any) {
     if (this.savedPlaceIds.includes(place.id)) {
-      this.toast.showErrorToast(400, 'Este lugar ya ha sido guardado', false);
+      this.toast.showErrorToast('Este lugar ya ha sido guardado', false);
       return;
     }
 
-    let payload = {
-      place_id: place.id,
-      destination: this.currentDestination?.destination_id,
-      name: place.displayName?.text,
-      primary_type: place.primaryType,
-      rating: place.rating,
-      formattedAddress: place.formattedAddress,
-      latitude: place.location?.latitude,
-      longitude: place.location?.longitude,
-      images: (place.photos || []).map((photo: any) => photo.name),
-      isSave: true
-    };
-    let saveObservable;
+    this.itinerariesService.getIdUser().subscribe({
+      next: (userId: number) => {
+        let payload = {
+          user_id: userId,
+          place_id: place.id,
+          destination: this.currentDestination?.destination_id,
+          name: place.displayName?.text,
+          primary_type: place.primaryType,
+          rating: place.rating,
+          formattedAddress: place.formattedAddress,
+          latitude: place.location?.latitude,
+          longitude: place.location?.longitude,
+          images: (place.photos || []).map((photo: any) => photo.name),
+          isSave: true
+        };
+        let saveObservable;
 
-    switch (this.selectedCategory) {
-      case 'Alojamientos':
-        saveObservable = this.searchPlacesService.saveAccommodationWithImages(payload);
-        break;
-      case 'Comer y beber':
-        saveObservable = this.searchPlacesService.saveRestaurantWithImages(payload);
-        break;
-      case 'Cosas que hacer':
-        saveObservable = this.searchPlacesService.saveActivityWithImages(payload);
-        break;
-      default:
-        this.toast.showErrorToast(400, 'Tipo de lugar no soportado', false);
-        return;
+        switch (this.selectedCategory) {
+          case 'Alojamientos':
+            saveObservable = this.searchPlacesService.saveAccommodationWithImages(payload);
+            break;
+          case 'Comer y beber':
+            saveObservable = this.searchPlacesService.saveRestaurantWithImages(payload);
+            break;
+          case 'Cosas que hacer':
+            saveObservable = this.searchPlacesService.saveActivityWithImages(payload);
+            break;
+          default:
+            this.toast.showErrorToast('Tipo de lugar no soportado', false);
+            return;
+        }
+
+        saveObservable.subscribe({
+          next: (res) => {
+            this.savedPlaceIds.push(place.id);
+            place.isSaveByPlace = true;
+            this.toast.showSuccessToast('Lugar guardado correctamente', false);
+          },
+          error: (err) => {
+            this.toast.showErrorToast('Error al guardar el lugar, ya ha sido guardado previamente', false);
+          }
+        });
+      },
+      error: (err: any) => {
+        this.toast.showErrorToast('No se pudo obtener el usuario', false);
+      }
+    });
+  }
+
+  savePlaces(place: any) {
+    if (this.savedPlaceIds2.includes(place.id)) {
+      this.toast.showErrorToast('Este lugar ya ha sido guardado', false);
+      return;
     }
 
-    saveObservable.subscribe({
-      next: (res) => {
-        this.savedPlaceIds.push(place.id);
-        place.isSave = true;
-        this.toast.showSuccessToast('Lugar guardado correctamente', false);
+    this.itinerariesService.getIdUser().subscribe({
+      next: (userId: number) => {
+        let payload = {
+          user_id: userId,
+          place_id: place.id,
+          destination: this.currentDestination?.destination_id,
+          name: place.displayName?.text,
+          primary_type: place.primaryType,
+          rating: place.rating,
+          formattedAddress: place.formattedAddress,
+          latitude: place.location?.latitude,
+          longitude: place.location?.longitude,
+          images: (place.photos || []).map((photo: any) => photo.name),
+          isSave: true
+        };
+
+        this.savedPlacesService.saveSavedPlaces(payload).subscribe({
+          next: (res: any) => {
+            this.savedPlaceIds2.push(place.id);
+            place.isSaveByPlaces = true;
+            this.toast.showSuccessToast('Lugar guardado correctamente', false);
+          },
+          error: (err: any) => {
+            this.toast.showErrorToast('Error al guardar el lugar, ya ha sido guardado previamente', false);
+          }
+        });
       },
-      error: (err) => {
-        this.toast.showErrorToast(500, 'Error al guardar el lugar, ya ha sido guardado previamente', false);
+      error: (err: any) => {
+        this.toast.showErrorToast('No se pudo obtener el usuario', false);
+
       }
     });
   }

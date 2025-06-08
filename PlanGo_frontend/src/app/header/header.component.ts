@@ -77,7 +77,7 @@ export class HeaderComponent {
     if (email) {
       this.authService.resetPassword(email)
         .then(() => this.toast.showSuccessToast('Se ha enviado un correo para restablecer la contraseña', false))
-        .catch(err => this.toast.showErrorToast(500, 'Error al enviar el correo', false));
+        .catch(err => this.toast.showErrorToast('Error al enviar el correo', false));
     }
   }
 

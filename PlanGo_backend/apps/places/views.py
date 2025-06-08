@@ -48,13 +48,13 @@ def create_accommodation_with_images(request):
         place_id = data.get('place_id')
         destination_id = data.get('destination')
         name = data.get('name')
-        primary_type = data.get('primary_type')
+        primary_type = data.get('primary_type') or 'hotel'
         rating = data.get('rating')
         formatted_address = data.get('formattedAddress')
         latitude = data.get('latitude')
         longitude = data.get('longitude')
         images = data.get('images', [])
-        is_save = data.get('isSave', True)
+        is_save = data.get('isSave')
 
         destination = Destination.objects.get(pk=destination_id)
 
@@ -101,13 +101,13 @@ def create_activity_with_images(request):
         place_id = data.get('place_id')
         destination_id = data.get('destination')
         name = data.get('name')
-        primary_type = data.get('primary_type')
+        primary_type = data.get('primary_type') or 'tourist_attraction'
         rating = data.get('rating')
         formatted_address = data.get('formattedAddress')
         latitude = data.get('latitude')
         longitude = data.get('longitude')
         images = data.get('images', [])
-        is_save = data.get('isSave', True)
+        is_save = data.get('isSave')
 
         destination = Destination.objects.get(pk=destination_id)
 
@@ -155,13 +155,13 @@ def create_restaurant_with_images(request):
         place_id = data.get('place_id')
         destination_id = data.get('destination')
         name = data.get('name')
-        primary_type = data.get('primary_type')
+        primary_type = data.get('primary_type') or 'restaurant'
         rating = data.get('rating')
         formatted_address = data.get('formattedAddress')
         latitude = data.get('latitude')
         longitude = data.get('longitude')
         images = data.get('images', [])
-        is_save = data.get('isSave', True)
+        is_save = data.get('isSave')
 
         destination = Destination.objects.get(pk=destination_id)
 
@@ -191,22 +191,25 @@ def create_restaurant_with_images(request):
 @permission_classes([IsAuthenticated])
 def create_saved_place_with_images(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        user_id = data.get('user_id')
-        place_id = data.get('place_id')
-        name = data.get('name')
-        primary_type = data.get('primary_type')
-        rating = data.get('rating')
-        formatted_address = data.get('formattedAddress')
-        latitude = data.get('latitude')
-        longitude = data.get('longitude')
-        isSave = data.get('isSave')
-        images = data.get('images', [])
+        user_id = request.data.get('user_id')
+        place_id = request.data.get('place_id')
+        name = request.data.get('name')
+        primary_type = request.data.get('primary_type')
+        rating = request.data.get('rating')
+        formatted_address = request.data.get('formattedAddress')
+        latitude = request.data.get('latitude')
+        longitude = request.data.get('longitude')
+        isSave = request.data.get('isSave')
+        images = request.data.get('images', [])
 
         try:
-            user = User.object.get(pk=user_id)
+            user = User.objects.get(pk=user_id)
         except:
             return JsonResponse({'error' : 'Usuario no encontrado'}, status=404)
+        
+        if SavedPlace.objects.filter(user=user, place_id=place_id).exists():
+            return JsonResponse({'error': 'Este lugar ya está guardado'}, status=400)
+        
         saved_place = SavedPlace.objects.create(
             user=user,
             place_id=place_id,
@@ -220,7 +223,7 @@ def create_saved_place_with_images(request):
         )
 
         for uri in images:
-            SavedPlace.objects.create(
+            SavedPlaceImage.objects.create(
                 saved_place=saved_place,
                 uri=uri
             )
@@ -427,8 +430,9 @@ def google_places_search_nearby(request):
         saved_place_ids = set(SavedPlace.objects.filter(user_id=user_id).values_list('place_id', flat=True))
 
     for place in data.get('places', []):
-        place['isSave'] = place.get('id') in saved_place_ids
-
+        place_id = str(place.get('id'))
+        place['isSave'] = place_id in set(str(pid) for pid in saved_place_ids)
+    print("saved_place_ids:", saved_place_ids)
     return JsonResponse(data, safe=False)
 
 
@@ -455,12 +459,13 @@ def get_all_categories_from_destination(request):
             images_data = [img.uri for img in images]
             accommodations_data.append({
                 'accommodation': alj.name,
-                'type': alj.accomodation_type if alj.accomodation_type is not None else 'hotel',
+                'accommodaton_type': alj.accomodation_type,
                 'address': alj.address,
                 'rating': alj.rating if alj.rating is not None else 3.0,
                 'latitude': alj.latitude,
                 'longitude': alj.longitude,
                 'images': images_data,
+                'isSave': alj.isSave,
             })
             
         # RESTAURANTES     
@@ -471,12 +476,13 @@ def get_all_categories_from_destination(request):
             images_data = [img.uri for img in images]
             restaurants_data.append({
                 'restaurant': rest.name,
-                'type': rest.restaurant_type if rest.restaurant_type is not None else 'restaurant',
+                'restaurant_type': rest.restaurant_type,
                 'rating': rest.rating if rest.rating is not None else 3.0,
                 'address': rest.address,
                 'latitude': rest.latitude,
                 'longitude': rest.longitude,
                 'images': images_data,
+                'isSave': rest.isSave,
             })
 
         # ACTIVIDADES
@@ -487,12 +493,13 @@ def get_all_categories_from_destination(request):
             images_data = [img.uri for img in images]
             activities_data.append({
                 'activity': act.name,
-                'type': act.activity_type if act.activity_type is not None else 'tourist_attraction',
+                'activity_type': act.activity_type,
                 'rating': act.rating if act.rating is not None else 3.0,
                 'address': act.address,
                 'latitude': act.latitude,
                 'longitude': act.longitude,
                 'images': images_data,
+                'isSave': act.isSave,
             })
             
         return JsonResponse({

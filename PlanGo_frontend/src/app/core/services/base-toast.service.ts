@@ -8,12 +8,12 @@ export class BaseToastService {
 
   constructor(private messageService: MessageService) {}
 
-  public showErrorToast(errorCode: number, summary: string, sticky: boolean = false) {
-    this.showToast("error", `Error ${ errorCode }`, summary, sticky);
+  public showErrorToast( summary: string, sticky: boolean = false) {
+    this.showToast("error", "", summary, sticky);
   }
 
   public showSuccessToast(summary: string, sticky: boolean = false) {
-    this.showToast("success", "Completado!", summary, sticky);
+    this.showToast("success", "", summary, sticky);
   }
 
   public showSuccessToastWithoutComplete(summary: string, sticky: boolean = false) {
