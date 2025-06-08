@@ -34,6 +34,7 @@ class SavedPlace(models.Model):
         ('cafe', 'Cafe'),
         ('bakery', 'Bakery'),
         ('bagel_shop', 'Bagel Shop'),
+        ('shopping_mall', 'Shopping Mall'),
         ('bar_and_grill', 'Bar and Grill'),
         ('barbecue_restaurant', 'Barbecue Restaurant'),
         ('buffet_restaurant', 'Buffet Restaurant'),

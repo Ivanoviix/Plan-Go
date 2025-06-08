@@ -21,7 +21,7 @@ export class SavedPlacesService {
         if (isPlatformBrowser(this.platformId)) {
             token = localStorage.getItem(globals.keys.accessToken) || '';
         }
-        return this.httpClient.get(`${globals.apiBaseUrl}/places/get_saved_places_by_category/${userId}/`, { headers });
+        return this.httpClient.get(`${globals.apiBaseUrl}/places/saved-places/by-category/${userId}/`, { headers });
     }
 
     saveSavedPlaces(payload: any): Observable<any> {

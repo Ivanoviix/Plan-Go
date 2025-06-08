@@ -254,7 +254,7 @@ def get_saved_places_by_category(request, user_id):
         'spanish_restaurant', 'american_restaurant', 'asian_restaurant', 'african_restaurant',
         'brazilian_restaurant', 'lebanese_restaurant', 'middle_eastern_restaurant',
         'mediterranean_restaurant', 'vegan_restaurant', 'vegetarian_restaurant', 'afghani_restaurant',
-        'acai_shop', 'cat_cafe', 'dog_cafe'
+        'acai_shop', 'cat_cafe', 'dog_cafe','shopping_mall',
     ]
 
     activity_types = [

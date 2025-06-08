@@ -5,13 +5,13 @@ import { HeaderComponent } from '../header/header.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ParticipantsComponent } from '../participants/participants.component';
 import { FormsModule } from '@angular/forms';
-import { DestinationService } from '../core/services/destinations.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Destination } from '../destinations/interfaces/destinations.interface';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { BackButtonComponent } from '../core/back-button/back-button.component';
 import { SearchLocationService } from '../core/services/search-location.service';
 import { ApiKeyService } from '../core/services/api-key.service';
+import { SavedPlacesService } from '../core/services/saved-places.service';
+import { ItinerariesService } from '../core/services/itineraries.service';
 
 @Component({
   selector: 'app-saved-places',
@@ -31,9 +31,7 @@ import { ApiKeyService } from '../core/services/api-key.service';
 export class SavedPlacesComponent {
   @ViewChild('participants') participantsComponent!: ParticipantsComponent;
   @ViewChild('mapRef') mapComponent!: MapComponent;
-  @Input() destinations: Destination[] = [];
-  @Input() selectedDestinationId: number | null = null;
-  participantName: string = '';
+  userId: number = 0;
   selectedSection: string = '';
   currentDestination!: Destination;
   selectedDestination: Destination[] = [];
@@ -42,7 +40,6 @@ export class SavedPlacesComponent {
   activities: any[] = [];
   svgIcons: SafeHtml[] = [];
   errorMessage: string = '';
-  activeMarker: any = null;
   activePhotoIndex: number = 0;
   selectedPlaceImages: any[] = [];
   googlePlacesApiKey?: string;
@@ -51,18 +48,17 @@ export class SavedPlacesComponent {
   mapLocation: any = { lat: 39.720007, lng: 2.910419 }; // o el centro por defecto
 
   sections = [
-    { title: 'Alojamientos', isOpen: false, onEdit: () => this.editCategory('Accommodation', this.currentDestination) },
-    { title: 'Comer y beber', isOpen: false, onEdit: () => this.editCategory('Comer y beber', this.currentDestination) },
-    { title: 'Cosas que hacer', isOpen: false, onEdit: () => this.editCategory('Accommodation', this.currentDestination) },
+    { title: 'Alojamientos', isOpen: false },
+    { title: 'Comer y beber', isOpen: false },
+    { title: 'Cosas que hacer', isOpen: false },
   ];
   constructor(
     private sanitizer: DomSanitizer,
-    private destinationService: DestinationService,
     private searchLocationService: SearchLocationService,
-    private route: ActivatedRoute,
-    private router: Router,
+    private itinerariesService: ItinerariesService,
     private toast: BaseToastService,
-    private apiKeyService: ApiKeyService
+    private apiKeyService: ApiKeyService,
+    private savedPlacesService: SavedPlacesService,
   ) {
 
     const rawIcons = [
@@ -102,7 +98,6 @@ export class SavedPlacesComponent {
     }
   }
 
-
   ngOnInit(): void {
     this.apiKeyService.getGooglePlacesApiKey().subscribe({
       next: (data: any) => {
@@ -112,33 +107,40 @@ export class SavedPlacesComponent {
         console.log("No ha recibido la KEY de Google Places API.")
       }
     });
-    this.route.paramMap.subscribe(params => {
-      const itineraryId = Number(params.get('itineraryId'));
-      this.route.queryParamMap.subscribe(queryParams => {
-        const destinationId = Number(queryParams.get('destinationId'));
-        this.selectedDestinationId = destinationId;
 
-        console.log('Destino seleccionado:', this.selectedDestinationId);
+    this.itinerariesService.getIdUser().subscribe({
+      next: (userId: number) => {
+        this.userId = userId;
+        this.loadSavedPlaces();
+      },
+      error: (err: any) => {
+        console.error('No se pudo obtener el userId', err);
+      }
+    });
+  }
 
-        if (itineraryId) {
-          this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
-            next: (data: any) => {
-              const allDestinations = data['User destinations'] || [];
-              this.destinations = allDestinations.filter((dest: Destination) => dest.destination_id === destinationId);
-              if (this.destinations.length > 0) {
-                this.currentDestination = this.destinations[0];
-                console.log('Current Destination asignado:', this.currentDestination);
-                this.onDestinationSelect(this.currentDestination)
-              } else {
-                console.warn('No se encontró un destino con el id', destinationId);
-              }
-            },
-            error: (err) => {
-              console.error('Error al obtener destinos:', err);
-            }
-          });
-        }
-      });
+  loadSavedPlaces() {
+    this.savedPlacesService.getSavedPlacesByCategory(this.userId).subscribe({
+      next: (data) => {
+        this.accommodations = (data.accommodations || []).map((acc: any) => ({
+          ...acc.saved_place,
+          images: acc.images,
+          activePhotoIndex: 0
+        }));
+        this.restaurants = (data.restaurants || []).map((rest: any) => ({
+          ...rest.saved_place,
+          images: rest.images,
+          activePhotoIndex: 0
+        }));
+        this.activities = (data.activities || []).map((act: any) => ({
+          ...act.saved_place,
+          images: act.images,
+          activePhotoIndex: 0
+        }));
+      },
+      error: (err) => {
+        this.toast.showErrorToastWithoutComplete('No se pudieron cargar los lugares guardados', false)
+      }
     });
   }
 
@@ -147,52 +149,6 @@ export class SavedPlacesComponent {
     this.mapLocation = {
       lat: Number(destination.latitude),
       lng: Number(destination.longitude),
-    }
-  }
-
-  editCategory(category: string, destination: Destination): void {
-    console.log('Editando categoría:', category, 'con destino:', destination);
-
-    if (category === 'Alojamientos' || category === 'Comer y beber' || category === 'Cosas que hacer') {
-      const payload = {
-        latitude: Number(destination.latitude),
-        longitude: Number(destination.longitude),
-        radius: 20000, 
-        category: category,
-      };
-
-      this.destinationService.googlePlacesSearchNearby(payload).subscribe({
-        next: (result) => {
-          console.log('Resultados:', result);
-          this.router.navigate(['/search/places'], {
-            queryParams: { category, destinationId: destination.destination_id }
-          });
-        },
-        error: (err) => {
-          console.error('Error buscando la categoría:', err);
-        },
-      });
-    } else {
-      console.warn('Categoría no soportada:', category);
-    }
-  }
-
-  callAddParticipant(): void {
-    if (!this.selectedDestinationId) {
-      console.error('No se ha seleccionado un destino válido.');
-      return;
-    }
-
-    if (this.participantsComponent) {
-      console.log('Llamando a addParticipantWithDetails con:', {
-        participantName: this.participantName,
-        destinationId: this.selectedDestinationId,
-      });
-      this.toast.showSuccessToast('Se han añadido el participante', true);
-      this.participantsComponent.addParticipantWithDetails(this.participantName, this.selectedDestinationId);
-
-    } else {
-      console.error('ParticipantsComponent no está inicializado.');
     }
   }
 
