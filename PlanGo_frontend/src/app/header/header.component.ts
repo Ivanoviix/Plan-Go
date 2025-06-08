@@ -6,12 +6,15 @@ import { UserService } from '../core/services/user.service';
 import { ItinerariesService } from '../core/services/itineraries.service';
 import { getAuth, signOut } from 'firebase/auth';
 import { AuthService } from '../auth/auth.service';
+import { BaseToastService } from '../core/services/base-toast.service';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
     CommonModule,
+    ToastModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -45,6 +48,7 @@ export class HeaderComponent {
     private userService: UserService,
     private itinerariesService: ItinerariesService,
     public authService: AuthService,
+    public toast: BaseToastService,
   ){}
 
   ngOnInit() {
@@ -56,8 +60,16 @@ export class HeaderComponent {
             this.userEmail = userData.email;
             this.userPhoto = userData.user_image;
           }); 
-      });
-     
+      });    
+  }
+
+  onResetPassword() {
+    let email = this.userEmail || prompt('Introduce tu email para restablecer la contraseña:');
+    if (email) {
+      this.authService.resetPassword(email)
+        .then(() => this.toast.showSuccessToast('Se ha enviado un correo para restablecer la contraseña', false))
+        .catch(err => this.toast.showErrorToast(500, 'Error al enviar el correo', false));
+    }
   }
 
   toggleHeaderWidth() {
