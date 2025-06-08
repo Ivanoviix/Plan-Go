@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from apps.places.models.accommodation import Accommodation
 from apps.users.models.user import User
 from .serializer import AcommodationSerializer, ActivitySerializer, RestaurantSerializer, SavedPlacesSerializer
+from ..itineraries.serializer import DestinationSerializer
 from apps.places.models.accommodation_image import AccommodationImage
 from apps.places.models.activity import Activity
 from apps.places.models.activity_image import ActivityImage
@@ -343,3 +344,70 @@ def google_places_search_nearby(request):
     url = f"https://places.googleapis.com/v1/places:searchNearby?key={api_key}"
     response = requests.post(url, json=payload, headers=headers)
     return JsonResponse(response.json(), safe=False)
+
+
+
+# RECIBIR TODAS LAS CATEGORIAS A PARTIR DEL ID DEL DESTINO
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def get_all_categories_from_destination(request):
+    if request.method == "POST":
+        destination_id = request.data.get('destination_id')
+        if not destination_id:
+            return JsonResponse({'error': 'destination_id es requerido'}, status=400)
+        try: 
+            destination = Destination.objects.get(pk=destination_id)
+        except Destination.DoesNotExist:
+            return JsonResponse({'error': 'Destination no encontrado'}, status=400)
+        
+        destination_data = DestinationSerializer(destination).data
+        
+        # ALOJAMIENTOS
+        accommodations = Accommodation.objects.filter(destination=destination)
+        accommodations_data = []
+        for alj in accommodations:
+            images = AccommodationImage.objects.filter(accommodation=alj)
+            images_data = [img.uri for img in images]
+            accommodations_data.append({
+                'accommodation': alj.name,
+                'type': alj.accomodation_type,
+                'address': alj.address,
+                'rating': alj.rating,
+                'images': images_data,
+            })
+            
+        # RESTAURANTES     
+        restaurants = Restaurant.objects.filter(destination=destination)
+        restaurants_data = []
+        for rest in restaurants:
+            images = RestaurantImage.objects.filter(restaurant=rest)
+            images_data = [img.uri for img in images]
+            restaurants_data.append({
+                'restaurant': rest.name,
+                'type': rest.restaurant_type,
+                'rating': rest.rating,
+                'address': rest.address,
+                'images': images_data,
+            })
+
+        # ACTIVIDADES
+        activities = Activity.objects.filter(destination=destination)
+        activities_data = []
+        for act in activities:
+            images = ActivityImage.objects.filter(activity=act)
+            images_data = [img.uri for img in images]
+            activities_data.append({
+                'activity': act.name,
+                'type': act.activity_type,
+                'rating': act.rating,
+                'address': act.address,
+                'images': images_data,
+            })
+            
+        return JsonResponse({
+            'destination': destination_data,
+            'accommodations': accommodations_data,
+            'restaurants': restaurants_data,
+            'activities': activities_data,
+        })
+    

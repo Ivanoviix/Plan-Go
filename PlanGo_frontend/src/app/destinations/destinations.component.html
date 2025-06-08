@@ -33,7 +33,7 @@
             <div class="h-10 w-px bg-gray-700 mx-4"></div>
             <div
               class="bg-[--primary-color] text-white rounded-full text-center text-xl h-10 w-20 flex items-center justify-center">
-              {{ getTotalExpenses() | currency:'EUR' }}
+              {{ getTotalExpenses() }}€
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@
             <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">{{ summary[destination.destination_id].activities_count }}</h1>
           </button>
           <div class="rounded-full w-20 h-12 bg-white text-center flex flex-row justify-center items-center">{{
-            summary[destination.destination_id].total_expenses | currency:'EUR' }}</div>
+            summary[destination.destination_id].total_expenses }}€</div>
         </div>
       </div>
       <div class=" h-2 text-sm text-red-500" *ngIf="errorMessage">{{ errorMessage }}</div>

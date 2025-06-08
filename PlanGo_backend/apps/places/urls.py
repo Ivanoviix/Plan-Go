@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import get_accommodations_from_destination, get_activities_from_destination, get_restaurants_from_destination, get_saved_accommodations, get_saved_activities, get_saved_restaurants, google_places_search_nearby, create_activity_with_images, create_restaurant_with_images, create_accommodation_with_images, create_saved_place_with_images
+from .views import get_accommodations_from_destination, get_activities_from_destination, get_restaurants_from_destination, get_saved_accommodations, get_saved_activities, get_saved_restaurants, google_places_search_nearby, create_activity_with_images, create_restaurant_with_images, create_accommodation_with_images, create_saved_place_with_images, get_all_categories_from_destination
+
 urlpatterns = [
     # ITINERARY
     path('accommodations/<int:destination_id>/', get_accommodations_from_destination, name='get_accommodations_from_destination'),
@@ -23,6 +24,9 @@ urlpatterns = [
      # CREATE SAVED PLACE
     path('create_saved_place/', create_saved_place_with_images, name="create_saved_place_with_images"),
     
+    # GIVE ALL CATEGORIES FROM A DESTIONATION
+    path('get_categories/', get_all_categories_from_destination, name="get_all_categories_from_destination"),
+    
     # API PLACES 
-    path('google_places_search_nearby/', google_places_search_nearby, name='google_places_search_nearby')
+    path('google_places_search_nearby/', google_places_search_nearby, name='google_places_search_nearby'),
 ]

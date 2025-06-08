@@ -1,13 +1,6 @@
-<google-map
-  [center]="center"
-  [zoom]="zoom"
-  [options]="mapOptions"
-  style="height: 100%; width: 100%;">
-  <map-marker
-    *ngFor="let marker of markers; let i = index"
-    [position]="{ lat: marker.lat, lng: marker.lng }"
-    [title]="marker.label || ''"
-    (mapClick)="openInfoWindow(i, marker)">
+<google-map [center]="center" [zoom]="zoom" [options]="mapOptions" style="height: 100%; width: 100%;">
+  <map-marker *ngFor="let marker of markers; let i = index" [position]="{ lat: marker.lat, lng: marker.lng }"
+    [title]="marker.label || ''" (mapClick)="openInfoWindow(i, marker)">
   </map-marker>
   <map-info-window #infoWindow>
     <div class="p-2 max-w-[320px] w-full bg-white shadow-xl">
@@ -17,8 +10,10 @@
         </span>
         <span class="text-sm flex items-center gap-1">
           <!-- Estrella de rating -->
-          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" class="w-4 h-4 text-yellow-400">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z"/>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20"
+            class="w-4 h-4 text-yellow-400">
+            <path
+              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
           </svg>
           {{ activeMarker?.place?.rating || '4.4' }}
         </span>
@@ -29,32 +24,27 @@
       <!-- Carrusel de fotos -->
       <div class="w-full h-32 bg-gray-200 rounded flex items-center justify-center mb-2 relative">
         <ng-container *ngIf="activeMarker?.place?.photos?.length; else noImage">
-          <button
-            class="absolute left-2 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-1"
+          <button class="absolute left-2 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-1"
             (click)="prevPhoto($event)">
             ‹
           </button>
-          <img
-            [src]="getPhotoUrl(selectedPlaceImages[activePhotoIndex])"
-            class="w-full h-32 object-cover rounded"
+          <img [src]="getPhotoUrl(selectedPlaceImages[activePhotoIndex])" class="w-full h-32 object-cover rounded"
             alt="Imagen del lugar" />
-          <button
-            class="absolute right-2 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-1"
+          <button class="absolute right-2 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-1"
             (click)="nextPhoto($event)">
             ›
           </button>
           <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
-            <span *ngFor="let photo of activeMarker.place.photos; let i = index"
-                  class="w-2 h-2 rounded-full"
-                  [ngClass]="i === activePhotoIndex ? 'bg-[--primary-color]' : 'bg-gray-300'"></span>
+            <span *ngFor="let photo of activeMarker.place.photos; let i = index" class="w-2 h-2 rounded-full"
+              [ngClass]="i === activePhotoIndex ? 'bg-[--primary-color]' : 'bg-gray-300'"></span>
           </div>
         </ng-container>
         <ng-template #noImage>
           <!-- Placeholder de imagen -->
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" class="w-16 h-16 text-gray-400">
-            <rect width="48" height="48" rx="8" fill="#e5e7eb"/>
-            <path d="M16 32l8-8 8 8" stroke="#a1a1aa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="20" cy="20" r="2" fill="#a1a1aa"/>
+            <rect width="48" height="48" rx="8" fill="#e5e7eb" />
+            <path d="M16 32l8-8 8 8" stroke="#a1a1aa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="20" cy="20" r="2" fill="#a1a1aa" />
           </svg>
         </ng-template>
       </div>

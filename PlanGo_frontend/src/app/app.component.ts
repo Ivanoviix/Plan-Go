@@ -5,6 +5,7 @@ import { RouterOutlet } from '@angular/router';
 import { trigger, transition, style, animate, group, query } from '@angular/animations';
 import { ItinerariesService } from './core/services/itineraries.service';
 import { DestinationService } from './core/services/destinations.service';
+import { SearchLocationService } from './core/services/search-location.service';
 
 @Component({
   standalone: true,
@@ -60,7 +61,8 @@ import { DestinationService } from './core/services/destinations.service';
 export class AppComponent implements OnInit {
   constructor(
     private itinerariesService: ItinerariesService,
-    private destinationService: DestinationService
+    private destinationService: DestinationService,
+    private searchLocationService: SearchLocationService,
   ) {}
 
   ngOnInit(): void {
@@ -82,7 +84,16 @@ export class AppComponent implements OnInit {
         console.error('Error al obtener el token CSRF:', err);
       },
     });
-  }
+    
+    this.searchLocationService.getCsrfTokenFromServer().subscribe({
+      next: (csrfToken) => {
+        this.searchLocationService.setCsrfToken(csrfToken);
+      },
+      error: (err) => {
+        console.error('Error al obtener el token CSRF:', err);
+    },
+  });
+}
 
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];

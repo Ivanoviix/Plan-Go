@@ -55,6 +55,7 @@ export class ItinerariesService extends BaseHttpService {
   
     const decodedPayload = JSON.parse(atob(payloadBase64));
     const uid = decodedPayload?.uid || decodedPayload?.sub;
+    console.log('PERFIIIIIL', uid)
     if (!uid) return throwError(() => new Error('UID not found in token'));
   
     const headers = this.createHeaders();
