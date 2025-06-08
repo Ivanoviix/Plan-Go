@@ -11,7 +11,7 @@ urlpatterns = [
     path('saved_accommodations/<int:user_id>/', get_saved_accommodations, name='get_saved_accommodations'),
     path('saved_restaurants/<int:user_id>/', get_saved_restaurants, name='get_saved_restaurants'),
     path('saved_activities/<int:user_id>/', get_saved_activities, name='get_saved_activities'),
-    path('saved-places/by-category/<int:user_id>/', get_saved_places_by_category, name='get_saved_places_by_category'),
+    path('saved_places/by_category/<int:user_id>/', get_saved_places_by_category, name='get_saved_places_by_category'),
 
     # CREATE ACCOMMODATION
     path('create_accommodation/', create_accommodation_with_images, name="create_accommodation_with_images"),
