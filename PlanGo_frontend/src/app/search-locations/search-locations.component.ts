@@ -10,6 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Destination } from '../destinations/interfaces/destinations.interface';
 import { BaseToastService } from '../core/services/base-toast.service';
 import { BackButtonComponent } from '../core/back-button/back-button.component';
+import { SearchLocationService } from '../core/services/search-location.service';
+import { ApiKeyService } from '../core/services/api-key.service';
 
 @Component({
   selector: 'app-search-locations',
@@ -28,28 +30,37 @@ import { BackButtonComponent } from '../core/back-button/back-button.component';
 })
 export class SearchLocationsComponent {
   @ViewChild('participants') participantsComponent!: ParticipantsComponent;
-  participantName: string = '';
   @Input() destinations: Destination[] = [];
   @Input() selectedDestinationId: number | null = null;
-  currentDestination!: Destination; 
-  selectedDestination: Destination[] = [];
-  mapLocation: google.maps.LatLngLiteral = {lat: 39.72596642771257, lng: 2.914616467674367};
+  mapLocation: google.maps.LatLngLiteral = { lat: 39.72596642771257, lng: 2.914616467674367 };
+  participantName: string = '';
   selectedSection: string = '';
-
+  currentDestination!: Destination;
+  selectedDestination: Destination[] = [];
+  accommodations: any[] = [];
+  restaurants: any[] = [];
+  activities: any[] = [];
+  svgIcons: SafeHtml[] = [];
+  errorMessage: string = '';
+  activeMarker: any = null;
+  activePhotoIndex: number = 0;
+  selectedPlaceImages: any[] = [];
+  googlePlacesApiKey?: string;
   sections = [
     { title: 'Alojamientos', isOpen: false, onEdit: () => this.editCategory('Accommodation', this.currentDestination) },
     { title: 'Comer y beber', isOpen: false, onEdit: () => this.editCategory('Comer y beber', this.currentDestination) },
     { title: 'Cosas que hacer', isOpen: false, onEdit: () => this.editCategory('Accommodation', this.currentDestination) },
   ];
-  svgIcons: SafeHtml[] = [];
-  
   constructor(
     private sanitizer: DomSanitizer,
     private destinationService: DestinationService,
+    private searchLocationService: SearchLocationService,
     private route: ActivatedRoute,
     private router: Router,
-    private toast: BaseToastService
+    private toast: BaseToastService,
+    private apiKeyService: ApiKeyService
   ) {
+
     const rawIcons = [
       `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="h-8 w-8">
         <path d="M3 5V19M3 16H21M21 19V13.2C21 12.0799 21 11.5198 20.782 11.092C20.5903 10.7157 20.2843 10.4097 19.908 10.218C19.4802 10 18.9201 10 17.8 10H11V15.7273M7 12H7.01M8 12C8 12.5523 7.55228 13 7 13C6.44772 13 6 12.5523 6 12C6 11.4477 6.44772 11 7 11C7.55228 11 8 11.4477 8 12Z" />
@@ -65,10 +76,23 @@ export class SearchLocationsComponent {
   }
 
   toggleSection(index: number): void {
-    this.sections[index].isOpen = !this.sections[index].isOpen;
-    
+    this.sections.forEach((section, i) => {
+      section.isOpen = i === index ? !section.isOpen : false;
+    });
+
     if (this.sections[index].isOpen) {
       this.selectedSection = this.sections[index].title;
+      this.searchLocationService.getAllCategories(this.currentDestination.destination_id).subscribe({
+        next: (data: any) => {
+          this.accommodations = (data.accommodations || []).map((acc: any) => ({ ...acc, activePhotoIndex: 0 }));
+          this.restaurants = (data.restaurants || []).map((rest: any) => ({ ...rest, activePhotoIndex: 0 }));
+          this.activities = (data.activities || []).map((act: any) => ({ ...act, activePhotoIndex: 0 }));
+        },
+        error: (err: any) => {
+          this.errorMessage = 'Error al encontrar las categorias';
+          console.error(err);
+        }
+      });
     } else {
       this.selectedSection = '';
     }
@@ -76,12 +100,20 @@ export class SearchLocationsComponent {
 
 
   ngOnInit(): void {
+    this.apiKeyService.getGooglePlacesApiKey().subscribe({
+      next: (data: any) => {
+        this.googlePlacesApiKey = data.googlePlacesApiKey;
+      },
+      error: (err: any) => {
+        console.log("No ha recibido la KEY de Google Places API.")
+      }
+    });
     this.route.paramMap.subscribe(params => {
       const itineraryId = Number(params.get('itineraryId'));
       this.route.queryParamMap.subscribe(queryParams => {
         const destinationId = Number(queryParams.get('destinationId'));
         this.selectedDestinationId = destinationId;
-        
+
         console.log('Destino seleccionado:', this.selectedDestinationId);
 
         if (itineraryId) {
@@ -116,7 +148,7 @@ export class SearchLocationsComponent {
 
   editCategory(category: string, destination: Destination): void {
     console.log('Editando categoría:', category, 'con destino:', destination);
-    
+
     if (category === 'Alojamientos' || category === 'Comer y beber' || category === 'Cosas que hacer') {
       const payload = {
         latitude: Number(destination.latitude),
@@ -128,7 +160,8 @@ export class SearchLocationsComponent {
       this.destinationService.googlePlacesSearchNearby(payload).subscribe({
         next: (result) => {
           console.log('Resultados:', result);
-          this.router.navigate(['/search/places'], { queryParams: { category, destinationId: destination.destination_id } 
+          this.router.navigate(['/search/places'], {
+            queryParams: { category, destinationId: destination.destination_id }
           });
         },
         error: (err) => {
@@ -139,13 +172,13 @@ export class SearchLocationsComponent {
       console.warn('Categoría no soportada:', category);
     }
   }
-  
+
   callAddParticipant(): void {
     if (!this.selectedDestinationId) {
       console.error('No se ha seleccionado un destino válido.');
       return;
     }
-  
+
     if (this.participantsComponent) {
       console.log('Llamando a addParticipantWithDetails con:', {
         participantName: this.participantName,
@@ -153,10 +186,30 @@ export class SearchLocationsComponent {
       });
       this.toast.showSuccessToast('Se han añadido el participante', true);
       this.participantsComponent.addParticipantWithDetails(this.participantName, this.selectedDestinationId);
-      
+
     } else {
       console.error('ParticipantsComponent no está inicializado.');
     }
   }
+  prevPhoto(event: Event) {
+    event.stopPropagation();
+    if (this.activeMarker?.place?.photos?.length) {
+      this.activePhotoIndex =
+        (this.activePhotoIndex - 1 + this.activeMarker.place.photos.length) %
+        this.activeMarker.place.photos.length;
+    }
+  }
 
+  nextPhoto(event: Event) {
+    event.stopPropagation();
+    if (this.activeMarker?.place?.photos?.length) {
+      this.activePhotoIndex =
+        (this.activePhotoIndex + 1) % this.activeMarker.place.photos.length;
+    }
+  }
+
+  getPhotoUrl(photo: any): string {
+    const cleanPhoto = photo.replace(/^"+|"+$/g, '');
+    return `https://places.googleapis.com/v1/${cleanPhoto}/media?maxHeightPx=400&key=${this.googlePlacesApiKey}`;
+  }
 }

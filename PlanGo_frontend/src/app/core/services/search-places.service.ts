@@ -9,24 +9,24 @@ import { MessageService } from '../messageService';
   providedIn: 'root'
 })
 export class SearchPlacesService {
-  
+
   categoriaSeleccionada: string | null = null;
 
   private csrfToken: string = '';
-  
-    constructor(
-      public httpClient: HttpClient, 
-      @Inject(PLATFORM_ID) private platformId: Object,
-      public toast: MessageService 
-    ) {
-    }
-  
+
+  constructor(
+    public httpClient: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    public toast: MessageService
+  ) {
+  }
+
   private createHeaders(): HttpHeaders {
     let token = '';
     if (isPlatformBrowser(this.platformId)) {
       token = localStorage.getItem(globals.keys.accessToken) || '';
     }
-  
+
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'X-CSRFToken': this.csrfToken,
