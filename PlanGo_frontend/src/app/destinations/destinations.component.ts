@@ -337,7 +337,6 @@ export class DestinationsComponent implements OnInit {
   }
 
   onInputClick() {
-    debugger
     if (this.getOccupiedDays() >= this.itineraryTotalDays) {
       this.showMaxDaysError = true;
       if (this.maxDaysErrorTimeout) clearTimeout(this.maxDaysErrorTimeout);

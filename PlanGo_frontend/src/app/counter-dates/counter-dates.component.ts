@@ -18,9 +18,13 @@ export class CounterDatesComponent {
   @Input() itineraryTotalDays!: number;
   @Input() otherOccupiedDays: number = 0;
   @Input() destinationStartDate!: string;
+  @Input() circleColor: string = '#ffffff';
+  @Input() bgColor: string = '#4c43ce'; 
+  @Input() textColor: string = '#ffffff'; 
   @Output() maxDaysReached = new EventEmitter<void>();
   @Output() fechasConfirmadas = new EventEmitter<{ idDestino: number; fechaInicio: string; fechaFin: string }>();
   @Output() reloadDestination = new EventEmitter<number>();
+  
   count: number = 1;
   readonly radius: number = 16; // Radio del círculo
   readonly circumference: number = 2 * Math.PI * this.radius; // Circunferencia del círculo
