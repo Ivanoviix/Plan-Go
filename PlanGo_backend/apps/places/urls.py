@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import get_accommodations_from_destination, get_activities_from_destination, get_restaurants_from_destination, get_saved_accommodations, get_saved_activities, get_saved_restaurants, google_places_search_nearby, create_activity_with_images, create_restaurant_with_images, create_accommodation_with_images, create_saved_place_with_images, get_all_categories_from_destination
+from .views import get_accommodations_from_destination, get_activities_from_destination, get_restaurants_from_destination, get_saved_accommodations, get_saved_activities, get_saved_restaurants, google_places_search_nearby, create_activity_with_images, create_restaurant_with_images, create_accommodation_with_images, create_saved_place_with_images, get_all_categories_from_destination, get_saved_places_by_category
 
 urlpatterns = [
     # ITINERARY
@@ -11,7 +11,8 @@ urlpatterns = [
     path('saved_accommodations/<int:user_id>/', get_saved_accommodations, name='get_saved_accommodations'),
     path('saved_restaurants/<int:user_id>/', get_saved_restaurants, name='get_saved_restaurants'),
     path('saved_activities/<int:user_id>/', get_saved_activities, name='get_saved_activities'),
-    
+    path('saved-places/by-category/<int:user_id>/', get_saved_places_by_category, name='get_saved_places_by_category'),
+
     # CREATE ACCOMMODATION
     path('create_accommodation/', create_accommodation_with_images, name="create_accommodation_with_images"),
     
