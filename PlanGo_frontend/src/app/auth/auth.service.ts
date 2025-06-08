@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {  signOut } from 'firebase/auth';
+import {  signOut, sendPasswordResetEmail } from 'firebase/auth';
 import { Auth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 
@@ -17,5 +17,9 @@ export class AuthService {
       localStorage.clear();
       this.router.navigate(['/login']);
     });
+  }
+
+  resetPassword(email: string): Promise<void> {
+    return sendPasswordResetEmail(this.auth, email);
   }
 }
