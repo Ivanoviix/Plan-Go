@@ -390,6 +390,8 @@ def get_all_categories_from_destination(request):
                 'type': alj.accomodation_type,
                 'address': alj.address,
                 'rating': alj.rating,
+                'latitude': alj.latitude,
+                'longitude': alj.longitude,
                 'images': images_data,
             })
             
@@ -404,6 +406,8 @@ def get_all_categories_from_destination(request):
                 'type': rest.restaurant_type,
                 'rating': rest.rating,
                 'address': rest.address,
+                'latitude': rest.latitude,
+                'longitude': rest.longitude,
                 'images': images_data,
             })
 
@@ -418,6 +422,8 @@ def get_all_categories_from_destination(request):
                 'type': act.activity_type,
                 'rating': act.rating,
                 'address': act.address,
+                'latitude': act.latitude,
+                'longitude': act.longitude,
                 'images': images_data,
             })
             
