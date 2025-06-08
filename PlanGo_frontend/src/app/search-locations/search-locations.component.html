@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <!-- Accordion Sections --> <!-- border -->
+            <!-- Accordion Sections -->
             <div class="accordion rounded-3xl border-gray-600 flex-grow">
                 <div *ngFor="let section of sections; let i = index" class="accordion-item">
                     <!-- Botón para abrir/cerrar la sección -->
@@ -36,7 +36,7 @@
                             <span class="text-lg text-white">{{ section.title }}</span>
                         </span>
                         <div class="flex flex-row justify-end items-center">
-                            <button class=" text-white px-4 rounded-full transition duration-300"
+                            <button class="text-white px-4 rounded-full transition duration-300"
                                 (click)="editCategory(section.title, currentDestination); $event.stopPropagation()">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="size-7">
@@ -55,18 +55,18 @@
                     </button>
                     <!-- Contenido de la sección -->
                     <div class="accordion-content overflow-hidden transition-all duration-300 ease-in-out bg-white px-4"
-                        [class.max-h-0]="!section.isOpen"
-                        [style.maxHeight]="section.isOpen ? 'calc(100vh - 7rem)' : '0px'">
-
+                        [class.max-h-0]="!section.isOpen" [style.maxHeight]="section.isOpen ? '44vh' : '0px'">
                         <!-- Alojamientos -->
                         <ng-container *ngIf="section.title === 'Alojamientos'">
-                            <div *ngIf="section.isOpen"
-                                class="accordion-content bg-white px-4 max-h-[48vh] overflow-y-auto w-full min-w-0 box-border">
+                            <div *ngIf="section.isOpen">
                                 <div *ngIf="accommodations && accommodations.length > 0"
-                                    class="grid gap-2 w-full min-w-0"
-                                    style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                                    class="grid gap-2 w-full min-w-0 overflow-y-auto"
+                                    style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-height: 40vh;">
+                                    <!-- ...cards... -->
                                     <div *ngFor="let acc of accommodations"
-                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0">
+                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0"
+                                        (click)="onPlaceSelect(acc)">
+                                        <!-- ...contenido de la card... -->
                                         <img *ngIf="acc.images?.length"
                                             [src]="getPhotoUrl(acc.images[acc.activePhotoIndex || 0])"
                                             alt="{{ acc.accommodation }}"
@@ -77,21 +77,6 @@
                                         <div class="text-gray-600 text-center text-sm break-words w-full">
                                             {{ acc.address }}
                                         </div>
-                                        <div class="flex flex-row justify-center w-full mt-2 gap-2">
-                                            <button class="bg-white bg-opacity-70 rounded-full p-1"
-                                                (click)="acc.activePhotoIndex = (acc.activePhotoIndex > 0 ? acc.activePhotoIndex - 1 : acc.images.length - 1); $event.stopPropagation()">
-                                                ‹
-                                            </button>
-                                            <button class="bg-white bg-opacity-70 rounded-full p-1"
-                                                (click)="acc.activePhotoIndex = (acc.activePhotoIndex + 1) % acc.images.length; $event.stopPropagation()">
-                                                ›
-                                            </button>
-                                        </div>
-                                        <div class="flex flex-row justify-center w-full mt-2">
-                                            <span *ngFor="let img of acc.images; let i = index"
-                                                class="w-2 h-2 rounded-full mx-0.5"
-                                                [ngClass]="i === (acc.activePhotoIndex || 0) ? 'bg-[--primary-color]' : 'bg-gray-300'"></span>
-                                        </div>
                                     </div>
                                 </div>
                                 <div *ngIf="!accommodations || accommodations.length === 0"
@@ -100,19 +85,19 @@
                                 </div>
                             </div>
                         </ng-container>
-
                         <!-- Comer y beber -->
                         <ng-container *ngIf="section.title === 'Comer y beber'">
-                            <div *ngIf="section.isOpen"
-                                class="accordion-content bg-white px-4 max-h-[48vh] overflow-y-auto w-full min-w-0 box-border">
-                                <div *ngIf="restaurants && restaurants.length > 0" class="grid gap-2 w-full min-w-0"
-                                    style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                            <div *ngIf="section.isOpen">
+                                <div *ngIf="restaurants && restaurants.length > 0"
+                                    class="grid gap-2 w-full min-w-0 overflow-y-auto"
+                                    style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-height: 40vh;">
+                                    <!-- ...cards... -->
                                     <div *ngFor="let rest of restaurants"
-                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0">
+                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0"
+                                        (click)="onPlaceSelect(rest)">
                                         <img *ngIf="rest.images?.length"
                                             [src]="getPhotoUrl(rest.images[rest.activePhotoIndex || 0])"
-                                            alt="{{ rest.accommodation }}"
-                                            class="w-full h-32 object-cover rounded mb-2" />
+                                            alt="{{ rest.restaurant }}" class="w-full h-32 object-cover rounded mb-2" />
                                         <div class="font-bold text-md text-center break-words w-full">
                                             {{ rest.restaurant }}
                                         </div>
@@ -138,23 +123,23 @@
                                 </div>
                                 <div *ngIf="!restaurants || restaurants.length === 0"
                                     class="py-6 text-center text-gray-500">
-                                    No hay locales para mostrar.
+                                    No hay restaurantes para mostrar.
                                 </div>
                             </div>
                         </ng-container>
-
-                        <!-- Cosas que hacer  -->
+                        <!-- Cosas que hacer -->
                         <ng-container *ngIf="section.title === 'Cosas que hacer'">
-                            <div *ngIf="section.isOpen"
-                                class="accordion-content bg-white px-4 max-h-[47vh] overflow-y-auto w-full min-w-0 box-border">
+                            <div *ngIf="section.isOpen">
                                 <div *ngIf="activities && activities.length > 0"
-                                    class="grid gap-2 w-full min-w-0"
-                                    style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                                    class="grid gap-2 w-full min-w-0 overflow-y-auto"
+                                    style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-height: 40vh;">
+                                    <!-- ...cards... -->
                                     <div *ngFor="let act of activities"
-                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0">
+                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0"
+                                        (click)="onPlaceSelect(act)">
                                         <img *ngIf="act.images?.length"
                                             [src]="getPhotoUrl(act.images[act.activePhotoIndex || 0])"
-                                            alt="{{ act.activities }}" class="w-full h-32 object-cover rounded mb-2" />
+                                            alt="{{ act.activity }}" class="w-full h-32 object-cover rounded mb-2" />
                                         <div class="font-bold text-md text-center break-words w-full">
                                             {{ act.activity }}
                                         </div>
@@ -191,7 +176,9 @@
 
         <!-- Map Section -->
         <section class="map w-[35%]">
-            <app-map [center]="mapLocation" [zoom]="13"></app-map>
+            <app-map #mapRef [center]="mapLocation" [zoom]="13" [markers]="markers" [selectedPlace]="selectedPlace"
+                [selectedPlaceImages]="selectedPlaceImages">
+            </app-map>
         </section>
     </div>
 </div>
