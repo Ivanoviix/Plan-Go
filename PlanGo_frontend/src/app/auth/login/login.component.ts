@@ -40,7 +40,6 @@ export class LoginComponent {
 
       this.loginService.loginWithGoogle(idToken).subscribe({
         next: () => {
-          console.log('Usuario autenticado en el backend');
           this.router.navigate(['/itineraries']);
         },
         error: (err) => {
@@ -71,7 +70,6 @@ export class LoginComponent {
       // Llama al servicio para autenticar con el backend
       this.loginService.loginWithEmail(idToken).subscribe({
         next: () => {
-          console.log('Usuario autenticado en el backend');
           this.router.navigate(['/itineraries']);
         },
         error: (err) => {

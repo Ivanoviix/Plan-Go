@@ -68,7 +68,6 @@ export class SavedPlacesService {
     }
 
     setCsrfToken(token: string): void {
-        console.log('CSRF token recibido:', token);
         this.csrfToken = token.replace(/^"|"$/g, '');
     }
 }

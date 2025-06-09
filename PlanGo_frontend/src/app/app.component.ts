@@ -68,7 +68,6 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.itinerariesService.getCsrfTokenFromServer().subscribe({
       next: (csrfToken) => {
-        console.log('CSRF Token obtenido:', csrfToken);
         this.itinerariesService.setCsrfToken(csrfToken);
       },
       error: (err) => {

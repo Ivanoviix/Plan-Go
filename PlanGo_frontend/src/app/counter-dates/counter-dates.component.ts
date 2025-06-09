@@ -35,7 +35,6 @@ export class CounterDatesComponent {
 
   ngOnInit() {
     this.count = this.days;
-    console.log('startDateStr recibido:', this.startDateStr);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -64,7 +63,6 @@ export class CounterDatesComponent {
       fechaInicio: this.formatDate(this.startDate),
       fechaFin: this.formatDate(this.endDate),
     };
-    console.log('Fechas enviadas:', datos);
     this.fechasConfirmadas.emit(datos);
   }
 

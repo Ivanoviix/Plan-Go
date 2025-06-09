@@ -25,13 +25,17 @@ export class SearchLocationService {
 
     private createHeaders(): HttpHeaders {
         let token = '';
+        let csrfToken = '';
         if (isPlatformBrowser(this.platformId)) {
             token = localStorage.getItem(globals.keys.accessToken) || '';
+            // Lee la cookie csrftoken directamente
+            const match = document.cookie.match(/csrftoken=([^;]+)/);
+            csrfToken = match ? match[1] : '';
         }
 
         return new HttpHeaders({
             Authorization: `Bearer ${token}`,
-            'X-CSRFToken': this.csrfToken,
+            'X-CSRFToken': csrfToken,
             'Content-Type': 'application/json',
         });
     }
@@ -57,7 +61,6 @@ export class SearchLocationService {
     }
 
     setCsrfToken(token: string): void {
-        console.log('CSRF token recibido:', token);
         this.csrfToken = token.replace(/^"|"$/g, '');
     }
 

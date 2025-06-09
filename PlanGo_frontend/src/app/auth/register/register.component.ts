@@ -110,7 +110,6 @@ export class RegisterComponent {
 
       this.registerService.registerUser(idToken, payload).subscribe({
         next: (rs) => {
-          console.log('Usuario registrado en Django:', rs);
           this.router.navigate(['/login']);
         },
         error: (err) => {

@@ -188,7 +188,6 @@ def get_restaurants_from_destination(request, destination_id):
 def create_restaurant_with_images(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        print("json", data)
         place_id = data.get('place_id')
         destination_id = data.get('destination')
         name = data.get('name')
@@ -404,7 +403,6 @@ def google_places_search_nearby(request):
     for place in data.get('places', []):
         place_id = str(place.get('id'))
         place['isSave'] = place_id in set(str(pid) for pid in saved_place_ids)
-    print("saved_place_ids:", saved_place_ids)
     return JsonResponse(data, safe=False)
 
 
