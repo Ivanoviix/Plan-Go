@@ -110,8 +110,7 @@
       <div *ngIf="destinations.length > 0" class="container-destinations flex-grow overflow-y-auto">
         <div *ngFor="let destination of destinations"
           class="flex flex-row mt-4 items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300"
-          style="cursor:pointer;"
-          (click)="goPlaces(destination.destination_id)">
+          style="cursor:pointer;">
           <h3 class="text-lg text-white w-[93px]">{{ destination.city_name }}</h3>
           <app-day-counter [idDestino]="destination.destination_id" [city]="destination.city_name"
             [max]="itineraryTotalDays" [startDateStr]="itineraryStartDate" [itineraryStartDate]="itineraryStartDate"
@@ -122,12 +121,18 @@
             (maxDaysReached)="onMaxDaysReached(destination.destination_id)" (fechasConfirmadas)="guardarFechas($event)"
             (reloadDestination)="reloadDestination($event)">
           </app-day-counter>
+          <button (click)="goPlaces(destination.destination_id)">
             <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-6">{{
               summary[destination.destination_id].accommodations_count }}</h1>
+          </button>
+          <button (click)="goPlaces(destination.destination_id)">
             <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">{{
               summary[destination.destination_id].restaurants_count }}</h1>
+          </button>
+          <button (click)="goPlaces(destination.destination_id)">
             <h1 class="text-xl w-24 flex justify-center items-center text-center text-white -translate-x-4">{{
               summary[destination.destination_id].activities_count }}</h1>
+          </button>
           <div class="rounded-full w-20 h-12 bg-white text-center flex flex-row justify-center items-center">{{
             summary[destination.destination_id].total_expenses }}€</div>
         </div>
