@@ -160,7 +160,7 @@ export class SavedPlacesComponent {
         lat: Number(place.latitude),
         lng: Number(place.longitude),
         label: place.accommodation || place.restaurant || place.activity || place.displayName?.text || '',
-        place: { ...place }
+        place: { ...place },
       };
       this.markers = [marker];
       this.mapLocation = { lat: marker.lat, lng: marker.lng };

@@ -427,6 +427,7 @@ def get_all_categories_from_destination(request):
             images_data = [img.uri for img in images]
             accommodations_data.append({
                 'accommodation': alj.name,
+                'id': alj.place_id
                 'accommodaton_type': alj.accomodation_type,
                 'address': alj.address,
                 'rating': alj.rating if alj.rating is not None else 3.0,
@@ -444,6 +445,7 @@ def get_all_categories_from_destination(request):
             images_data = [img.uri for img in images]
             restaurants_data.append({
                 'restaurant': rest.name,
+                'id': rest.place_id,
                 'restaurant_type': rest.restaurant_type,
                 'rating': rest.rating if rest.rating is not None else 3.0,
                 'address': rest.address,
@@ -461,6 +463,7 @@ def get_all_categories_from_destination(request):
             images_data = [img.uri for img in images]
             activities_data.append({
                 'activity': act.name,
+                'place_id': act.place_id,
                 'activity_type': act.activity_type,
                 'rating': act.rating if act.rating is not None else 3.0,
                 'address': act.address,
