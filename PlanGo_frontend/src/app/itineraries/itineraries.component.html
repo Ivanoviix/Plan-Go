@@ -3,7 +3,8 @@
   <p-toast></p-toast>
   <div class="flex flex-grow">
     <section class="flex-grow p-8 pt-5 flex flex-col">
-      <div class="itineraries-header w-auto h-20 flex flex-row justify-between items-center">
+      <!-- Sticky Header -->
+      <div class="itineraries-header sticky top-0 bg-white z-10 h-20 flex flex-row justify-between items-center pb-3">
         <div class="w-[30%]">
           <h1 class="text-4xl font-bold text-gray-800">Itinerarios</h1>
           <hr class="flex-grow border-black border-[1px] mt-4">
@@ -15,15 +16,22 @@
         </button>
       </div>
 
-      <div *ngIf="itineraries.length == 0">
+      <div *ngIf="itineraries.length == 0" class="flex-grow">
         <p class="text-xl pl-3 my-4">No hay itinerarios creados. ¡Añade el primero!</p>
       </div>
-      <div *ngIf="itineraries.length > 0" class="mt-6">
+      <div 
+        *ngIf="itineraries.length > 0" 
+        class="flex-grow overflow-y-auto mt-4"
+        style="max-height: calc(100vh - 8rem);"
+      >
         <ul>
           <li *ngFor="let itinerary of itineraries" class="my-3">
             <div 
               *ngIf="itinerary.itinerary_id !== undefined"  
-              class="flex flex-row items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300" (click)="goToDestinations(itinerary.itinerary_id!)" style="cursor:pointer;">
+              class="flex flex-row items-center justify-between w-auto h-20 p-6 rounded-3xl bg-[--primary-color] hover:bg-[--secondary-color] transition duration-300" 
+              (click)="goToDestinations(itinerary.itinerary_id!)" 
+              style="cursor:pointer;"
+            >
               <h3 class="text-lg text text-white w-[30%]">{{ itinerary.itinerary_name }}</h3>
               <time class="text-lg text-white w-[40%] text-center" [attr.datetime]="itinerary.start_date">
                 {{ itinerary.start_date | date:'dd-MMMM-yyyy' }} - {{ itinerary.end_date | date:'dd-MMMM-yyyy' }}
