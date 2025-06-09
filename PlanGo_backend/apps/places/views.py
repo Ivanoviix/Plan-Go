@@ -427,7 +427,7 @@ def get_all_categories_from_destination(request):
             images_data = [img.uri for img in images]
             accommodations_data.append({
                 'accommodation': alj.name,
-                'id': alj.place_id
+                'id': alj.place_id,
                 'accommodaton_type': alj.accomodation_type,
                 'address': alj.address,
                 'rating': alj.rating if alj.rating is not None else 3.0,
