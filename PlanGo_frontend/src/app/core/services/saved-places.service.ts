@@ -35,7 +35,6 @@ export class SavedPlacesService {
         let csrfToken = '';
         if (isPlatformBrowser(this.platformId)) {
             token = localStorage.getItem(globals.keys.accessToken) || '';
-            // Lee la cookie csrftoken directamente
             const match = document.cookie.match(/csrftoken=([^;]+)/);
             csrfToken = match ? match[1] : '';
         }

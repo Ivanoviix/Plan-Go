@@ -394,15 +394,13 @@ def google_places_search_nearby(request):
     response = requests.post(url, json=payload, headers=headers)
     data = response.json()
 
-    # --- Añade isSave a cada lugar ---
     from apps.places.models.saved_place import SavedPlace
     saved_place_ids = set()
     if user_id:
         saved_place_ids = set(SavedPlace.objects.filter(user_id=user_id).values_list('place_id', flat=True))
 
     for place in data.get('places', []):
-        place_id = str(place.get('id'))
-        place['isSave'] = place_id in set(str(pid) for pid in saved_place_ids)
+        place['isSave'] = place.get('id') in saved_place_ids
     return JsonResponse(data, safe=False)
 
 
