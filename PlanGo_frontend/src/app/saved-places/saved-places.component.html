@@ -43,10 +43,10 @@
                             <div *ngIf="section.isOpen">
                                 <div *ngIf="accommodations && accommodations.length > 0"
                                     class="grid gap-2 w-full min-w-0 overflow-y-auto"
-                                    style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-height: 40vh;">
+                                    style="grid-template-columns: repeat(auto-fit, 270px); max-height: 40vh;">
                                     <!-- ...cards... -->
                                     <div *ngFor="let acc of accommodations"
-                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0"
+                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0 max-w-[16.9rem]"
                                         (click)="onPlaceSelect(acc)">
                                         <!-- ...contenido de la card... -->
                                         <img *ngIf="acc.images?.length"
@@ -72,10 +72,10 @@
                             <div *ngIf="section.isOpen">
                                 <div *ngIf="restaurants && restaurants.length > 0"
                                     class="grid gap-2 w-full min-w-0 overflow-y-auto"
-                                    style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-height: 40vh;">
+                                    style="grid-template-columns: repeat(auto-fit, 270px); max-height: 40vh;">
                                     <!-- ...cards... -->
                                     <div *ngFor="let rest of restaurants"
-                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0"
+                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0 max-w-[16.9rem]"
                                         (click)="onPlaceSelect(rest)">
                                         <img *ngIf="rest.images?.length"
                                             [src]="getPhotoUrl(rest.images[rest.activePhotoIndex || 0])"
@@ -99,10 +99,10 @@
                             <div *ngIf="section.isOpen">
                                 <div *ngIf="activities && activities.length > 0"
                                     class="grid gap-2 w-full min-w-0 overflow-y-auto"
-                                    style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-height: 40vh;">
+                                    style="grid-template-columns: repeat(auto-fit, 270px); max-height: 40vh;">
                                     <!-- ...cards... -->
                                     <div *ngFor="let act of activities"
-                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0"
+                                        class="bg-white rounded-xl shadow-xl p-4 flex flex-col h-full items-center min-w-0 max-w-[16.9rem]"
                                         (click)="onPlaceSelect(act)">
                                         <img *ngIf="act.images?.length"
                                             [src]="getPhotoUrl(act.images[act.activePhotoIndex || 0])"

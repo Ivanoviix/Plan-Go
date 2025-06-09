@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, PLATFORM_ID, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { DestinationService } from '../core/services/destinations.service';
 import { ItinerariesService } from '../core/services/itineraries.service';
@@ -22,14 +22,14 @@ import { BackButtonComponent } from '../core/back-button/back-button.component';
   templateUrl: './expenses.component.html',
   styleUrl: './expenses.component.css',
   imports: [
-    CommonModule, 
-    HeaderComponent, 
-    GoogleMapsModule, 
+    CommonModule,
+    HeaderComponent,
+    GoogleMapsModule,
     ReactiveFormsModule,
     ToastModule,
     BackButtonComponent
-  ], 
-  schemas: [CUSTOM_ELEMENTS_SCHEMA], 
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 
 export class ExpensesComponent implements OnInit {
@@ -49,18 +49,18 @@ export class ExpensesComponent implements OnInit {
   zoom = 13;
   map!: google.maps.Map;
   selectedDestination: any = null;
-  mapOptions: google.maps.MapOptions = {  
+  mapOptions: google.maps.MapOptions = {
     mapId: 'DEMO_MAP_ID',
     disableDefaultUI: true,
   };
 
   constructor(
-    private expensesService: ExpensesService, 
-    private destinationService: DestinationService, 
-    private itinerariesService: ItinerariesService, 
-    private participantsService: ParticipantsService, 
-    private router: Router, 
-    private formBuilder: FormBuilder,   
+    private expensesService: ExpensesService,
+    private destinationService: DestinationService,
+    private itinerariesService: ItinerariesService,
+    private participantsService: ParticipantsService,
+    private router: Router,
+    private formBuilder: FormBuilder,
     private cdr: ChangeDetectorRef,
     private toast: BaseToastService
   ) {
@@ -85,26 +85,25 @@ export class ExpensesComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-
     this.expensesService.getExpensesByLoggedUser().subscribe({
       next: (data) => this.expenses = data.expenses,
       error: (err) => this.errorMessage = 'No se pudieron cargar los gastos.'
     });
-    
+
     this.destinationService.getDestinations().subscribe({
       next: (data) => this.destinations = data,
       error: (err) => this.errorMessage = 'No se pudieron cargar los destinos.'
     })
 
     this.itinerariesService.getItineraries().subscribe({
-        next: (data: any) => this.itineraries = data.itineraries,
-        error: (err: any) => this.itineraries = []
-      });
+      next: (data: any) => this.itineraries = data.itineraries,
+      error: (err: any) => this.itineraries = []
+    });
 
     this.expenseForm.valueChanges.subscribe(() => {
-      const { itinerary, destination, payer} = this.expenseForm.value
+      let { itinerary, destination, payer } = this.expenseForm.value
       if (itinerary && destination && payer) {
-          this.formSubmitted = false;
+        this.formSubmitted = false;
       }
       // Si quieres ocultar todos los mensajes cuando el campo es válido:
       if (this.expenseForm.valid) {
@@ -113,9 +112,14 @@ export class ExpensesComponent implements OnInit {
     });
   }
 
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscKey(event: KeyboardEvent) {
+    if (this.showForm) this.toggleForm();
+  }
+
   toggleForm(): void {
     this.showForm = !this.showForm;
-    this.formSubmitted = false; 
+    this.formSubmitted = false;
     this.errorMessage = '';
     if (this.showForm) {
       this.expenseForm.reset({
@@ -124,7 +128,7 @@ export class ExpensesComponent implements OnInit {
         payer: '',
         total_amount: '',
         description: '',
-        type_expense: 'Personalized', 
+        type_expense: 'Personalized',
         debtors: [],
       });
     }
@@ -133,18 +137,18 @@ export class ExpensesComponent implements OnInit {
   onSubmit(): void {
     this.formSubmitted = true;
     if (this.expenseForm.valid) {
-      const formValue = this.expenseForm.value;
+      let formValue = this.expenseForm.value;
 
-      const payerId = Number(formValue.payer);
-      const payer = this.participants.find(p => p.participant_id === payerId);
+      let payerId = Number(formValue.payer);
+      let payer = this.participants.find(p => p.participant_id === payerId);
 
       // Pagador: si es -1 es el usuario, si no es participante invitado
-      const paid_by_user = payer?.participant_id === -1 ? payer.user : null;
-      const paid_by_name = payer?.participant_id === -1 ? null : payer.participant_name;
+      let paid_by_user = payer?.participant_id === -1 ? payer.user : null;
+      let paid_by_name = payer?.participant_id === -1 ? null : payer.participant_name;
 
       // Deudores: solo el usuario autenticado lleva user, los demás llevan user_name
-      const debtors = formValue.debtors.map((debtor: any) => {
-        const participant = this.participants.find(p => p.participant_id === Number(debtor.id));
+      let debtors = formValue.debtors.map((debtor: any) => {
+        let participant = this.participants.find(p => p.participant_id === Number(debtor.id));
         return {
           participant_id: Number(debtor.id),
           user: participant?.participant_id === -1 ? participant.user : null,
@@ -153,7 +157,7 @@ export class ExpensesComponent implements OnInit {
         };
       });
 
-      const newExpense = {
+      let newExpense = {
         itinerary: formValue.itinerary,
         destination: formValue.destination,
         paid_by_user,
@@ -171,12 +175,12 @@ export class ExpensesComponent implements OnInit {
             next: (data) => this.expenses = data.expenses
           });
           this.getTotalExpenses();
-          const debtorsArray = this.expenseForm.get('debtors') as FormArray;
+          let debtorsArray = this.expenseForm.get('debtors') as FormArray;
 
           while (debtorsArray.length) {
             debtorsArray.removeAt(0);
           }
-          
+
           this.showForm = false;
           this.toast.showSuccessToast('Se han añadido el gasto', false);
         },
@@ -189,7 +193,7 @@ export class ExpensesComponent implements OnInit {
       this.expenseForm.markAllAsTouched();
     }
   }
-  
+
   goToDestinations(itineraryId: number): void {
     this.router.navigate(['/destinations', itineraryId]);
   }
@@ -203,7 +207,7 @@ export class ExpensesComponent implements OnInit {
   }
 
   onItineraryChange(): void {
-    const itineraryId = this.expenseForm.value.itinerary;
+    let itineraryId = this.expenseForm.value.itinerary;
     if (itineraryId) {
       this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
         next: (data: any) => {
@@ -216,10 +220,10 @@ export class ExpensesComponent implements OnInit {
     }
     this.selectedDestinationId = null;
   }
-    
+
   onDestinationsChange(): void {
-    
-    const destinationId = this.expenseForm.value.destination;
+
+    let destinationId = this.expenseForm.value.destination;
     if (destinationId) {
       this.selectedDestinationId = destinationId;
       this.loadParticipants(destinationId);
@@ -230,12 +234,11 @@ export class ExpensesComponent implements OnInit {
   }
 
   onPayerChange(): void {
-    const debtorsArray = this.expenseForm.get('debtors') as FormArray;
+    let debtorsArray = this.expenseForm.get('debtors') as FormArray;
     debtorsArray.clear();
     this.expenseForm.updateValueAndValidity();
   }
 
-  
   onClickExpense(expense: any): void {
     this.expensesService.getExpenseDetail(expense.expense_id).subscribe({
       next: (data) => this.selectedExpense = data,
@@ -259,9 +262,9 @@ export class ExpensesComponent implements OnInit {
   get debtorsControls() {
     return (this.expenseForm.get('debtors') as FormArray).controls;
   }
-  
+
   get possibleDebtors() {
-    const payerId = this.expenseForm?.value?.payer;
+    let payerId = this.expenseForm?.value?.payer;
     return this.participants.filter(p => (p.user || p.participant_id) !== payerId);
   }
 
@@ -271,7 +274,7 @@ export class ExpensesComponent implements OnInit {
 
   setEqualitarian() {
     this.expenseForm.get('type_expense')?.setValue('Equalitarian');
-    const debtorsArray = this.expenseForm.get('debtors') as FormArray;
+    let debtorsArray = this.expenseForm.get('debtors') as FormArray;
     debtorsArray.controls.forEach(ctrl => {
       ctrl.get('amount')?.clearValidators();
       ctrl.get('amount')?.setErrors(null);
@@ -283,7 +286,7 @@ export class ExpensesComponent implements OnInit {
 
   setPersonalized() {
     this.expenseForm.get('type_expense')?.setValue('Personalized');
-    const debtorsArray = this.expenseForm.get('debtors') as FormArray;
+    let debtorsArray = this.expenseForm.get('debtors') as FormArray;
     debtorsArray.controls.forEach(ctrl => {
       ctrl.get('amount')?.setValidators(Validators.required);
       ctrl.get('amount')?.enable();
@@ -302,9 +305,9 @@ export class ExpensesComponent implements OnInit {
       return;
     }
 
-    const debtorsArray = this.expenseForm.get('debtors') as FormArray;
-    const isEqualitarian = this.expenseForm.get('type_expense')?.value === 'Equalitarian';
-    const group = this.formBuilder.group({
+    let debtorsArray = this.expenseForm.get('debtors') as FormArray;
+    let isEqualitarian = this.expenseForm.get('type_expense')?.value === 'Equalitarian';
+    let group = this.formBuilder.group({
       id: [null, Validators.required],
       amount: ['', isEqualitarian ? [] : Validators.required]
     });
@@ -316,18 +319,18 @@ export class ExpensesComponent implements OnInit {
   }
 
   removeDebtor(index: number): void {
-    const debtorsArray = this.expenseForm.get('debtors') as FormArray;
+    let debtorsArray = this.expenseForm.get('debtors') as FormArray;
     debtorsArray.removeAt(index);
   }
 
   getPossibleDebtors(i: number): any[] {
-    const payerParticipantId = String(this.expenseForm.get('payer')?.value);
-    const debtorsArray = this.expenseForm.get('debtors') as FormArray;
-    const selectedIds = debtorsArray.controls
+    let payerParticipantId = String(this.expenseForm.get('payer')?.value);
+    let debtorsArray = this.expenseForm.get('debtors') as FormArray;
+    let selectedIds = debtorsArray.controls
       .map((ctrl, idx) => idx !== i ? String(ctrl.value.id) : null)
-      .filter(id => id !== null); 
+      .filter(id => id !== null);
     return this.participants.filter(p => {
-      const id = String(p.participant_id);
+      let id = String(p.participant_id);
       return id !== payerParticipantId && !selectedIds.includes(id);
     });
   }
@@ -335,24 +338,24 @@ export class ExpensesComponent implements OnInit {
   addUserExpense(): void {
     this.userExpenses.push(
       this.formBuilder.group({
-        user: [''], 
+        user: [''],
         userName: [''],
         amountPaid: [''],
         expectedShare: [''],
-        debt: [''], 
+        debt: [''],
       })
     );
   }
-  
+
   removeUserExpense(index: number): void {
     this.userExpenses.removeAt(index);
   }
 
   isAddDebtorDisabled(): boolean {
-  return (
-    !this.expenseForm.value.payer || this.possibleDebtors.length === 0 ||
-    this.debtorsControls.length >= this.possibleDebtors.length - 1 ||
-    this.debtorsControls.some(d => !d.value.id)
-  );
-}
+    return (
+      !this.expenseForm.value.payer || this.possibleDebtors.length === 0 ||
+      this.debtorsControls.length >= this.possibleDebtors.length - 1 ||
+      this.debtorsControls.some(d => !d.value.id)
+    );
+  }
 }

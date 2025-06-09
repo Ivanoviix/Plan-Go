@@ -61,11 +61,24 @@ export class ItinerariesComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.getItineraries();
     await this.getCountries();
-    /* await this.addAdvancedMarker(this.center); */
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscKey(event: KeyboardEvent) {
+    if (this.showForm) this.toggleForm();
   }
 
   toggleForm(): void {
     this.showForm = !this.showForm;
+    if (!this.showForm) {
+      this.itineraryForm.reset({
+        itineraryName: '',
+        countries: [],
+        startDate: this.currentDate.toISOString().split('T')[0],
+        endDate: ''
+      });
+      this.formSubmitted = false;
+    }
   }
 
   private formatDate(date: any): string {
@@ -90,18 +103,13 @@ export class ItinerariesComponent implements OnInit {
           return this.itinerariesService.getIdUser().pipe(
             switchMap((userId) => {
               let countries = this.itineraryForm.get('countries')?.value.map((country: string) => country);
-
-              let startDate = this.formatDate(this.itineraryForm.get('startDate')?.value);
-              let endDate = this.formatDate(this.itineraryForm.get('endDate')?.value);
-
               let newItinerary: Itinerary = {
-
                 itinerary_name: this.itineraryForm.get('itineraryName')?.value,
                 creator_user: userId,
                 creation_date: new Date().toISOString().split('T')[0],
                 start_date: (this.itineraryForm.get('startDate')?.value).toISOString().split('T')[0],
                 end_date: (this.itineraryForm.get('endDate')?.value).toISOString().split('T')[0],
-                countries: countries, // Enviar como array
+                countries: countries,
               };
               this.toast.showSuccessToast('Se han añadido el itinerario', false);
               return this.itinerariesService.createItinerary(newItinerary);
@@ -112,6 +120,13 @@ export class ItinerariesComponent implements OnInit {
         next: (response) => {
           this.getItineraries();
           this.showForm = false;
+          this.itineraryForm.reset({
+            itineraryName: '',
+            countries: [],
+            startDate: this.currentDate.toISOString().split('T')[0],
+            endDate: ''
+          });
+          this.formSubmitted = false;
         },
         error: (err) => {
           console.error('Error al guardar el itinerario:', err);
@@ -167,4 +182,3 @@ export class ItinerariesComponent implements OnInit {
     });
   }
 }
-
