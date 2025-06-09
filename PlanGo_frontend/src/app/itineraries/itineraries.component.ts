@@ -63,6 +63,11 @@ export class ItinerariesComponent implements OnInit {
     await this.getCountries();
   }
 
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscKey(event: KeyboardEvent) {
+    if (this.showForm) this.toggleForm();
+  }
+
   toggleForm(): void {
     this.showForm = !this.showForm;
     if (!this.showForm) {
