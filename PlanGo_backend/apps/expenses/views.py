@@ -175,7 +175,6 @@ def get_expenses_with_names(request):
 # @permission_classes([IsAuthenticated])
 def get_expenses_with_names_by_user(request):
     user = request.user
-    print("PRUEBAAAA ", request.user)
     if not user or not user.is_authenticated:
         return JsonResponse({'error': 'Usuario no autenticado'}, status=401)
     
@@ -189,7 +188,6 @@ def create_expense(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            print("GASTOOO", data)
 
             destination_id = data.get('destination')
             description = data.get('description')
@@ -222,7 +220,6 @@ def create_expense(request):
 
             match type_expense:
                 case 'Personalized':
-                    print("PRINT! ", type_expense)
                     total_expenses = sum(float(debtor.get('amount', 0)) for debtor in debtors)
                     # UserExpense del pagador
                     if user_obj:
@@ -312,8 +309,6 @@ def get_expense_detail(request, expense_id):
         expense = Expense.objects.get(pk=expense_id)
         serializer = ExpenseWithNamesSerializer(expense)
         
-        print("EXPENSE", expense)
-        print("SERIALEZER", serializer)
         return JsonResponse({'success': True, 'Gasto': serializer.data})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)

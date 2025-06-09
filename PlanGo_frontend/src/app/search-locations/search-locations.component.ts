@@ -118,7 +118,6 @@ export class SearchLocationsComponent {
         const destinationId = Number(queryParams.get('destinationId'));
         this.selectedDestinationId = destinationId;
 
-        console.log('Destino seleccionado:', this.selectedDestinationId);
 
         if (itineraryId) {
           this.destinationService.getDestinationsByItinerary(itineraryId).subscribe({
@@ -127,7 +126,6 @@ export class SearchLocationsComponent {
               this.destinations = allDestinations.filter((dest: Destination) => dest.destination_id === destinationId);
               if (this.destinations.length > 0) {
                 this.currentDestination = this.destinations[0];
-                console.log('Current Destination asignado:', this.currentDestination);
                 this.onDestinationSelect(this.currentDestination)
               } else {
                 console.warn('No se encontró un destino con el id', destinationId);
@@ -151,8 +149,6 @@ export class SearchLocationsComponent {
   }
 
   editCategory(category: string, destination: Destination): void {
-    console.log('Editando categoría:', category, 'con destino:', destination);
-
     if (category === 'Alojamientos' || category === 'Comer y beber' || category === 'Cosas que hacer') {
       const payload = {
         latitude: Number(destination.latitude),
@@ -163,7 +159,6 @@ export class SearchLocationsComponent {
 
       this.destinationService.googlePlacesSearchNearby(payload).subscribe({
         next: (result) => {
-          console.log('Resultados:', result);
           this.router.navigate(['/search/places'], {
             queryParams: { category, destinationId: destination.destination_id }
           });
@@ -184,10 +179,6 @@ export class SearchLocationsComponent {
     }
 
     if (this.participantsComponent) {
-      console.log('Llamando a addParticipantWithDetails con:', {
-        participantName: this.participantName,
-        destinationId: this.selectedDestinationId,
-      });
       this.toast.showSuccessToast('Se han añadido el participante', true);
       this.participantsComponent.addParticipantWithDetails(this.participantName, this.selectedDestinationId);
 

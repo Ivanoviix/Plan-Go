@@ -55,7 +55,6 @@ export class ItinerariesService extends BaseHttpService {
   
     const decodedPayload = JSON.parse(atob(payloadBase64));
     const uid = decodedPayload?.uid || decodedPayload?.sub;
-    console.log('PERFIIIIIL', uid)
     if (!uid) return throwError(() => new Error('UID not found in token'));
   
     const headers = this.createHeaders();
@@ -96,17 +95,6 @@ export class ItinerariesService extends BaseHttpService {
       map((response) => response.csrftoken)
     );
   }
-
-  /* private getCsrfTokenFromCookies(): string | null {
-    const cookies = document.cookie.split(';');
-    for (const cookie of cookies) {
-      const [key, value] = cookie.trim().split('=');
-      if (key === 'csrftoken') {
-        return value;
-      }
-    }
-    return null;
-  } */
 
   setCsrfToken(token: string): void {
     this.csrfToken = token;

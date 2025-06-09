@@ -77,7 +77,6 @@ export class DestinationsComponent implements OnInit {
       filter((itineraryId: number) => !!itineraryId),
       distinctUntilChanged()
     ).subscribe((itineraryId: number) => {
-      console.log('Fetching itinerary with ID:', itineraryId);
       this.fetchItineraryDetails(itineraryId);
       this.fetchDestinationsByItinerary(itineraryId);
       this.fetchCountriesByItinerary(itineraryId);
@@ -91,7 +90,6 @@ export class DestinationsComponent implements OnInit {
     this.selectedItineraryId = itineraryId; // Actualiza el ID seleccionado
     this.itineraryService.getItineraryById(itineraryId).subscribe({
       next: (itinerary: any) => {
-        console.log('Itinerary data:', itinerary);
         this.selectedItinerary = itinerary;
       },
       error: (err: any) => {
@@ -146,7 +144,6 @@ export class DestinationsComponent implements OnInit {
       },
       error: () => {
         this.countries = [];
-        console.log("No hay países en su destino")
       }
     });
   }
@@ -177,7 +174,6 @@ export class DestinationsComponent implements OnInit {
       },
       error: () => {
         this.countries = [];
-        console.log("No hay países en su destino");
       }
     });
   }

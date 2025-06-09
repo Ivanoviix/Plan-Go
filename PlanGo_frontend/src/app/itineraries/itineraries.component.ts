@@ -22,12 +22,12 @@ import { ValidatorMessages } from '../core/validators/validator-messages';
   templateUrl: './itineraries.component.html',
   styleUrls: ['./itineraries.component.css'],
   imports: [
-    CommonModule, 
-    HeaderComponent, 
-    GoogleMapsModule, 
-    MapComponent, 
-    ReactiveFormsModule, 
-    NgSelectModule, 
+    CommonModule,
+    HeaderComponent,
+    GoogleMapsModule,
+    MapComponent,
+    ReactiveFormsModule,
+    NgSelectModule,
     ToastModule,
     CalendarModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -95,7 +95,7 @@ export class ItinerariesComponent implements OnInit {
               let endDate = this.formatDate(this.itineraryForm.get('endDate')?.value);
 
               let newItinerary: Itinerary = {
-                
+
                 itinerary_name: this.itineraryForm.get('itineraryName')?.value,
                 creator_user: userId,
                 creation_date: new Date().toISOString().split('T')[0],
@@ -110,7 +110,6 @@ export class ItinerariesComponent implements OnInit {
         })
       ).subscribe({
         next: (response) => {
-          console.log('Itinerario creado exitosamente:', response);
           this.getItineraries();
           this.showForm = false;
         },
@@ -125,11 +124,10 @@ export class ItinerariesComponent implements OnInit {
       console.error('Formulario inválido');
     }
   }
-  
+
   getItineraries(): void {
     this.itinerariesService.getItineraries().subscribe({
       next: (data: { itineraries: Itinerary[] }) => {
-        console.log('Datos recibidos:', data);
         this.itineraries = data.itineraries;
       },
       error: (err: any) => {
@@ -138,7 +136,7 @@ export class ItinerariesComponent implements OnInit {
       }
     });
   }
-  
+
   async getCountries(): Promise<void> {
     try {
       let response = await fetch(globals.countriesRest);
@@ -146,48 +144,27 @@ export class ItinerariesComponent implements OnInit {
       this.allCountries = data
         .map((country: any) => ({
           code: country.cca2,
-          name: country.translations?.spa?.common || country.name.common, 
+          name: country.translations?.spa?.common || country.name.common,
         }))
         .sort((a: any, b: any) => a.name.localeCompare(b.name));
-      } catch (error) {
-        console.error('Error al obtener los países:', error);
-      }
+    } catch (error) {
+      console.error('Error al obtener los países:', error);
     }
-    
+  }
+
   onCountriesChange(): void {
     let selectedCountries = this.itineraryForm.get('destinations')?.value || [];
-    console.log('Países seleccionados:', selectedCountries);
   }
 
   goToDestinations(itineraryId: number | undefined): void {
-  let itinerary = this.itineraries.find(it => it.itinerary_id === itineraryId);
-  console.log("itinerary:", itinerary)
-  if (!itinerary) return;
-  this.router.navigate(['/destinations', itineraryId], {
-    state: {
-      itineraryStartDate: itinerary.start_date,
-      itineraryEndDate: itinerary.end_date
-    }
-  });
-}
-}
-  
-  /* onMapReady(map: google.maps.Map): void {
-    this.map = map;
-  
-    this.map.addListener('dblclick', async (event: google.maps.MapMouseEvent) => {
-      if (event.latLng) await this.addAdvancedMarker(event.latLng);
+    let itinerary = this.itineraries.find(it => it.itinerary_id === itineraryId);
+    if (!itinerary) return;
+    this.router.navigate(['/destinations', itineraryId], {
+      state: {
+        itineraryStartDate: itinerary.start_date,
+        itineraryEndDate: itinerary.end_date
+      }
     });
-  } */
-  
-  /* async addAdvancedMarker(position: google.maps.LatLng | google.maps.LatLngLiteral): Promise<void> {
-    let { AdvancedMarkerElement } = await google.maps.importLibrary(
-      'marker'
-    ) as google.maps.MarkerLibrary;
-  
-    let marker = new AdvancedMarkerElement({
-      map: this.map,
-      position: position,
-      title: 'Nuevo marcador',
-    });
-  } */
+  }
+}
+

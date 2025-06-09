@@ -63,7 +63,6 @@ export class CustomValidators {
     static debtorsSelectRequired(): ValidatorFn {
         return (form: AbstractControl): ValidationErrors | null => {
             let group = form as FormGroup;
-            console.log(group)
             let debtors = group.get('debtors')?.value || [];
             let noDebtorSelected = debtors.some((debtor: any) => !debtor.id);
             let errors: ValidationErrors = {};

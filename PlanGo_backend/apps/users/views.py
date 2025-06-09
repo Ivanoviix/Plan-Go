@@ -32,7 +32,6 @@ class RegisterView(View):
             try:
                 decoded_token = auth.verify_id_token(token)
                 uid = decoded_token['uid']
-                print("Token válido. UID:", uid)
             except Exception as e:
                 return JsonResponse({'error': 'Token inválido o expirado'}, status=401)
 
@@ -66,7 +65,6 @@ class RegisterView(View):
 
             return JsonResponse({'message': 'Usuario registrado exitosamente'}, status=201)
         except Exception as e:
-            print("Error en el backend:", str(e))
             return JsonResponse({'error': str(e)}, status=400)
        
         
@@ -85,7 +83,6 @@ class LoginWithGoogleView(View):
             try:
                 decoded_token = auth.verify_id_token(token)
                 uid = decoded_token['uid']
-                print("Token válido. UID:", uid)
             except Exception as e:
                 return JsonResponse({'error': 'Token inválido o expirado'}, status=401)
 
@@ -109,14 +106,8 @@ class LoginWithGoogleView(View):
                 }
             )
 
-            if created:
-                print("Usuario creado en Django:", user.email)
-            else:
-                print("Usuario ya existente en Django:", user.email)
-
             return JsonResponse({'message': 'Usuario autenticado exitosamente'}, status=200)
         except Exception as e:
-            print("Error en el backend:", str(e))
             return JsonResponse({'error': str(e)}, status=400)
        
 @method_decorator(csrf_exempt, name='dispatch')
@@ -135,22 +126,18 @@ class LoginWithEmailView(View):
             try:
                 decoded_token = auth.verify_id_token(id_token)
                 uid = decoded_token.get('uid')
-                print("Token válido. UID:", uid)
 
                 # Usuario autenticado correctamente
                 return JsonResponse({'message': 'Inicio de sesión exitoso'}, status=200)
             except Exception as e:
-                print("Error al verificar el token de Firebase:", str(e))
                 return JsonResponse({'error': 'Token inválido o expirado'}, status=401)
         except Exception as e:
-            print("Error en el backend:", str(e))
             return JsonResponse({'error': str(e)}, status=400)
         
 @csrf_exempt
 def get_userId_by_userUid(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        print(data)
         uid = data.get('uid')
         try:
             user = User.objects.get(firebase_uid=uid)
@@ -177,7 +164,6 @@ def get_participants_by_destination(request, destination_id):
         }
         for p in participants
     ]
-    print("USUARIOOO", request.user)
 
     user = request.user
     if user.is_authenticated:
@@ -188,7 +174,6 @@ def get_participants_by_destination(request, destination_id):
             'participant_name': user.username,
             'is_user': True
         })
-    print("DATOS USUARIO!!!!", data)
     return JsonResponse({'Participants': data})
     
     

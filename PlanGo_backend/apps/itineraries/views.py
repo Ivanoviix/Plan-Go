@@ -76,7 +76,6 @@ def get_itineraries_by_user(request, user_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_itinerary_by_id(request, itinerary_id):
-    print("Usuario autenticado:", request.user)
     try:
         itinerary = Itinerary.objects.get(pk=itinerary_id, creator_user=request.user)
         serializer = ItinerarySerializer(itinerary)
@@ -187,10 +186,8 @@ def get_destinations_by_itinerary(request, itinerary_id):
 def create_destination(request):
     if request.method == 'POST':
         data = request.data
-        print("RESPUESTAAA", data)
         itinerary_id = data.get('itinerary')
         country = data.get('country')
-        print("itinerary_id recibido:", itinerary_id)
         city_name = data.get('city_name')
         start_date = data.get('start_date')
         end_date = data.get('end_date')
@@ -278,7 +275,6 @@ def country_names_to_codes(names):
 @csrf_exempt
 @require_GET
 def geocodenames_autocomplete(request):
-    print("ESTA ES LA REQUEST", request)
     input_text = request.GET.get('input')
     country_code = request.GET.get('country')
     api_key = GEONAMES_API_KEY 
