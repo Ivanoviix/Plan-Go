@@ -394,15 +394,13 @@ def google_places_search_nearby(request):
     response = requests.post(url, json=payload, headers=headers)
     data = response.json()
 
-    # --- Añade isSave a cada lugar ---
     from apps.places.models.saved_place import SavedPlace
     saved_place_ids = set()
     if user_id:
         saved_place_ids = set(SavedPlace.objects.filter(user_id=user_id).values_list('place_id', flat=True))
 
     for place in data.get('places', []):
-        place_id = str(place.get('id'))
-        place['isSave'] = place_id in set(str(pid) for pid in saved_place_ids)
+        place['isSave'] = place.get('id') in saved_place_ids
     return JsonResponse(data, safe=False)
 
 
@@ -429,6 +427,7 @@ def get_all_categories_from_destination(request):
             images_data = [img.uri for img in images]
             accommodations_data.append({
                 'accommodation': alj.name,
+                'id': alj.place_id
                 'accommodaton_type': alj.accomodation_type,
                 'address': alj.address,
                 'rating': alj.rating if alj.rating is not None else 3.0,
@@ -446,6 +445,7 @@ def get_all_categories_from_destination(request):
             images_data = [img.uri for img in images]
             restaurants_data.append({
                 'restaurant': rest.name,
+                'id': rest.place_id,
                 'restaurant_type': rest.restaurant_type,
                 'rating': rest.rating if rest.rating is not None else 3.0,
                 'address': rest.address,
@@ -463,6 +463,7 @@ def get_all_categories_from_destination(request):
             images_data = [img.uri for img in images]
             activities_data.append({
                 'activity': act.name,
+                'place_id': act.place_id,
                 'activity_type': act.activity_type,
                 'rating': act.rating if act.rating is not None else 3.0,
                 'address': act.address,

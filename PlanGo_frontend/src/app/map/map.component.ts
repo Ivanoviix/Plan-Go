@@ -93,7 +93,7 @@ export class MapComponent implements OnInit {
   }
 
   openGoogleMapsPlace(): void {
-    let placeId = this.activeMarker?.place?.id;
+    let placeId = this.activeMarker?.place?.id || this.activeMarker?.place?.place_id;
     if (placeId) {
       window.open(`https://www.google.com/maps/place/?q=place_id:${placeId}`, '_blank');
     }

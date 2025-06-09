@@ -300,7 +300,7 @@ export class SearchPlacesComponent {
           place_id: place.id,
           destination: this.currentDestination?.destination_id,
           name: place.displayName?.text,
-          primary_type: place.primaryType,
+          primary_type: place.primaryType ? place.primaryType : (place.types && place.types.length > 0 ? place.types[0] : ''),
           rating: place.rating,
           formattedAddress: place.formattedAddress,
           latitude: place.location?.latitude,
