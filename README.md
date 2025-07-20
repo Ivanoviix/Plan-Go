@@ -1,6 +1,6 @@
-# PlanGo Project
+# Plan&Go Project
 
-PlanGo is a full-stack web application that combines a Django backend and an Angular frontend. The backend handles data management and API services, while the frontend provides a dynamic and interactive user interface.
+Plan&Go is a full-stack web application that combines a Django backend and an Angular frontend. The backend handles data management and API services, while the frontend provides a dynamic and interactive user interface.
 
 ---
 
